@@ -71,6 +71,9 @@ bool RsmMesh::Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream)
 	stream->Read(&transf[10], sizeof(float));
 	transf[11] = 0;
 	
+	//stream->Read(&transf[12], sizeof(float));
+	//stream->Read(&transf[13], sizeof(float));
+	//stream->Read(&transf[14], sizeof(float));
 	transf[12] = 0;
 	transf[13] = 0;
 	transf[14] = 0;
@@ -167,6 +170,9 @@ bool RsmMesh::Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream)
 
 void RsmMesh::UpdateBoundingBox()
 {
+	if (_Parent != NULL)
+		_BoundingBox = AABBox(glm::vec3(0.f), glm::vec3(0.f));
+
 	for (unsigned int i = 0; i < _TmpVertex.size(); i++)
 	{
 		for (int n = 0; n < 3; n++)
@@ -174,7 +180,7 @@ void RsmMesh::UpdateBoundingBox()
 			glm::vec3 v = (_ParentTransformation * glm::vec4(_TmpVertex[i], 1)).xyz;
 
 			if (_Parent != NULL || _Children.size() > 0)
-				v += _Position;
+				v += _Position + _ParentPosition;
 
 			_BoundingBox += v;
 		}
@@ -187,6 +193,22 @@ void RsmMesh::UpdateBoundingBox()
 	}
 
 	_BoundingBox.CalculateRangeAndOffset();
+}
+
+void RsmMesh::UpdateRealBoundingBox(AABBox &aabb, const glm::mat4 &ptm)
+{
+	UpdateGlobalMatrix(0);
+	UpdateLocalMatrix();
+
+	glm::mat4 myMat = ptm * _GlobalMatrix;
+	glm::mat4 lMat = myMat * _LocalMatrix;
+	
+	for (unsigned int i = 0; i < _TmpVertex.size(); i++)
+		aabb += (lMat * glm::vec4(_TmpVertex[i], 1)).xyz;
+	
+	for (unsigned int i = 0; i < _Children.size(); i++)
+		_Children[i]->UpdateRealBoundingBox(aabb, myMat);
+
 	_TmpVertex.clear();
 }
 
@@ -195,22 +217,22 @@ void RsmMesh::UpdateGlobalMatrix(double elapsed)
 	if (_HasGlobalMatrix)
 		return;
 
-	_GlobalMatrix = glm::scale(glm::mat4(), _Scale);
+	_GlobalMatrix = glm::mat4();
 
 	if (_Parent == NULL)
 	{
 		if (_Children.size() == 0)
 		{
-			_GlobalMatrix = glm::translate(_GlobalMatrix, glm::vec3(0, -_BoundingBox.Max.y + _BoundingBox.Offset.y, 0));
+			_GlobalMatrix = glm::translate(_GlobalMatrix, glm::vec3(0, -_Owner->MainMesh->_BoundingBox.Max.y + _Owner->MainMesh->_BoundingBox.Range.y, 0));
 		}
 		else
 		{
-			_GlobalMatrix = glm::translate(_GlobalMatrix, glm::vec3(-_BoundingBox.Offset.x, -_BoundingBox.Max.y, -_BoundingBox.Offset.z));
+			_GlobalMatrix = glm::translate(_GlobalMatrix, glm::vec3(-_Owner->MainMesh->_BoundingBox.Range.x, -_Owner->MainMesh->_BoundingBox.Max.y, -_Owner->MainMesh->_BoundingBox.Range.z));
 		}
 	}
 	else
 	{
-		_GlobalMatrix = glm::translate(_GlobalMatrix, _ParentPosition);
+		_GlobalMatrix = glm::translate(_GlobalMatrix, _Position);
 	}
 
 	if (_RotationFrames.size() == 0)
@@ -254,10 +276,11 @@ void RsmMesh::UpdateGlobalMatrix(double elapsed)
 			_GlobalMatrix *= glm::mat4_cast(glm::normalize(_RotationFrames[0].second));
 		}
 	}
+
+	_GlobalMatrix = glm::scale(_GlobalMatrix, _Scale);
 	
 	if (_RotationFrames.size() == 0)
 		_HasGlobalMatrix = true;
-
 }
 		
 void RsmMesh::UpdateLocalMatrix()
@@ -269,11 +292,11 @@ void RsmMesh::UpdateLocalMatrix()
 
 	if (_Parent == NULL && _Children.size() == 0)
 	{
-		_LocalMatrix = glm::translate(_LocalMatrix, -_BoundingBox.Offset);
+		_LocalMatrix = glm::translate(_LocalMatrix, -_Owner->MainMesh->_BoundingBox.Range);
 	}
 	else if (_Parent != NULL || _Children.size() > 0)
 	{
-		_LocalMatrix = glm::translate(_LocalMatrix, _Position);
+		_LocalMatrix = glm::translate(_LocalMatrix, _ParentPosition);
 	}
 
 	_LocalMatrix *= _ParentTransformation;
@@ -307,6 +330,7 @@ void RsmMesh::Render(CommonShaderProgramPtr &shader, Camera &camera, const glm::
 }
 
 RsmModel::RsmModel()
+	: _BoundingBox(glm::vec3(999999), glm::vec3(-999999))
 {
 
 }
@@ -399,6 +423,10 @@ bool RsmModel::Load(YA3DE::FileSystem::FilePtr stream)
 void RsmModel::UpdateBoundingBox()
 {
 	_MainMesh->UpdateBoundingBox();
+	
+	glm::mat4 mat = glm::scale(glm::mat4(), glm::vec3(1.f, -1.f, 1.f));
+	_MainMesh->UpdateRealBoundingBox(_BoundingBox, mat);
+	_BoundingBox.CalculateRangeAndOffset();
 }
 
 template<>

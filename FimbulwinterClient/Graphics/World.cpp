@@ -207,16 +207,16 @@ bool World::LoadGround(FilePtr stream)
 			{
 				case 0:
 					{
-						float x0 = (x - header.Width / 2) * header.Zoom;
-						float x1 = (x - header.Width / 2 + 1) * header.Zoom;
+						float x0 = x * header.Zoom;
+						float x1 = (x + 1) * header.Zoom;
 
-						float z0 = (y - header.Height / 2) * header.Zoom;
-						float z1 = (y - header.Height / 2 + 1) * header.Zoom;
+						float z0 = (_GroundHeight - y) * header.Zoom;
+						float z1 = (_GroundHeight - y - 1) * header.Zoom;
 
-						position[0] = glm::vec3(x0, cell.Height[0], z0);
-						position[1] = glm::vec3(x1, cell.Height[1], z0);
-						position[2] = glm::vec3(x0, cell.Height[2], z1);
-						position[3] = glm::vec3(x1, cell.Height[3], z1);
+						position[0] = glm::vec3(x0, -cell.Height[0], z0);
+						position[1] = glm::vec3(x1, -cell.Height[1], z0);
+						position[2] = glm::vec3(x0, -cell.Height[2], z1);
+						position[3] = glm::vec3(x1, -cell.Height[3], z1);
 
 						//normal[0] = cell.Normal[1];
 						//normal[1] = cell.Normal[2];
@@ -228,15 +228,15 @@ bool World::LoadGround(FilePtr stream)
 					{
 						GroundCell &cell2 = cells[(y + 1) * header.Width + x];
 
-						float x0 = (x - header.Width / 2) * header.Zoom;
-						float x1 = (x - header.Width / 2 + 1) * header.Zoom;
+						float x0 = x * header.Zoom;
+						float x1 = (x + 1) * header.Zoom;
 
-						float z0 = (y - header.Height / 2 + 1) * header.Zoom;
+						float z0 = (header.Height  - y - 1) * header.Zoom;
 
-						position[0] = glm::vec3(x0, cell.Height[2], z0);
-						position[1] = glm::vec3(x1, cell.Height[3], z0);
-						position[2] = glm::vec3(x0, cell2.Height[0], z0);
-						position[3] = glm::vec3(x1, cell2.Height[1], z0);
+						position[0] = glm::vec3(x0, -cell.Height[2], z0);
+						position[1] = glm::vec3(x1, -cell.Height[3], z0);
+						position[2] = glm::vec3(x0, -cell2.Height[0], z0);
+						position[3] = glm::vec3(x1, -cell2.Height[1], z0);
 
 						normal[0] = glm::vec3(0, 0, cell2.Height[0] > cell.Height[3] ? -1 : 1);
 						normal[1] = normal[0];
@@ -248,10 +248,10 @@ bool World::LoadGround(FilePtr stream)
 					{
 						GroundCell &cell2 = cells[y * header.Width + x + 1];
 
-						float x0 = (x - header.Width / 2 + 1) * header.Zoom;
-
-						float z0 = (y - header.Height / 2) * header.Zoom;
-						float z1 = (y - header.Height / 2 + 1) * header.Zoom;
+						float x0 = (x + 1) * header.Zoom;
+						
+						float z0 = (_GroundHeight - y) * header.Zoom;
+						float z1 = (_GroundHeight - y - 1) * header.Zoom;
 
 						position[0] = glm::vec3(x0, cell.Height[3], z1);
 						position[1] = glm::vec3(x0, cell.Height[1], z0);
@@ -454,16 +454,16 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
         glm::vec3 position[4];
         glm::vec2 tex[4];
 
-        float x0 = (-_GroundWidth / 2) * _GroundZoom;
-        float x1 = ((_GroundWidth - 1) - _GroundWidth / 2 + 1) * _GroundZoom;
+        float x0 = 0;
+        float x1 = _GroundWidth * _GroundZoom;
 
-        float z0 = (-_GroundHeight / 2) * _GroundZoom;
-        float z1 = ((_GroundHeight - 1) - _GroundHeight / 2 + 1) * _GroundZoom;
+        float z0 = 0;
+        float z1 = _GroundHeight * _GroundZoom;
             
-        position[0] = glm::vec3(x0, _Water.Level, z0);
-        position[1] = glm::vec3(x1, _Water.Level, z0);
-        position[2] = glm::vec3(x0, _Water.Level, z1);
-        position[3] = glm::vec3(x1, _Water.Level, z1);
+        position[0] = glm::vec3(x0, -_Water.Level, z0);
+        position[1] = glm::vec3(x1, -_Water.Level, z0);
+        position[2] = glm::vec3(x0, -_Water.Level, z1);
+        position[3] = glm::vec3(x1, -_Water.Level, z1);
 
         tex[0] = glm::vec2(0, 0);
         tex[1] = glm::vec2(_GroundWidth / 8, 0);

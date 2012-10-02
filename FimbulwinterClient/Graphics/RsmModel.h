@@ -79,6 +79,7 @@ namespace ROGraphics
 		bool Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream);
 
 		void UpdateBoundingBox();
+		void UpdateRealBoundingBox(AABBox &aabb, const glm::mat4 &ptm);
 
 		void Update(double elapsed);
 		void Render(CommonShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
@@ -131,6 +132,7 @@ namespace ROGraphics
 		DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
 		DEFPROP_RO(public, RsmMeshPtr, MainMesh);
 		DEFPROP_RO_R(public, MeshList, Meshes);
+		DEFPROP_RO_R(public, AABBox, BoundingBox);
 	};
 	typedef std::shared_ptr<RsmModel> RsmModelPtr;
 }

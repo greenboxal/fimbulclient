@@ -18,6 +18,7 @@
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Helpers.h>
+#include <YA3DE/Math/Frustum.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -54,6 +55,7 @@ public:
 			_View = glm::lookAt(_Position, _Target, Up);
 			_ViewProjection = _Projection * _View;
 			_dirty = false;
+			_Frustum.Update(_View, _Projection);
 		}
 	}
 
@@ -117,7 +119,7 @@ public:
 
 	DEFPROP_SELF_RO(public, glm::vec3, Up)
 	{
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, 1, 0);
 	}
 
 	DEFPROP_SELF_RO(public, glm::vec3, Right)
@@ -134,6 +136,8 @@ public:
 	DEFPROP_RO(public, float, FarPlane);
 	DEFPROP_RO(public, float, Yaw);
 	DEFPROP_RO(public, float, Pitch);
+	
+	DEFPROP_RO_R(public, YA3DE::Math::Frustum, Frustum);
 
 private:
 	void CalculateYawPitch()

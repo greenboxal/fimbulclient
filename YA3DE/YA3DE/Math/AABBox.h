@@ -87,8 +87,8 @@ namespace YA3DE
 
 			void CalculateRangeAndOffset()
 			{
-				_Offset = (_Max + _Min) / 2.0F;
-				_Range = (_Max - _Min) / 2.0F;
+				_Range = (_Max + _Min) / 2.0F;
+				_Offset = (_Max - _Min) / 2.0F;
 			}
 
 			DEFPROP_RO_R(public, glm::vec3, Min);

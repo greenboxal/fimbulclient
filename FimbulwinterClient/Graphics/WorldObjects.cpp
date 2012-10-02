@@ -73,15 +73,15 @@ bool WorldModel::DoPostLoad()
 		_Mesh = _Model->MainMesh;
 	else
 		_Mesh = it->second;
-
-    float offsetX = _Owner->GroundZoom * _Owner->GroundWidth / 2;
-    float offsetZ = _Owner->GroundZoom * _Owner->GroundHeight / 2;
-
-	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(-offsetX + _Position.x * 5, _Position.y, -offsetZ + _Position.z * 5));
-	_WorldMatrix = glm::rotate(_WorldMatrix, -_Rotation.x, glm::vec3(1.f, 0.f, 0.f));
+	
+	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(0, 0, _Owner->GroundHeight * _Owner->GroundZoom));
+	_WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(1, 1, -1));
+	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(_Position.x * 5, -_Position.y, _Position.z * 5));
 	_WorldMatrix = glm::rotate(_WorldMatrix, -_Rotation.z, glm::vec3(0.f, 0.f, 1.f));
+	_WorldMatrix = glm::rotate(_WorldMatrix, -_Rotation.x, glm::vec3(1.f, 0.f, 0.f));
 	_WorldMatrix = glm::rotate(_WorldMatrix, _Rotation.y, glm::vec3(0.f, 1.f, 0.f));
-	_WorldMatrix = glm::scale(_WorldMatrix, _Scale);
+	_WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Scale.x, -_Scale.y, _Scale.z));
+	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(-_Model->BoundingBox.Range.x, _Model->BoundingBox.Min.y, -_Model->BoundingBox.Range.z));
 
 	return true;
 }
