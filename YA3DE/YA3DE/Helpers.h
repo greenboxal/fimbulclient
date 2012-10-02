@@ -30,7 +30,7 @@ access: \
 
 #define DEFPROP_I_RW_R(access, type, name, getter, setter) \
 access: \
-	__declspec(property(get = getter, put = setter)) type name
+	__declspec(property(get = getter, put = setter)) type &name
 
 #define DEFPROP_I_RO(access, type, name, getter) \
 access: \
@@ -38,7 +38,7 @@ access: \
 
 #define DEFPROP_I_RO_R(access, type, name, getter) \
 access: \
-	__declspec(property(get = getter)) type name
+	__declspec(property(get = getter)) type &name
 
 #define DEFPROP_SELF_RO(access, type, name) \
 access: \
@@ -68,7 +68,7 @@ private: \
 
 #define DEFPROP_RW_R(access, type, name) \
 access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
+	DEFPROP_I_RW_R(access, type, name, Get##name, Set##name); \
 	type &Get##name() { return _##name; } \
 	void Set##name(const type &value) { _##name = value; } \
 private: \
@@ -91,7 +91,7 @@ private: \
 
 #define DEFPROP_RO_R(access, type, name) \
 access: \
-	DEFPROP_I_RO(access, type, name, Get##name); \
+	DEFPROP_I_RO_R(access, type, name, Get##name); \
 	type &Get##name() { return _##name; } \
 private: \
 	type _##name

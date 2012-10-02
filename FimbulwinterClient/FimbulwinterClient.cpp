@@ -50,12 +50,6 @@ void ClientGame::OnLoad()
 
 void ClientGame::OnUpdate(double elapsedTime)
 {
-	char buff[256];
-
-	sprintf(buff, "Elapsed: %f FPS: %f", (float)elapsedTime, GetFrameRate());
-
-	Window->setTitle(buff);
-
 	if (_Mode != NULL)
 		_Mode->Update(elapsedTime);
 }
@@ -63,7 +57,6 @@ void ClientGame::OnUpdate(double elapsedTime)
 void ClientGame::OnRender(double elapsedTime)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
 	
 	if (_Mode != NULL)
 		_Mode->Render(elapsedTime);

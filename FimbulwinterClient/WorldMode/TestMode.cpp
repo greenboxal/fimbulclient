@@ -17,8 +17,10 @@
 #include "../FileSystem/Grf/Grf.h"
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/Content/StringResource.h>
+#include "../Graphics/World.h"
 
 using namespace WorldMode;
+using namespace ROGraphics;
 using namespace YA3DE::Content;
 
 TestMode::TestMode()
@@ -32,14 +34,15 @@ TestMode::~TestMode()
 
 }
 
+WorldPtr world;
 void TestMode::OnLoad()
 {
-	StringResourcePtr str = ContentManager::Instance()->Load<StringResource>("data/monster_talk_table.xml");
+	world = ContentManager::Instance()->Load<World>("data/comodo.rsw");
 }
 
 void TestMode::Update(double elapsed)
 {
-	float timeDifference = (float)elapsed / 10.0f;
+	float timeDifference = (float)elapsed;
 
 	if (Ragnarok->IsActive)
 	{
@@ -87,12 +90,18 @@ void TestMode::Update(double elapsed)
 		prevRightButton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
 
 		_FPSCamera.Update();
+
+		char buffer[1024];
+		sprintf(buffer, "X=%f, Y=%f, Z=%f -> X=%f, Y=%f, Z=%f", _FPSCamera.Position.x, _FPSCamera.Position.y, _FPSCamera.Position.z, _FPSCamera.Target.x, _FPSCamera.Target.y, _FPSCamera.Target.z);
+		Ragnarok->Window->setTitle(buffer);
 	}
+
+	world->Update(elapsed);
 }
 
 void TestMode::Render(double elapsed)
 {
-
+	world->Render(_FPSCamera, elapsed);
 }
 
 void TestMode::OnEvent(sf::Event &ev, double elapsedTime)

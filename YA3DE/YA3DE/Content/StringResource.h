@@ -34,7 +34,10 @@ namespace YA3DE
 			~StringResource()
 			{
 				if (_Data)
+				{
 					delete[] _Data;
+					_Data = NULL;
+				}
 			}
 
 			DEFPROP_RO(public, unsigned char *, Data);

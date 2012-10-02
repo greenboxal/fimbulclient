@@ -12,6 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GL\glew.c" />
+    <ClCompile Include="SOIL\image_DXT.c" />
+    <ClCompile Include="SOIL\image_helper.c" />
+    <ClCompile Include="SOIL\SOIL.c" />
+    <ClCompile Include="SOIL\stb_image_aug.c" />
     <ClCompile Include="YA3DE\Config.cpp" />
     <ClCompile Include="YA3DE\Content\ContentManager.cpp" />
     <ClCompile Include="YA3DE\FileSystem\FileManager.cpp" />
@@ -269,6 +273,12 @@
     <ClInclude Include="SFML\Window\Window.hpp" />
     <ClInclude Include="SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="SFML\Window\WindowStyle.hpp" />
+    <ClInclude Include="SOIL\image_DXT.h" />
+    <ClInclude Include="SOIL\image_helper.h" />
+    <ClInclude Include="SOIL\SOIL.h" />
+    <ClInclude Include="SOIL\stbi_DDS_aug.h" />
+    <ClInclude Include="SOIL\stbi_DDS_aug_c.h" />
+    <ClInclude Include="SOIL\stb_image_aug.h" />
     <ClInclude Include="YA3DE\Config.h" />
     <ClInclude Include="YA3DE\Content\ContentManager.h" />
     <ClInclude Include="YA3DE\Content\ContentName.h" />

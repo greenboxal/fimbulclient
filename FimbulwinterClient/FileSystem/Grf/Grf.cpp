@@ -159,7 +159,7 @@ void *Grf::GetFileData(GrfFile *file, size_t &size)
 			return NULL;
 		}
 
-		_stream.read(compressed, file->CompressedLength);
+		_stream.read(compressed, file->CompressedLengthAligned);
 		
 		if (_stream.fail())
 		{

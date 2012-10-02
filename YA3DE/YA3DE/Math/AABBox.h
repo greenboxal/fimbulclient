@@ -16,6 +16,7 @@
 #ifndef _AABBOX_H_
 #define _AABBOX_H_
 
+#include <algorithm>
 #include <YA3DE/Helpers.h>
 #include <YA3DE/Math.h>
 
@@ -26,7 +27,74 @@ namespace YA3DE
 		class AABBox
 		{
 		public:
-			
+			AABBox(const glm::vec3 &min, const glm::vec3 &max)
+				: _Min(min), _Max(max)
+			{
+
+			}
+
+			AABBox &operator+(const glm::vec3 &vertex)
+			{
+				_Min.x = std::min(_Min.x, vertex.x);
+				_Min.y = std::min(_Min.y, vertex.y);
+				_Min.z = std::min(_Min.z, vertex.z);
+
+				_Max.x = std::max(_Max.x, vertex.x);
+				_Max.y = std::max(_Max.y, vertex.y);
+				_Max.z = std::max(_Max.z, vertex.z);
+
+				return (*this);
+			}
+
+			AABBox &operator+(const AABBox &other)
+			{
+				_Min.x = std::min(_Min.x, other._Min.x);
+				_Min.y = std::min(_Min.y, other._Min.y);
+				_Min.z = std::min(_Min.z, other._Min.z);
+
+				_Max.x = std::max(_Max.x, other._Max.x);
+				_Max.y = std::max(_Max.y, other._Max.y);
+				_Max.z = std::max(_Max.z, other._Max.z);
+
+				return (*this);
+			}
+
+			AABBox &operator+=(const glm::vec3 &vertex)
+			{
+				_Min.x = std::min(_Min.x, vertex.x);
+				_Min.y = std::min(_Min.y, vertex.y);
+				_Min.z = std::min(_Min.z, vertex.z);
+
+				_Max.x = std::max(_Max.x, vertex.x);
+				_Max.y = std::max(_Max.y, vertex.y);
+				_Max.z = std::max(_Max.z, vertex.z);
+
+				return (*this);
+			}
+
+			AABBox &operator+=(const AABBox &other)
+			{
+				_Min.x = std::min(_Min.x, other._Min.x);
+				_Min.y = std::min(_Min.y, other._Min.y);
+				_Min.z = std::min(_Min.z, other._Min.z);
+
+				_Max.x = std::max(_Max.x, other._Max.x);
+				_Max.y = std::max(_Max.y, other._Max.y);
+				_Max.z = std::max(_Max.z, other._Max.z);
+
+				return (*this);
+			}
+
+			void CalculateRangeAndOffset()
+			{
+				_Offset = (_Max + _Min) / 2.0F;
+				_Range = (_Max - _Min) / 2.0F;
+			}
+
+			DEFPROP_RO_R(public, glm::vec3, Min);
+			DEFPROP_RO_R(public, glm::vec3, Max);
+			DEFPROP_RO_R(public, glm::vec3, Range);
+			DEFPROP_RO_R(public, glm::vec3, Offset);
 		};
 	}
 }

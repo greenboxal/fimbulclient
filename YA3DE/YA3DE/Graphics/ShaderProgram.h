@@ -39,27 +39,26 @@ namespace YA3DE
 			bool Link();
 
 			void Begin();
-			int GetUniformID(std::string name);
+			int GetUniformID(const std::string &name);
 			void End();
-			
+
 			template<typename T>
-			void SetUniform(std::string name, const T &value)
+			void SetUniform(const std::string &name, const T &value)
 			{
 				int index = GetUniformID(name);
 
+#ifdef _DEBUG
+				if (index == -1)
+					return;
+#else
 				assert(index != -1);
+#endif
 
 				SetUniform<T>(index, value);
 			}
 			
 			template<typename T>
 			void SetUniform(int id, const T &value);
-
-			/*template<typename T>
-			void SetUniformImm(std::string name, const T value)
-			{
-				SetUniform<T>(name, value);
-			}*/
 			
 			DEFPROP_RO(public, unsigned int, ID);
 			DEFPROP_RO_R(public, std::list<ShaderPtr>, Shaders);

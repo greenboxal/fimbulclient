@@ -51,7 +51,6 @@ class TextureStep2D : public Graphics2D::Step2D
 {
 public:
 	TextureStep2D(Texture2DPtr texture, glm::uvec4 &rect, glm::uvec4 &srect, glm::vec4 &color, float rotation, float depth)
-		: _vbo(VertexPositionTexture::VertexDeclaration), _ibo(GL_UNSIGNED_SHORT)
 	{
 		if (!_isShaderInit)
 			InitShader();
@@ -80,8 +79,11 @@ public:
 			0, 1, 2, 3
 		};
 
-		_vbo.SetData(vertices, 4, GL_STATIC_DRAW);
-		_ibo.SetData(indices, 4, GL_STATIC_DRAW);
+		_vbo = std::make_shared<VertexBuffer>(VertexPositionTexture::VertexDeclaration);
+		_vbo->SetData(vertices, 4, GL_STATIC_DRAW);
+
+		_ibo = std::make_shared<IndexBuffer>(GL_UNSIGNED_SHORT);
+		_ibo->SetData(indices, 4, GL_STATIC_DRAW);
 	}
 	
 	void InitShader()
@@ -114,7 +116,7 @@ public:
 		_shader->SetUniform("InTexture", 0);
 
 		_texture->Bind(0);
-		_vbo.Render(GL_QUADS, _ibo, 4);
+		_vbo->Render(GL_QUADS, _ibo, 4);
 
 		_shader->End();
 	}
@@ -123,8 +125,8 @@ private:
 	Texture2DPtr _texture;
 	glm::mat4 _mvp;
 	glm::vec4 _color;
-	IndexBuffer _ibo;
-	VertexBuffer _vbo;
+	IndexBufferPtr _ibo;
+	VertexBufferPtr _vbo;
 
 	static bool _isShaderInit;
 	static ShaderProgramPtr _shader;

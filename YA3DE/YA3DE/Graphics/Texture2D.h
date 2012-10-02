@@ -32,7 +32,6 @@ namespace YA3DE
 			
 			void SetMinMagFilter(int min, int mag);
 			void SetSTWrap(int s, int t);
-			void SetEnv(int env);
 
 			void SetData(void *data);
 
@@ -44,6 +43,16 @@ namespace YA3DE
 			DEFPROP_RO(public, int, PixelFormat);
 			DEFPROP_RO(public, int, InternalPixelFormat);
 			DEFPROP_RO(public, int, Type);
+
+			static void InvalidateLastUsedCache()
+			{
+				_LastUsedTextureUnit = -1;
+				_LastUsedTexture = -1;
+			}
+
+		private:
+			static int _LastUsedTextureUnit;
+			static int _LastUsedTexture;
 		};
 		typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	}

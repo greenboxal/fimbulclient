@@ -23,7 +23,7 @@ namespace YA3DE
 {
 	namespace Graphics
 	{
-		class IndexBuffer
+		class IndexBuffer : public std::enable_shared_from_this<IndexBuffer>
 		{
 		public:
 			IndexBuffer(int type)
@@ -60,13 +60,17 @@ namespace YA3DE
 
 			void SetData(void *data, int count, int hint)
 			{
+				_Count = count;
+
 				Bind();
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * GetSize(), data, hint);
 			}
 			
 			DEFPROP_RO(public, unsigned int, ID);
 			DEFPROP_RO(public, int, GLType);
+			DEFPROP_RO(public, int, Count);
 		};
+		typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 	}
 }
 

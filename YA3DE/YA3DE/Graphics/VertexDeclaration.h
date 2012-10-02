@@ -19,7 +19,7 @@
 #include <YA3DE/Helpers.h>
 #include <YA3DE/OpenGL.h>
 #include <memory>
-#include <list>
+#include <vector>
 
 namespace YA3DE
 {
@@ -51,20 +51,7 @@ namespace YA3DE
 			void Activate(int index, int offset, int stride)
 			{
 				glEnableVertexAttribArray(index);
-				glVertexAttribPointer(index, ValueCount, GLType, GL_FALSE, stride, (void *)offset);
-			}
-
-			DEFPROP_SELF_RO(public, int, GLType)
-			{
-				switch (_Type)
-				{
-					case VertexElementFormat::Vector2:
-					case VertexElementFormat::Vector3:
-					case VertexElementFormat::Vector4:
-						return GL_FLOAT;
-				}
-
-				return 0;
+				glVertexAttribPointer(index, ValueCount, GL_FLOAT, GL_FALSE, stride, (void *)offset);
 			}
 
 			DEFPROP_SELF_RO(public, int, SizeInBytes)
@@ -108,6 +95,10 @@ namespace YA3DE
 			VertexDeclaration(VertexElement *elements, int size)
 				: _Elements(elements, elements + size)
 			{
+				_TotalSize = 0;
+				
+				for (unsigned int i = 0; i < _Elements.size(); i++)
+					_TotalSize += _Elements[i].SizeInBytes;
 			}
 
 			void Activate()
@@ -116,27 +107,16 @@ namespace YA3DE
 				int stride = TotalSize;
 				int index = 0;
 
-				std::list<VertexElement>::iterator it;
-				for (it = _Elements.begin(); it != _Elements.end(); it++)
+				for (unsigned int i = 0; i < _Elements.size(); i++)
 				{
-					it->Activate(index, offset, stride);
-					offset += it->GetSizeInBytes();
+					_Elements[i].Activate(index, offset, stride);
+					offset += _Elements[i].SizeInBytes;
 					index++;
 				}
 			}
 			
-			DEFPROP_SELF_RO(public, int, TotalSize)
-			{
-				int size = 0;
-
-				std::list<VertexElement>::iterator it;
-				for (it = _Elements.begin(); it != _Elements.end(); it++)
-					size += it->GetSizeInBytes();
-
-				return size;
-			}
-			
-			DEFPROP_RO_R(public, std::list<VertexElement>, Elements);
+			DEFPROP_RO_R(public, std::vector<VertexElement>, Elements);
+			DEFPROP_RO(public, int, TotalSize);
 		};
 	}
 }

@@ -37,13 +37,13 @@ public:
 
 		CalculateYawPitch();
 
-		while (std::abs(_Pitch) >= glm::radians(80.f))
-		{
-			_Position.z += 10.f;
-			CalculateYawPitch();
-		}
+		//while (std::abs(_Pitch) >= glm::radians(80.f))
+		//{
+		//	_Position.z += 10.f;
+		//	CalculateYawPitch();
+		//}
 
-		_Projection = glm::perspectiveFov<float>(glm::radians(45.f), (float)Ragnarok->Window->getSize().x, (float)Ragnarok->Window->getSize().y, nearPlane, farPlane);
+		_Projection = glm::perspectiveFov<float>(45.f, (float)Ragnarok->Window->getSize().x, (float)Ragnarok->Window->getSize().y, nearPlane, farPlane);
 		_dirty = true;
 	}
 
@@ -52,6 +52,7 @@ public:
 		if (_dirty)
 		{
 			_View = glm::lookAt(_Position, _Target, Up);
+			_ViewProjection = _Projection * _View;
 			_dirty = false;
 		}
 	}
@@ -77,7 +78,7 @@ public:
         _Yaw += angle;
 
         glm::vec4 dir = glm::vec4(Direction, 1);
-		dir = glm::rotate_slow(glm::mat4(), angle, Up) * dir;
+		dir = glm::rotate(glm::mat4(), angle, Up) * dir;
 
         _Target = _Position + glm::distance(_Target, _Position) * dir.xyz;
         CalculateYawPitch();
@@ -87,13 +88,13 @@ public:
 
     void AddPitch(float angle)
     {
-		if (std::abs(_Pitch + angle) >= glm::radians(80.f)) 
+		if (std::abs(_Pitch + angle) >= 80.f) 
 			return;
 
         _Pitch += angle;
 
         glm::vec4 dir = glm::vec4(Direction, 1);
-		dir = glm::rotate_slow(glm::mat4(), angle, Right) * dir;
+		dir = glm::rotate(glm::mat4(), angle, Right) * dir;
 
 		_Target = _Position + glm::distance(_Target, _Position) * dir.xyz;
         CalculateYawPitch();
@@ -103,8 +104,8 @@ public:
 
     void Levitate(float amount)
     {
-        _Position.y += amount;
-        _Target.z += amount;
+        _Position += Up * amount;
+        _Target += Up * amount ;
 
 		_dirty = true;
     }
@@ -116,7 +117,7 @@ public:
 
 	DEFPROP_SELF_RO(public, glm::vec3, Up)
 	{
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, -1, 0);
 	}
 
 	DEFPROP_SELF_RO(public, glm::vec3, Right)
@@ -126,6 +127,7 @@ public:
 	
 	DEFPROP_RO_R(public, glm::mat4, View);
 	DEFPROP_RO_R(public, glm::mat4, Projection);
+	DEFPROP_RO_R(public, glm::mat4, ViewProjection);
 	DEFPROP_RO_R(public, glm::vec3, Position);
 	DEFPROP_RO_R(public, glm::vec3, Target);
 	DEFPROP_RO(public, float, NearPlane);

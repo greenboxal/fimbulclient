@@ -16,15 +16,15 @@
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/Graphics/Texture2D.h>
 #include <YA3DE/FileSystem/FileManager.h>
-#include <IL/il.h>
-#include <IL/ilut.h>
+#include <SOIL/SOIL.h>
 
 using namespace YA3DE;
 using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;
 using namespace YA3DE::FileSystem;
 
-static bool ilOpened = false;
+int Texture2D::_LastUsedTextureUnit = -1;
+int Texture2D::_LastUsedTexture = -1;
 
 Texture2D::Texture2D(int textureID)
 {
@@ -38,6 +38,8 @@ Texture2D::Texture2D(int textureID)
 Texture2D::Texture2D(int width, int height, int pixelformat, int internalpixelformat, int type)
 {
 	glGenTextures(1, &_TextureID);
+	_Width = width;
+	_Height = height;
 	_PixelFormat = pixelformat;
 	_InternalPixelFormat = internalpixelformat;
 	_Type = type;
@@ -45,6 +47,9 @@ Texture2D::Texture2D(int width, int height, int pixelformat, int internalpixelfo
 
 Texture2D::~Texture2D()
 {
+	if (_LastUsedTexture == _TextureID)
+		_LastUsedTexture = -1;
+
 	glDeleteTextures(1, &_TextureID);
 }
 
@@ -62,12 +67,6 @@ void Texture2D::SetSTWrap(int s, int t)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, t);
 }
 
-void Texture2D::SetEnv(int env)
-{
-	Bind();
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, env);
-}
-
 void Texture2D::SetData(void *data)
 {
 	Bind();
@@ -76,12 +75,17 @@ void Texture2D::SetData(void *data)
 
 void Texture2D::Bind(int index)
 {
-	if (index != -1)
+	if (index != -1 && _LastUsedTextureUnit != index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
+		_LastUsedTextureUnit = index;
 	}
 
-	glBindTexture(GL_TEXTURE_2D, _TextureID);
+	if (_LastUsedTexture != _TextureID)
+	{
+		glBindTexture(GL_TEXTURE_2D, _TextureID);
+		_LastUsedTexture = _TextureID;
+	}
 }
 
 template<>
@@ -96,35 +100,13 @@ std::shared_ptr<Texture2D> ContentManager::LoadNew(const std::string &name)
 	char *data = new char[size];
 	fp->Read(data, size);
 	fp->Close();
-
-	if (!ilOpened)
-	{
-		ilInit();
-		iluInit();
-		ilutRenderer(ILUT_OPENGL);
-		ilOpened = true;
-	}
-
-	unsigned int texID = 0, id;
 	
-	id = ilGenImage();
-	ilBindImage(id);
-
-	if (!ilLoadL(IL_TYPE_UNKNOWN, data, size))
-	{
-		ilDeleteImage(id);
-		return NULL;
-	}
+	int texID = SOIL_load_OGL_texture_from_memory((const unsigned char *)data, size, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, /*SOIL_FLAG_MIPMAPS | */SOIL_FLAG_FUCSIA_TRANSPARENCY);
 	
-	if (ilGetInteger(IL_ORIGIN_MODE) == IL_ORIGIN_LOWER_LEFT)
-		iluFlipImage();
-	
-	glGenTextures(1, &texID);
-	glBindTexture(GL_TEXTURE_2D, texID);
-	ilutGLTexImage(0);
-
-	ilDeleteImage(id);
 	delete[] data;
+
+	if (texID == -1)
+		return false;
 
 	std::shared_ptr<Texture2D> tex(new Texture2D(texID));
 

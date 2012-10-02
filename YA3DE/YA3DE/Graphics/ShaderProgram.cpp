@@ -57,7 +57,7 @@ void ShaderProgram::Begin()
 	glUseProgram(_ID);
 }
 
-int ShaderProgram::GetUniformID(std::string name)
+int ShaderProgram::GetUniformID(const std::string &name)
 {
 	return glGetUniformLocation(_ID, name.c_str());
 }

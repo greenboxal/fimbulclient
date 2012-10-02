@@ -78,7 +78,7 @@ void Game::ReadConfig()
 
 void Game::Run()
 {
-	float total = 0, frames = 0;
+	double total = 0, frames = 0;
 
 	OnInitialize();
 	ReadConfig();
@@ -90,6 +90,8 @@ void Game::Run()
 	while (_Window->isOpen() && _Running)
 	{
 		sf::Event ev;
+		double elapsed = clock.getElapsedTime().asMilliseconds();
+		clock.restart();
 
 		while(_Window->pollEvent(ev) && _Running)
 		{
@@ -98,18 +100,18 @@ void Game::Run()
 			else if (ev.type == sf::Event::LostFocus)
 				_IsActive = false;
 
-			OnEvent(ev, clock.getElapsedTime().asMilliseconds());
+			OnEvent(ev, elapsed);
 		}
 
 		if (!_Running)
 			break;
 
-		OnUpdate(clock.getElapsedTime().asMilliseconds());
-		OnRender(clock.getElapsedTime().asMilliseconds());
+		OnUpdate(elapsed);
+		OnRender(elapsed);
 
 		_Window->display();
 
-		total += clock.getElapsedTime().asMilliseconds();
+		total += elapsed;
 		frames++;
 
 		if (total > 1000.0F)
@@ -118,8 +120,6 @@ void Game::Run()
 			frames = 0;
 			total -= 1000.0F;
 		}
-
-		clock.restart();
 	}
 
 	OnUnload();

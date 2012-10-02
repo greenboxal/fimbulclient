@@ -25,7 +25,7 @@ namespace YA3DE
 {
 	namespace Graphics
 	{
-		class VertexBuffer
+		class VertexBuffer : public std::enable_shared_from_this<VertexBuffer>
 		{
 		public:
 			VertexBuffer(VertexDeclaration &declaration)
@@ -42,6 +42,7 @@ namespace YA3DE
 			void Bind()
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, _ID);
+				_Declaration.Activate();
 			}
 
 			void SetData(void *data, int count, int hint)
@@ -50,18 +51,17 @@ namespace YA3DE
 				glBufferData(GL_ARRAY_BUFFER, count * _Declaration.TotalSize, data, hint);
 			}
 
-			void Render(int mode, IndexBuffer &indices, int count)
+			void Render(int mode, IndexBufferPtr indices, int count)
 			{
-				Bind();
-				indices.Bind();
-				Declaration.Activate();
-				glDrawElements(mode, count, indices.GLType, NULL);
+				indices->Bind();
+				glDrawElements(mode, count, indices->GLType, NULL);
 			}
 
 			DEFPROP_RO(public, unsigned int, ID);
 			DEFPROP_RO(public, int, Type);
-			DEFPROP_RO(public, VertexDeclaration, Declaration);
+			DEFPROP_RO_R(public, VertexDeclaration, Declaration);
 		};
+		typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
 	}
 }
 
