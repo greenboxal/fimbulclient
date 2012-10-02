@@ -1074,10 +1074,8 @@ unsigned int
 			{
 				if (flags & SOIL_FLAG_FUCSIA_TRANSPARENCY)
 				{
-					unsigned int *color = (unsigned int *)&img[i];
-
-					if ((*color & 0xFFFFFF) == 0xFF00FF)
-						*color = 0x00FFFFFF;
+					if (img[i + 0] >= 253 && img[i + 1] == 0 && img[i + 2] >= 253)
+						img[i + 3] = 0x00;
 				}
 
 				if (flags & SOIL_FLAG_MULTIPLY_ALPHA)

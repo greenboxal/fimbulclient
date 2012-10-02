@@ -93,6 +93,9 @@ void WorldModel::Update(double elapsed)
 
 void WorldModel::Render(CommonShaderProgramPtr &shader, Camera &camera, double elapsed)
 {
-	shader->SetAlpha(_Model->Alpha / 255.f);
-	_Mesh->Render(shader, camera, _WorldMatrix, elapsed);
+	//if (camera.Frustum.IsBoxInside(_Model->BoundingBox, _WorldMatrix))
+	{
+		shader->SetAlpha(_Model->Alpha / 255.f);
+		_Mesh->Render(shader, camera, _WorldMatrix, elapsed);
+	}
 }
