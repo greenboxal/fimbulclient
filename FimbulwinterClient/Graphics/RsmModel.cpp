@@ -70,10 +70,7 @@ bool RsmMesh::Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream)
 	stream->Read(&transf[9], sizeof(float));
 	stream->Read(&transf[10], sizeof(float));
 	transf[11] = 0;
-	
-	//stream->Read(&transf[12], sizeof(float));
-	//stream->Read(&transf[13], sizeof(float));
-	//stream->Read(&transf[14], sizeof(float));
+
 	transf[12] = 0;
 	transf[13] = 0;
 	transf[14] = 0;
@@ -371,7 +368,7 @@ bool RsmModel::Load(YA3DE::FileSystem::FilePtr stream)
 		if (tex == NULL)
 			return false;
 
-		tex->SetMinMagFilter(GL_LINEAR, GL_LINEAR);
+		tex->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		tex->SetSTWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
 		_Textures[i] = tex;

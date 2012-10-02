@@ -1074,8 +1074,9 @@ unsigned int
 			{
 				if (flags & SOIL_FLAG_FUCSIA_TRANSPARENCY)
 				{
-					if (img[i + 0] >= 253 && img[i + 1] == 0 && img[i + 2] >= 253)
-						img[i + 3] = 0x00;
+					//if (img[i + 0] >= 253 && img[i + 1] == 0 && img[i + 2] >= 253)
+					if (((*(unsigned int *)&img[i]) & 0xFFFFFF) == 0xFF00FF)
+						*(unsigned int *)&img[i] = 0;
 				}
 
 				if (flags & SOIL_FLAG_MULTIPLY_ALPHA)

@@ -99,7 +99,7 @@ bool World::LoadGround(FilePtr stream)
 	{
 		stream->Read(name, header.TextureSize);
 		_GroundTextures[i] = cm->Load<Texture2D>(std::string("data/texture/") + name);
-		_GroundTextures[i]->SetMinMagFilter(GL_LINEAR, GL_LINEAR);
+		_GroundTextures[i]->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		_GroundTextures[i]->SetSTWrap(GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT);
 	}
 	delete[] name;
@@ -497,7 +497,7 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 			if (tex == NULL)
 				return false;
 
-			tex->SetMinMagFilter(GL_LINEAR, GL_LINEAR);
+			tex->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 			tex->SetSTWrap(GL_REPEAT, GL_REPEAT);
 
 			_WaterTextures.push_back(tex);

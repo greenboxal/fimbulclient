@@ -101,7 +101,7 @@ std::shared_ptr<Texture2D> ContentManager::LoadNew(const std::string &name)
 	fp->Read(data, size);
 	fp->Close();
 	
-	int texID = SOIL_load_OGL_texture_from_memory((const unsigned char *)data, size, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, /*SOIL_FLAG_MIPMAPS | */SOIL_FLAG_FUCSIA_TRANSPARENCY);
+	int texID = SOIL_load_OGL_texture_from_memory((const unsigned char *)data, size, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_FUCSIA_TRANSPARENCY);
 	
 	delete[] data;
 
