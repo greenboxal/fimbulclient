@@ -31,6 +31,13 @@ using namespace YA3DE::FileSystem;
 #define GAT_MAGIC "GRAT"
 #define RSW_MAGIC "GRSW"
 
+typedef struct SmoothNode 
+{
+    unsigned int Index;
+    bool Averaged;
+    struct SmoothNode *Next;
+} SmoothNode;
+
 bool World::_StaticInit = false;
 ShaderProgramPtr World::_GroundShader = NULL;
 CommonShaderProgramPtr World::_CommonShader = NULL;
@@ -123,8 +130,8 @@ bool World::LoadGround(FilePtr stream)
 	{
 		int w = (int)std::floor(std::sqrt((float)lmaps.size()));
         int h = (int)std::ceil((float)lmaps.size() / (float)w);
-		_Lightmap = std::make_shared<Texture2D>(w * 8, h * 8, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
-		unsigned char *lmapData = new unsigned char[w * h * 8 * 8 * 4];
+		_Lightmap = std::make_shared<Texture2D>(w * 8, h * 8, GL_RGBA, GL_RGBA, GL_FLOAT);
+		float *lmapData = new float[w * h * 8 * 8 * 4];
 
 		int x = 0, y = 0;
 		for (unsigned int i = 0; i < lmaps.size(); i++)
@@ -135,10 +142,12 @@ bool World::LoadGround(FilePtr stream)
 
 				for (int k = 0; k < 8; k++)
 				{
-					lmapData[offset + k * 4 + 0] = lmaps[i].Color[j * 8 + k].R;
-					lmapData[offset + k * 4 + 1] = lmaps[i].Color[j * 8 + k].G;
-					lmapData[offset + k * 4 + 2] = lmaps[i].Color[j * 8 + k].B;
-					lmapData[offset + k * 4 + 3] = lmaps[i].Brightness[j * 8 + k];
+#define POSTERIZE(color, levels) ((int)((float)(color) / levels) * levels)
+					lmapData[offset + k * 4 + 0] = POSTERIZE(lmaps[i].Color[j * 8 + k].R, 16.f) / 255.f;
+					lmapData[offset + k * 4 + 1] = POSTERIZE(lmaps[i].Color[j * 8 + k].G, 16.f) / 255.f;
+					lmapData[offset + k * 4 + 2] = POSTERIZE(lmaps[i].Color[j * 8 + k].B, 16.f) / 255.f;
+					lmapData[offset + k * 4 + 3] = lmaps[i].Brightness[j * 8 + k] / 255.f;
+#undef POSTERIZE
 				}
 			}
 
@@ -171,6 +180,7 @@ bool World::LoadGround(FilePtr stream)
 
 	{
 		int objectCount = 0;
+
 		for (int x = 0; x < header.Width; x++)
 		{
 			for (int y = 0; y < header.Height; y++)
@@ -188,7 +198,7 @@ bool World::LoadGround(FilePtr stream)
 			}
 		}
 
-		VertexPositionTextureNormalLightmap *vertices = new VertexPositionTextureNormalLightmap[objectCount * 4];
+		VertexPositionTextureColorNormalLightmap *vertices = new VertexPositionTextureColorNormalLightmap[objectCount * 4];
 		std::vector<int> *indices = new std::vector<int>[header.TextureCount];
 		int currentSurface = 0;
 
@@ -218,10 +228,15 @@ bool World::LoadGround(FilePtr stream)
 						position[2] = glm::vec3(x0, -cell.Height[2], z1);
 						position[3] = glm::vec3(x1, -cell.Height[3], z1);
 
-						//normal[0] = cell.Normal[1];
-						//normal[1] = cell.Normal[2];
-						//normal[2] = cell.Normal[3];
-						//normal[3] = cell.Normal[4];
+						glm::vec3 b1 = position[0] - position[3];
+						glm::vec3 b2 = position[1] - position[3];
+
+						glm::vec3 norm = glm::normalize(glm::cross(b1, b2));
+
+						normal[0] = norm;
+						normal[1] = norm;
+						normal[2] = norm;
+						normal[3] = norm;
 					}
 					break;
 				case 1:
@@ -279,10 +294,12 @@ bool World::LoadGround(FilePtr stream)
 			lightmapV[0] = (0.1f + lmY) / lmH;
 			lightmapV[1] = (0.9f + lmY) / lmH;
 
-			vertices[idx + 0] = VertexPositionTextureNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]));
-			vertices[idx + 1] = VertexPositionTextureNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]));
-			vertices[idx + 2] = VertexPositionTextureNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]));
-			vertices[idx + 3] = VertexPositionTextureNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]));
+			glm::vec4 color(surface.Color.R / 255.f, surface.Color.G / 255.f, surface.Color.B / 255.f, surface.Color.A / 255.f);
+
+			vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), color);
+			vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), color);
+			vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), color);
+			vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), color);
 
 			indices[surface.TextureID].push_back(idx + 0);
 			indices[surface.TextureID].push_back(idx + 1);
@@ -327,7 +344,80 @@ bool World::LoadGround(FilePtr stream)
 			}
 		}
 
-		_GroundVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureNormalLightmap::Declaration);
+		/*{
+			float cos_angle = std::cos(glm::radians(90));
+
+			int trianglecount = objectCount * 2;
+			int verticecount = objectCount * 4;
+
+			SmoothNode **members = new SmoothNode *[verticecount];
+			glm::vec3 *normals = new glm::vec3[verticecount];
+
+			memset(members, 0, sizeof(SmoothNode *) * verticecount);
+			for (int i = 0; i < verticecount; i++)
+			{
+				SmoothNode *node = new SmoothNode();
+				
+				node->Index = i;
+				node->Averaged = false;
+				node->Next = members[i];
+
+				members[i] = node;
+			}
+
+			int numnormals = 0;
+			for (int i = 0; i < verticecount; i++)
+			{
+				SmoothNode *node = &members[i];
+				glm::vec3 average;
+
+				bool avg = false;
+
+				while (node)
+				{
+					float dot = glm::dot(vertices[i].Normal, vertices[node->Index].Normal);
+
+					if (dot > cos_angle)
+					{
+						node->Averaged = true;
+						average += vertices[node->Index].Normal;
+						avg = true;
+					}
+					else
+					{
+						node->Averaged = false;
+					}
+
+					node = node->Next;
+				}
+
+				if (avg)
+				{
+					average = glm::normalize(average);
+					normals[i] = average;
+					numnormals++;
+				}
+
+				node = &members[i];
+				while (node)
+				{
+					if (node->Averaged)
+					{
+						if (
+					}
+
+					node = node->Next;
+				}
+			}
+
+			for (int i = 0; i < verticecount; i++)
+				vertices[i].Normal = normals[i];
+
+			delete[] members;
+			delete[] normals;
+		}*/
+
+		_GroundVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureColorNormalLightmap::Declaration);
 		_GroundVBuffer->SetData(vertices, objectCount * 4, GL_STATIC_DRAW);
 
 		_GroundIBuffers.resize(header.TextureCount);
@@ -524,13 +614,19 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 
 	if (IsCompatibleWith(1, 7))
 	{
-		stream->Seek(1, 4);
+		stream->Read(&Light.Intensity, sizeof(float));
+	}
+	else
+	{
+		Light.Intensity = 1.f;
 	}
 
 	{
 		float x = glm::cos(glm::radians((float)Light.Longitude + 90.f)) * glm::cos(glm::radians(90.f - (float)Light.Latitude));
 		float y = glm::sin(glm::radians((float)Light.Longitude + 90.f)) * glm::sin(glm::radians(90.f - (float)Light.Latitude));
 		float z = glm::cos(glm::radians(90.f - (float)Light.Latitude));
+
+		Light.Position = glm::vec3(x, y, z);
 	}
 
 	if (IsCompatibleWith(1, 6))
@@ -628,6 +724,9 @@ void World::Render(Camera &camera, double elapsed)
 		_GroundShader->SetUniform("InTexture", 0);
 		_GroundShader->SetUniform("InLightmap", 1);
 		_GroundShader->SetUniform("ViewProjection", camera.ViewProjection);
+		_GroundShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
+		_GroundShader->SetUniform("DiffuseColor", _Light.Diffuse);
+		_GroundShader->SetUniform("LightPosition", _Light.Position);
 		_Lightmap->Bind(1);
 		_GroundVBuffer->Bind();
 		for (unsigned int i = 0; i < _GroundTextures.size(); i++)
@@ -647,6 +746,9 @@ void World::Render(Camera &camera, double elapsed)
 		_CommonShader->SetTexture(0);
 		_CommonShader->SetAlpha(0.5f);
 		_CommonShader->SetMatrix(camera.ViewProjection);
+		_CommonShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
+		_CommonShader->SetUniform("DiffuseColor", _Light.Diffuse);
+		_CommonShader->SetUniform("LightPosition", _Light.Position);
 		_WaterTextures[_WaterTextureIndex]->Bind(0);
 		_WaterVBuffer->Bind();
 		_WaterVBuffer->Render(GL_TRIANGLE_STRIP, _WaterIBuffer, _WaterIBuffer->Count);
@@ -660,6 +762,9 @@ void World::Render(Camera &camera, double elapsed)
 		glEnable(GL_BLEND);
 		
 		_CommonShader->Begin();
+		_CommonShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
+		_CommonShader->SetUniform("DiffuseColor", _Light.Diffuse);
+		_CommonShader->SetUniform("LightPosition", _Light.Position);
 		std::list<WorldObjectPtr>::iterator it;
 		for (it = _Objects.begin(); it != _Objects.end(); it++)
 			(*it)->Render(_CommonShader, camera, elapsed);

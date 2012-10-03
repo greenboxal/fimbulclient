@@ -17,13 +17,15 @@
 
 using namespace YA3DE::Graphics;
 
-VertexElement VertexPositionTextureNormalLightmapDeclarationElements[] =
+VertexElement VertexPositionTextureColorNormalLightmapElements[] =
 {
 	VertexElement(VertexElementFormat::Vector3, VertexElementUsage::Position),
 	VertexElement(VertexElementFormat::Vector3, VertexElementUsage::Normal),
 	VertexElement(VertexElementFormat::Vector2, VertexElementUsage::TextureCoordinate, 0),
+	VertexElement(VertexElementFormat::Vector2, VertexElementUsage::TextureCoordinate, 1),
+	VertexElement(VertexElementFormat::Vector4, VertexElementUsage::Color),
 };
-VertexDeclaration VertexPositionTextureNormalLightmap::Declaration(VertexPositionTextureNormalLightmapDeclarationElements, 4);
+VertexDeclaration VertexPositionTextureColorNormalLightmap::Declaration(VertexPositionTextureColorNormalLightmapElements, 5);
 
 VertexElement VertexPositionTextureNormalDeclarationElements[] =
 {

@@ -24,7 +24,7 @@ using namespace ROGraphics;
 using namespace YA3DE::Content;
 
 TestMode::TestMode()
-	: _FPSCamera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -1), 1.f, 500000.f)
+	: _FPSCamera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -1), 1.f, 5000.f)
 {
 	prevRightButton = false;
 }
@@ -37,7 +37,7 @@ TestMode::~TestMode()
 WorldPtr world;
 void TestMode::OnLoad()
 {
-	world = ContentManager::Instance()->Load<World>("data/izlude.rsw");
+	world = ContentManager::Instance()->Load<World>("data/prt_in.rsw");
 }
 
 void TestMode::Update(double elapsed)

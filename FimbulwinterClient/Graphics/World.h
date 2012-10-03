@@ -149,6 +149,7 @@ namespace ROGraphics
 			glm::vec3 Diffuse;
 			glm::vec3 Ambient;
 			glm::vec3 Position;
+			float Intensity;
 		} STRUCT_PACKED;
 
 		struct GroundInfo
