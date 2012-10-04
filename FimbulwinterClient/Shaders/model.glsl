@@ -10,6 +10,7 @@
 
 // Control
 //#define DEBUG_NORMALS
+//#define ENABLE_LIGHTS
 
 // WorldViewProjection matrix 
 uniform mat4 WorldViewProjection;
@@ -41,11 +42,15 @@ void main()
 #else
 	TexCoord0 = VertexTexCoord;
 	
+#ifdef ENABLE_LIGHTS
 	vec3 normal = normalize(VertexNormal);
 	vec3 lightDir = normalize(LightPosition);
 	float NdotL = max(dot(normal, lightDir), 0.0);
 	
 	LightColorFactor = NdotL * DiffuseColor + AmbientColor;
+#else
+	LightColorFactor = vec3(1.0);
+#endif
 #endif
 	
 	gl_Position = WorldViewProjection * vec4(VertexPosition, 1);
