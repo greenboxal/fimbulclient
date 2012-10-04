@@ -37,7 +37,7 @@ TestMode::~TestMode()
 WorldPtr world;
 void TestMode::OnLoad()
 {
-	world = ContentManager::Instance()->Load<World>("data/prontera.rsw");
+	world = ContentManager::Instance()->Load<World>("data/prt_fild01.rsw");
 }
 
 void TestMode::Update(double elapsed)

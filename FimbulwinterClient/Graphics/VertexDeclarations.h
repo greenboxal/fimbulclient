@@ -48,7 +48,7 @@ struct VertexPositionTextureColorNormalLightmap
 	glm::vec3 Normal;
 	glm::vec2 TextureCoord;
 	glm::vec2 LightmapCoord;
-	glm::vec4 Color;
+	glm::vec3 Color;
 
 	VertexPositionTextureColorNormalLightmap()
 		: Position(0), Normal(0), TextureCoord(0), LightmapCoord(0)
@@ -56,7 +56,7 @@ struct VertexPositionTextureColorNormalLightmap
 
 	}
 
-	VertexPositionTextureColorNormalLightmap(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord, const glm::vec2 &lmapcoord, const glm::vec4 &color)
+	VertexPositionTextureColorNormalLightmap(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord, const glm::vec2 &lmapcoord, const glm::vec3 &color)
 		: Position(position), Normal(normal), TextureCoord(texcoord), LightmapCoord(lmapcoord), Color(color)
 	{
 

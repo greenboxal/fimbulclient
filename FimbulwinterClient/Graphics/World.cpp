@@ -300,12 +300,37 @@ void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Su
 		lightmapV[0] = (0.1f + lmY) / lmH;
 		lightmapV[1] = (0.9f + lmY) / lmH;
 
-		glm::vec4 color(surface.Color.R / 255.f, surface.Color.G / 255.f, surface.Color.B / 255.f, surface.Color.A / 255.f);
+		glm::vec3 colors[4];
 
-		vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), color);
-		vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), color);
-		vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), color);
-		vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), color);
+#define FIND_COLOR(stor, x1, y1) \
+		{ \
+			int xx = x1; \
+			int yy = y1; \
+			if (xx >= 0 && xx < _GroundWidth && yy >= 0 && yy < _GroundHeight) \
+			{ \
+				int idx = yy * _GroundWidth + xx; \
+				if (cells[idx].TopSurfaceID != -1) \
+				{ \
+					Surface &s = surfaces[cells[idx].TopSurfaceID]; \
+					colors[stor] = glm::vec3(s.Color.R / 255.f, s.Color.G / 255.f, s.Color.B / 255.f); \
+				} \
+			} \
+		}
+		
+		colors[3] = glm::vec3(1);
+		colors[2] = glm::vec3(1);
+		colors[1] = glm::vec3(1);
+		colors[0] = glm::vec3(1);
+
+		FIND_COLOR(2, x, y + 1);
+		FIND_COLOR(3, x + 1, y + 1);
+		FIND_COLOR(1, x + 1, y);
+		FIND_COLOR(0, x, y);
+
+		vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), colors[0]);
+		vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), colors[1]);
+		vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), colors[2]);
+		vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), colors[3]);
 
 		indices[surface.TextureID].push_back(idx + 0);
 		indices[surface.TextureID].push_back(idx + 1);

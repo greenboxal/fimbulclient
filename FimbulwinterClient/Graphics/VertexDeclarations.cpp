@@ -23,7 +23,7 @@ VertexElement VertexPositionTextureColorNormalLightmapElements[] =
 	VertexElement(VertexElementFormat::Vector3, VertexElementUsage::Normal),
 	VertexElement(VertexElementFormat::Vector2, VertexElementUsage::TextureCoordinate, 0),
 	VertexElement(VertexElementFormat::Vector2, VertexElementUsage::TextureCoordinate, 1),
-	VertexElement(VertexElementFormat::Vector4, VertexElementUsage::Color),
+	VertexElement(VertexElementFormat::Vector3, VertexElementUsage::Color),
 };
 VertexDeclaration VertexPositionTextureColorNormalLightmap::Declaration(VertexPositionTextureColorNormalLightmapElements, 5);
 

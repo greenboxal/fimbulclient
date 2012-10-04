@@ -10,7 +10,7 @@
 
 // Control
 //#define DEBUG_NORMALS
-//#define ENABLE_LIGHTS
+#define ENABLE_LIGHTS
 
 // ViewProjection matrix as we don't need a world matrix
 uniform mat4 ViewProjection;
@@ -47,11 +47,7 @@ void main()
 	TexCoord1 = VertexLightmap;
 	
 #ifdef ENABLE_LIGHTS
-	vec3 normal = normalize(VertexNormal);
-	vec3 lightDir = normalize(LightPosition);
-	float NdotL = max(dot(normal, lightDir), 0.0);
-	
-	LightColorFactor = NdotL * DiffuseColor + AmbientColor;
+	LightColorFactor = VertexColor.rgb;
 #else
 	LightColorFactor = vec3(1.0);
 #endif
