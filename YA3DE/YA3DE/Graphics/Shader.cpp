@@ -21,6 +21,7 @@ using namespace YA3DE::Graphics;
 
 Shader::Shader(int type)
 {
+	_Type = type;
 	_ID = glCreateShader(type);
 }
 
@@ -32,8 +33,20 @@ Shader::~Shader()
 bool Shader::Load(std::string source)
 {
 	const char *src = source.c_str();
+	const char *sources[2];
 
-	glShaderSource(_ID, 1, &src, NULL);
+	if (_Type == GL_VERTEX_SHADER)
+		sources[0] = "#define VERTEX_SHADER\n";
+	else if (_Type == GL_FRAGMENT_SHADER)
+		sources[0] = "#define FRAGMENT_SHADER\n";
+	else if (_Type == GL_GEOMETRY_SHADER)
+		sources[0] = "#define GEOMETRY_SHADER\n";
+	else
+		sources[0] = "";
+
+	sources[1] = src;
+
+	glShaderSource(_ID, 2, sources, NULL);
 	glCompileShader(_ID);
 
 	int compiled;

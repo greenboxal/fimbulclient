@@ -16,13 +16,15 @@
 #ifndef _SHADERPROGRAM_H_
 #define _SHADERPROGRAM_H_
 
+#include <assert.h>
+
+#include <string>
+#include <list>
+
 #include <YA3DE/Helpers.h>
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/Graphics/Shader.h>
 #include <YA3DE/Content/ContentManager.h>
-#include <assert.h>
-#include <string>
-#include <list>
 
 namespace YA3DE
 {

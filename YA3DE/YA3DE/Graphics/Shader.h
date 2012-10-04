@@ -17,23 +17,24 @@
 #define _SHADER_H_
 
 #include <string>
+#include <memory>
 
 #include <YA3DE/Helpers.h>
-#include <YA3DE/Content/ContentManager.h>
 
 namespace YA3DE
 {
 	namespace Graphics
 	{
-		class Shader : public YA3DE::Content::Resource
+		class Shader : public std::enable_shared_from_this<Shader>
 		{
 		public:
 			Shader(int type);
 			~Shader();
 
 			bool Load(std::string code);
-
+			
 			DEFPROP_RO(public, unsigned int, ID);
+			DEFPROP_RO(public, int, Type);
 			DEFPROP_RO_R(public, std::string, ErrorMessage);
 		private:
 		};

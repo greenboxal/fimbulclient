@@ -159,4 +159,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\ground.glsl" />
+    <None Include="Shaders\model.glsl" />
+  </ItemGroup>
 </Project>

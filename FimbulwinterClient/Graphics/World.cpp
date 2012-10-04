@@ -18,11 +18,13 @@
 */
 
 #include "World.h"
+#include "VertexDeclarations.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
+
 #include <YA3DE/Math.h>
 #include <YA3DE/Content/StringResource.h>
-#include "VertexDeclarations.h"
 
 using namespace ROGraphics;
 using namespace YA3DE::FileSystem;
@@ -51,21 +53,10 @@ bool World::LoadFromRsw(FilePtr rswFile)
 {
 	if (!_StaticInit)
 	{
-		_GroundShader = std::make_shared<ShaderProgram>();
-
-		ShaderPtr gndvs(new Shader(GL_VERTEX_SHADER));
-		if (!gndvs->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/rognd.vert")->GetData()))
+		_GroundShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/ground.glsl");
+		if (!_GroundShader)
 			return false;
-		_GroundShader->AddShader(gndvs);
-
-		ShaderPtr gndps(new Shader(GL_FRAGMENT_SHADER));
-		if (!gndps->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/rognd.frag")->GetData()))
-			return false;
-		_GroundShader->AddShader(gndps);
-
-		if (!_GroundShader->Link())
-			return false;
-
+		
 		_CommonShader = std::make_shared<CommonShaderProgram>();
 		
 		_StaticInit = true;
@@ -75,6 +66,302 @@ bool World::LoadFromRsw(FilePtr rswFile)
 		return false;
 
 	return true;
+}
+
+void World::SetupGroundLightmap(std::vector<LightmapCell> &lmaps)
+{
+	int w = (int)std::floor(std::sqrt((float)lmaps.size()));
+    int h = (int)std::ceil((float)lmaps.size() / (float)w);
+	float *lmapData = new float[w * h * 8 * 8 * 4];
+
+	int x = 0, y = 0;
+	for (unsigned int i = 0; i < lmaps.size(); i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			int offset = (y * w * 8 * 8 + j * w * 8 + x * 8) * 4;
+
+			for (int k = 0; k < 8; k++)
+			{
+#define POSTERIZE(color, levels) (((int)((float)(color) / levels)) * levels)
+				lmapData[offset + k * 4 + 0] = POSTERIZE(lmaps[i].Color[j * 8 + k].R, 16.f) / 255.f;
+				lmapData[offset + k * 4 + 1] = POSTERIZE(lmaps[i].Color[j * 8 + k].G, 16.f) / 255.f;
+				lmapData[offset + k * 4 + 2] = POSTERIZE(lmaps[i].Color[j * 8 + k].B, 16.f) / 255.f;
+				lmapData[offset + k * 4 + 3] = lmaps[i].Brightness[j * 8 + k] / 255.f;
+#undef POSTERIZE
+			}
+		}
+
+		if (++y >= h)
+		{
+			y = 0;
+			x++;
+		}
+	}
+	
+	_Lightmap = std::make_shared<Texture2D>(w * 8, h * 8, GL_RGBA, GL_RGBA, GL_FLOAT);
+	_Lightmap->SetData(lmapData);
+	_Lightmap->SetMinMagFilter(GL_LINEAR, GL_LINEAR);
+	_Lightmap->SetSTWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+
+	delete[] lmapData;
+}
+
+void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Surface> &surfaces, std::vector<GroundCell> &cells)
+{
+	int objectCount = 0;
+	struct NormalInfo
+	{
+		glm::vec3 Flat;
+		glm::vec3 Smoothed[4];
+	} *normals = new NormalInfo[surfaces.size()];
+
+	// Count object count & calculate normals
+	for (int x = 0; x < _GroundWidth; x++)
+	{
+		for (int y = 0; y < _GroundHeight; y++)
+		{
+			int index = y * _GroundWidth + x;
+			GroundCell &cell = cells[index];
+
+			if (cell.TopSurfaceID != -1)
+				objectCount++;
+
+			if (cell.FrontSurfaceID != -1)
+				objectCount++;
+
+			if (cell.RightSurfaceID != -1)
+				objectCount++;
+
+			glm::vec3 b1 = glm::vec3(_GroundZoom, -cell.Height[0], -_GroundZoom) - glm::vec3(0, -cell.Height[3], 0);
+			glm::vec3 b2 = glm::vec3(0, -cell.Height[2], -_GroundZoom) - glm::vec3(0, -cell.Height[3], 0);
+
+			normals[index].Flat = glm::normalize(glm::cross(b1, b2));
+		}
+	}
+
+	// Smooth normals
+	for (int x = 0; x < _GroundWidth; x++)
+	{
+		for (int y = 0; y < _GroundHeight; y++)
+		{
+#define CELLN(x, y) normals[(y) * _GroundWidth + (x)]
+#define SMOOTH(i, x, y) info.Smoothed[i] += CELLN(x, y).Flat; num++
+			NormalInfo &info = CELLN(x, y);
+			float num = 0;
+
+			info.Smoothed[0] = info.Flat;
+			info.Smoothed[1] = info.Flat;
+			info.Smoothed[2] = info.Flat;
+			info.Smoothed[3] = info.Flat;
+
+			if (x > 0)
+			{
+				SMOOTH(0, x - 1, y);
+				SMOOTH(1, x - 1, y);
+				
+				if (y > 0)
+					SMOOTH(0, x - 1, y - 1);
+
+				if (y < _GroundHeight - 1)
+					SMOOTH(1, x - 1, y + 1);
+			}
+
+			if (y > 0)
+			{
+				SMOOTH(0, x, y - 1);
+				SMOOTH(2, x, y - 1);
+
+				if (x > 0)
+					SMOOTH(0, x - 1, y - 1);
+				
+				if (x < _GroundWidth - 1)
+					SMOOTH(2, x + 1, y - 1);
+			}
+
+			if (x < _GroundWidth - 1)
+			{
+				SMOOTH(2, x + 1, y);
+				SMOOTH(3, x + 1, y);
+
+				if (y < _GroundHeight - 1)
+					SMOOTH(3, x + 1, y + 1);
+			}
+
+			if (y < _GroundHeight - 1)
+			{
+				SMOOTH(1, x, y + 1);
+				SMOOTH(3, x, y + 1);
+
+				if (x < _GroundWidth - 1)
+					SMOOTH(3, x + 1, y + 1);
+			}
+
+			if (num == 0)
+				num++;
+
+			info.Smoothed[0] = glm::normalize(info.Smoothed[0] / num);
+			info.Smoothed[1] = glm::normalize(info.Smoothed[1] / num);
+			info.Smoothed[2] = glm::normalize(info.Smoothed[2] / num);
+			info.Smoothed[3] = glm::normalize(info.Smoothed[3] / num);
+#undef SMOOTH
+#undef CELLN
+		}
+	}
+
+	VertexPositionTextureColorNormalLightmap *vertices = new VertexPositionTextureColorNormalLightmap[objectCount * 4];
+	std::vector<int> *indices = new std::vector<int>[_GroundTextures.size()];
+	int currentSurface = 0;
+
+	auto AddSurface = [&](int x, int y, int surfaceID, int type) 
+	{
+		int idx = currentSurface * 4;
+		int cellIdx = y * _GroundWidth + x;
+
+		GroundCell &cell = cells[cellIdx];
+		Surface &surface = surfaces[surfaceID];
+
+		glm::vec3 position[4];
+		glm::vec3 normal[4];
+
+		switch (type)
+		{
+			case 0:
+				{
+					float x0 = x * _GroundZoom;
+					float x1 = (x + 1) * _GroundZoom;
+
+					float z0 = (_GroundHeight - y) * _GroundZoom;
+					float z1 = (_GroundHeight - y - 1) * _GroundZoom;
+
+					position[0] = glm::vec3(x0, -cell.Height[0], z0);
+					position[1] = glm::vec3(x1, -cell.Height[1], z0);
+					position[2] = glm::vec3(x0, -cell.Height[2], z1);
+					position[3] = glm::vec3(x1, -cell.Height[3], z1);
+
+					normal[0] = normals[cellIdx].Smoothed[0];
+					normal[1] = normals[cellIdx].Smoothed[1];
+					normal[2] = normals[cellIdx].Smoothed[2];
+					normal[3] = normals[cellIdx].Smoothed[3];
+				}
+				break;
+			case 1:
+				{
+					GroundCell &cell2 = cells[(y + 1) * _GroundWidth + x];
+
+					float x0 = x * _GroundZoom;
+					float x1 = (x + 1) * _GroundZoom;
+
+					float z0 = (_GroundHeight - y - 1) * _GroundZoom;
+
+					position[0] = glm::vec3(x0, -cell.Height[2], z0);
+					position[1] = glm::vec3(x1, -cell.Height[3], z0);
+					position[2] = glm::vec3(x0, -cell2.Height[0], z0);
+					position[3] = glm::vec3(x1, -cell2.Height[1], z0);
+
+					normal[0] = glm::vec3(0, 0, cell2.Height[0] > cell.Height[3] ? -1 : 1);
+					normal[1] = normal[0];
+					normal[2] = normal[0];
+					normal[3] = normal[0];
+				}
+				break;
+			case 2:
+				{
+					GroundCell &cell2 = cells[y * _GroundWidth + x + 1];
+
+					float x0 = (x + 1) * _GroundZoom;
+						
+					float z0 = (_GroundHeight - y) * _GroundZoom;
+					float z1 = (_GroundHeight - y - 1) * _GroundZoom;
+
+					position[0] = glm::vec3(x0, -cell.Height[3], z1);
+					position[1] = glm::vec3(x0, -cell.Height[1], z0);
+					position[2] = glm::vec3(x0, -cell2.Height[2], z1);
+					position[3] = glm::vec3(x0, -cell2.Height[0], z0);
+
+					normal[0] = glm::vec3(cell.Height[3] > cell2.Height[2] ? -1 : 1, 0, 0);
+					normal[1] = normal[0];
+					normal[2] = normal[0];
+					normal[3] = normal[0];
+				}
+				break;
+		}
+
+		int lmW = (int)std::floor(std::sqrt((float)lmaps.size()));
+		int lmH = (int)std::ceil((float)lmaps.size() / (float)lmW);
+		int lmX = (int)std::floor((float)surface.LightmapID / (float)lmH);
+		int lmY = surface.LightmapID % lmH;
+
+		float lightmapU[2];
+		float lightmapV[2];
+
+		lightmapU[0] = (0.1f + lmX) / lmW;
+		lightmapU[1] = (0.9f + lmX) / lmW;
+		lightmapV[0] = (0.1f + lmY) / lmH;
+		lightmapV[1] = (0.9f + lmY) / lmH;
+
+		glm::vec4 color(surface.Color.R / 255.f, surface.Color.G / 255.f, surface.Color.B / 255.f, surface.Color.A / 255.f);
+
+		vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), color);
+		vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), color);
+		vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), color);
+		vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), color);
+
+		indices[surface.TextureID].push_back(idx + 0);
+		indices[surface.TextureID].push_back(idx + 1);
+		indices[surface.TextureID].push_back(idx + 2);
+		indices[surface.TextureID].push_back(idx + 2);
+		indices[surface.TextureID].push_back(idx + 1);
+		indices[surface.TextureID].push_back(idx + 3);
+	};
+
+	for (int x = 0; x < _GroundWidth; x++)
+	{
+		for (int y = 0; y < _GroundHeight; y++)
+		{
+			GroundCell &cell = cells[y * _GroundWidth + x];
+
+			if (cell.TopSurfaceID != -1)
+			{
+				int tid = surfaces[cell.TopSurfaceID].TextureID;
+
+				AddSurface(x, y, cell.TopSurfaceID, 0);
+
+				currentSurface++;
+			}
+
+			if (cell.FrontSurfaceID != -1)
+			{
+				int tid = surfaces[cell.FrontSurfaceID].TextureID;
+				
+				AddSurface(x, y, cell.FrontSurfaceID, 1);
+
+				currentSurface++;
+			}
+
+			if (cell.RightSurfaceID != -1)
+			{
+				int tid = surfaces[cell.RightSurfaceID].TextureID;
+				
+				AddSurface(x, y, cell.RightSurfaceID, 2);
+
+				currentSurface++;
+			}
+		}
+	}
+
+	_GroundVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureColorNormalLightmap::Declaration);
+	_GroundVBuffer->SetData(vertices, objectCount * 4, GL_STATIC_DRAW);
+
+	_GroundIBuffers.resize(_GroundTextures.size());
+	for (int i = 0; i < _GroundTextures.size(); i++)
+	{
+		_GroundIBuffers[i] = std::make_shared<IndexBuffer>(GL_UNSIGNED_INT);
+		_GroundIBuffers[i]->SetData(&indices[i][0], indices[i].size(), GL_STATIC_DRAW);
+	}
+
+	delete[] vertices;
+	delete[] indices;
 }
 
 bool World::LoadGround(FilePtr stream)
@@ -121,315 +408,25 @@ bool World::LoadGround(FilePtr stream)
 		return false;
 
 	std::vector<LightmapCell> lmaps;
-	if (lmapCount > 0)
-	{
-		lmaps.resize(lmapCount);
-		stream->Read(&lmaps[0], sizeof(LightmapCell) * lmapCount);
-	}
-
-	{
-		int w = (int)std::floor(std::sqrt((float)lmaps.size()));
-        int h = (int)std::ceil((float)lmaps.size() / (float)w);
-		_Lightmap = std::make_shared<Texture2D>(w * 8, h * 8, GL_RGBA, GL_RGBA, GL_FLOAT);
-		float *lmapData = new float[w * h * 8 * 8 * 4];
-
-		int x = 0, y = 0;
-		for (unsigned int i = 0; i < lmaps.size(); i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				int offset = (y * w * 8 * 8 + j * w * 8 + x * 8) * 4;
-
-				for (int k = 0; k < 8; k++)
-				{
-#define POSTERIZE(color, levels) ((int)((float)(color) / levels) * levels)
-					lmapData[offset + k * 4 + 0] = POSTERIZE(lmaps[i].Color[j * 8 + k].R, 16.f) / 255.f;
-					lmapData[offset + k * 4 + 1] = POSTERIZE(lmaps[i].Color[j * 8 + k].G, 16.f) / 255.f;
-					lmapData[offset + k * 4 + 2] = POSTERIZE(lmaps[i].Color[j * 8 + k].B, 16.f) / 255.f;
-					lmapData[offset + k * 4 + 3] = lmaps[i].Brightness[j * 8 + k] / 255.f;
-#undef POSTERIZE
-				}
-			}
-
-			if (++y >= h)
-			{
-				y = 0;
-				x++;
-			}
-		}
-
-		_Lightmap->SetData(lmapData);
-		_Lightmap->SetMinMagFilter(GL_LINEAR, GL_LINEAR);
-		_Lightmap->SetSTWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-		delete[] lmapData;
-	}
+	lmaps.resize(lmapCount);
+	stream->Read(&lmaps[0], sizeof(LightmapCell) * lmapCount);
 
 	int surfaceCount;
 	stream->Read(&surfaceCount, sizeof(int));
 
+	if (surfaceCount <= 0)
+		return false;
+
 	std::vector<Surface> surfaces;
-	if (surfaceCount > 0)
-	{
-		surfaces.resize(surfaceCount);
-		stream->Read(&surfaces[0], sizeof(Surface) * surfaceCount);
-	}
+	surfaces.resize(surfaceCount);
+	stream->Read(&surfaces[0], sizeof(Surface) * surfaceCount);
 	
 	std::vector<GroundCell> cells;
 	cells.resize(header.Width * header.Height);
 	stream->Read(&cells[0], sizeof(GroundCell) * cells.size());
-
-	{
-		int objectCount = 0;
-
-		for (int x = 0; x < header.Width; x++)
-		{
-			for (int y = 0; y < header.Height; y++)
-			{
-				GroundCell &cell = cells[y * header.Width + x];
-
-				if (cell.TopSurfaceID != -1)
-					objectCount++;
-
-				if (cell.FrontSurfaceID != -1)
-					objectCount++;
-
-				if (cell.RightSurfaceID != -1)
-					objectCount++;
-			}
-		}
-
-		VertexPositionTextureColorNormalLightmap *vertices = new VertexPositionTextureColorNormalLightmap[objectCount * 4];
-		std::vector<int> *indices = new std::vector<int>[header.TextureCount];
-		int currentSurface = 0;
-
-		auto AddSurface = [&](int x, int y, int surfaceID, int type) 
-		{
-			int idx = currentSurface * 4;
-			int cellIdx = y * header.Width + x;
-
-			GroundCell &cell = cells[cellIdx];
-			Surface &surface = surfaces[surfaceID];
-
-			glm::vec3 position[4];
-			glm::vec3 normal[4];
-
-			switch (type)
-			{
-				case 0:
-					{
-						float x0 = x * header.Zoom;
-						float x1 = (x + 1) * header.Zoom;
-
-						float z0 = (_GroundHeight - y) * header.Zoom;
-						float z1 = (_GroundHeight - y - 1) * header.Zoom;
-
-						position[0] = glm::vec3(x0, -cell.Height[0], z0);
-						position[1] = glm::vec3(x1, -cell.Height[1], z0);
-						position[2] = glm::vec3(x0, -cell.Height[2], z1);
-						position[3] = glm::vec3(x1, -cell.Height[3], z1);
-
-						glm::vec3 b1 = position[0] - position[3];
-						glm::vec3 b2 = position[1] - position[3];
-
-						glm::vec3 norm = glm::normalize(glm::cross(b1, b2));
-
-						normal[0] = norm;
-						normal[1] = norm;
-						normal[2] = norm;
-						normal[3] = norm;
-					}
-					break;
-				case 1:
-					{
-						GroundCell &cell2 = cells[(y + 1) * header.Width + x];
-
-						float x0 = x * header.Zoom;
-						float x1 = (x + 1) * header.Zoom;
-
-						float z0 = (header.Height - y - 1) * header.Zoom;
-
-						position[0] = glm::vec3(x0, -cell.Height[2], z0);
-						position[1] = glm::vec3(x1, -cell.Height[3], z0);
-						position[2] = glm::vec3(x0, -cell2.Height[0], z0);
-						position[3] = glm::vec3(x1, -cell2.Height[1], z0);
-
-						normal[0] = glm::vec3(0, 0, cell2.Height[0] > cell.Height[3] ? -1 : 1);
-						normal[1] = normal[0];
-						normal[2] = normal[0];
-						normal[3] = normal[0];
-					}
-					break;
-				case 2:
-					{
-						GroundCell &cell2 = cells[y * header.Width + x + 1];
-
-						float x0 = (x + 1) * header.Zoom;
-						
-						float z0 = (_GroundHeight - y) * header.Zoom;
-						float z1 = (_GroundHeight - y - 1) * header.Zoom;
-
-						position[0] = glm::vec3(x0, -cell.Height[3], z1);
-						position[1] = glm::vec3(x0, -cell.Height[1], z0);
-						position[2] = glm::vec3(x0, -cell2.Height[2], z1);
-						position[3] = glm::vec3(x0, -cell2.Height[0], z0);
-
-						normal[0] = glm::vec3(cell.Height[3] > cell2.Height[2] ? -1 : 1, 0, 0);
-						normal[1] = normal[0];
-						normal[2] = normal[0];
-						normal[3] = normal[0];
-					}
-					break;
-			}
-
-			int lmW = (int)std::floor(std::sqrt((float)lmaps.size()));
-			int lmH = (int)std::ceil((float)lmaps.size() / (float)lmW);
-			int lmX = (int)std::floor((float)surface.LightmapID / (float)lmH);
-			int lmY = surface.LightmapID % lmH;
-
-			float lightmapU[2];
-			float lightmapV[2];
-
-			lightmapU[0] = (0.1f + lmX) / lmW;
-			lightmapU[1] = (0.9f + lmX) / lmW;
-			lightmapV[0] = (0.1f + lmY) / lmH;
-			lightmapV[1] = (0.9f + lmY) / lmH;
-
-			glm::vec4 color(surface.Color.R / 255.f, surface.Color.G / 255.f, surface.Color.B / 255.f, surface.Color.A / 255.f);
-
-			vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), color);
-			vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), color);
-			vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), color);
-			vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), color);
-
-			indices[surface.TextureID].push_back(idx + 0);
-			indices[surface.TextureID].push_back(idx + 1);
-			indices[surface.TextureID].push_back(idx + 2);
-			indices[surface.TextureID].push_back(idx + 2);
-			indices[surface.TextureID].push_back(idx + 1);
-			indices[surface.TextureID].push_back(idx + 3);
-		};
-
-		for (int x = 0; x < header.Width; x++)
-		{
-			for (int y = 0; y < header.Height; y++)
-			{
-				GroundCell cell = cells[y * header.Width + x];
-
-				if (cell.TopSurfaceID != -1)
-				{
-					int tid = surfaces[cell.TopSurfaceID].TextureID;
-
-					AddSurface(x, y, cell.TopSurfaceID, 0);
-
-					currentSurface++;
-				}
-
-				if (cell.FrontSurfaceID != -1)
-				{
-					int tid = surfaces[cell.FrontSurfaceID].TextureID;
-				
-					AddSurface(x, y, cell.FrontSurfaceID, 1);
-
-					currentSurface++;
-				}
-
-				if (cell.RightSurfaceID != -1)
-				{
-					int tid = surfaces[cell.RightSurfaceID].TextureID;
-				
-					AddSurface(x, y, cell.RightSurfaceID, 2);
-
-					currentSurface++;
-				}
-			}
-		}
-
-		/*{
-			float cos_angle = std::cos(glm::radians(90));
-
-			int trianglecount = objectCount * 2;
-			int verticecount = objectCount * 4;
-
-			SmoothNode **members = new SmoothNode *[verticecount];
-			glm::vec3 *normals = new glm::vec3[verticecount];
-
-			memset(members, 0, sizeof(SmoothNode *) * verticecount);
-			for (int i = 0; i < verticecount; i++)
-			{
-				SmoothNode *node = new SmoothNode();
-				
-				node->Index = i;
-				node->Averaged = false;
-				node->Next = members[i];
-
-				members[i] = node;
-			}
-
-			int numnormals = 0;
-			for (int i = 0; i < verticecount; i++)
-			{
-				SmoothNode *node = &members[i];
-				glm::vec3 average;
-
-				bool avg = false;
-
-				while (node)
-				{
-					float dot = glm::dot(vertices[i].Normal, vertices[node->Index].Normal);
-
-					if (dot > cos_angle)
-					{
-						node->Averaged = true;
-						average += vertices[node->Index].Normal;
-						avg = true;
-					}
-					else
-					{
-						node->Averaged = false;
-					}
-
-					node = node->Next;
-				}
-
-				if (avg)
-				{
-					average = glm::normalize(average);
-					normals[i] = average;
-					numnormals++;
-				}
-
-				node = &members[i];
-				while (node)
-				{
-					if (node->Averaged)
-					{
-						if (
-					}
-
-					node = node->Next;
-				}
-			}
-
-			for (int i = 0; i < verticecount; i++)
-				vertices[i].Normal = normals[i];
-
-			delete[] members;
-			delete[] normals;
-		}*/
-
-		_GroundVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureColorNormalLightmap::Declaration);
-		_GroundVBuffer->SetData(vertices, objectCount * 4, GL_STATIC_DRAW);
-
-		_GroundIBuffers.resize(header.TextureCount);
-		for (int i = 0; i < header.TextureCount; i++)
-		{
-			_GroundIBuffers[i] = std::make_shared<IndexBuffer>(GL_UNSIGNED_INT);
-			_GroundIBuffers[i]->SetData(&indices[i][0], indices[i].size(), GL_STATIC_DRAW);
-		}
-
-		delete[] vertices;
-		delete[] indices;
-	}
+	
+	SetupGroundLightmap(lmaps);
+	SetupGroundVertices(lmaps, surfaces, cells);
 	
 	return true;
 }

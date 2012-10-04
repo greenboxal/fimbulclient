@@ -199,6 +199,9 @@ namespace ROGraphics
 		static bool _StaticInit;
 		static ShaderProgramPtr _GroundShader;
 		static CommonShaderProgramPtr _CommonShader;
+		
+		void SetupGroundLightmap(std::vector<LightmapCell> &lmaps);
+		void SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Surface> &surfaces, std::vector<GroundCell> &cells);
 
 		bool LoadGround(YA3DE::FileSystem::FilePtr stream);
 		bool LoadAltitude(YA3DE::FileSystem::FilePtr stream);

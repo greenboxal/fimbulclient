@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Config>
+	<Window Title="Ragnarok Online - Fimbulwinter Client" Width="1280" Height="720" BitsPerPixel="32" Fullscreen="False" />
+	<FileSystem>
+		<Sources>
+			<Source Path="." Type="Folder" />
+			<!--<Source Path="rdata.grf" Type="Grf" />-->
+			<Source Path="E:\Games\RO\bRO\data.grf" Type="Grf" />
+		</Sources>
+	</FileSystem>
+</Config>

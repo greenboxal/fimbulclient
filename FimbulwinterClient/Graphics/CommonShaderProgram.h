@@ -32,12 +32,12 @@ namespace ROGraphics
 		CommonShaderProgram()
 		{
 			ShaderPtr watervs(new Shader(GL_VERTEX_SHADER));
-			if (!watervs->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/common.vert")->GetData()))
+			if (!watervs->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/model.glsl")->GetData()))
 				return;
 			AddShader(watervs);
 
 			ShaderPtr waterps(new Shader(GL_FRAGMENT_SHADER));
-			if (!waterps->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/common.frag")->GetData()))
+			if (!waterps->Load((char *)ContentManager::Instance()->Load<StringResource>("data/shaders/model.glsl")->GetData()))
 				return;
 			AddShader(waterps);
 

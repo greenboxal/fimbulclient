@@ -43,6 +43,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Stage\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>Link</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -67,6 +68,25 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib\;$(SolutionDir)Lib\$(Configuration)\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-main.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;OpenGL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>mkdir $(SolutionDir)Build\$(Configuration)\data &gt; nul 2&gt;&amp;1
+mkdir $(SolutionDir)Build\$(Configuration)\data\shaders &gt; nul 2&gt;&amp;1
+copy $(ProjectDir)Shaders\*.glsl $(SolutionDir)Build\$(Configuration)\data\shaders &gt; nul 2&gt;&amp;1
+exit 0</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying shaders</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)Build\$(Configuration)\data\shaders\*.glsl</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,6 +109,12 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib\;$(SolutionDir)Lib\$(Configuration)\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-main.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;OpenGL32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>mkdir $(SolutionDir)Build\$(Configuration)\data &gt; nul 2&gt;&amp;1
+mkdir $(SolutionDir)Build\$(Configuration)\data\shaders &gt; nul 2&gt;&amp;1
+copy $(ProjectDir)Shaders\*.glsl $(SolutionDir)Build\$(Configuration)\data\shaders &gt; nul 2&gt;&amp;1
+exit 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileSystem\GrfFileSystem.cpp" />
@@ -145,6 +171,10 @@
     <ClInclude Include="LoginGameMode.h" />
     <ClInclude Include="WorldGameMode.h" />
     <ClInclude Include="WorldMode\TestMode.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\ground.glsl" />
+    <None Include="Shaders\model.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

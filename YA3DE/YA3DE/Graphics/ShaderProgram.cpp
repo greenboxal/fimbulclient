@@ -15,12 +15,15 @@
 
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/Math.h>
+#include <YA3DE/FileSystem/FileManager.h>
 #include <YA3DE/Graphics/ShaderProgram.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace YA3DE;
+using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;
+using namespace YA3DE::FileSystem;
 
 ShaderProgram::ShaderProgram()
 {
@@ -161,4 +164,39 @@ template<>
 void ShaderProgram::SetUniform(int id, const glm::uvec4 &value)
 {
 	glUniform4iv(id, 1, (GLint *)glm::value_ptr(value));
+}
+
+template<>
+std::shared_ptr<ShaderProgram> ContentManager::LoadNew(const std::string &name)
+{
+	FilePtr fp = FileManager::Instance()->OpenFile(name);
+
+	if (!fp)
+		return NULL;
+
+	int size = fp->GetSize();
+	char *data = new char[size + 1];
+	fp->Read(data, size);
+	fp->Close();
+
+	data[size] = 0;
+
+	ShaderProgramPtr program = std::make_shared<ShaderProgram>();
+
+	ShaderPtr vs = std::make_shared<Shader>(GL_VERTEX_SHADER);
+	if (!vs->Load(data))
+		return NULL;
+	program->AddShader(vs);
+	
+	ShaderPtr ps = std::make_shared<Shader>(GL_FRAGMENT_SHADER);
+	if (!ps->Load(data))
+		return NULL;
+	program->AddShader(ps);
+
+	if (!program->Link())
+		return NULL;
+
+	ContentManager::Instance()->CacheObject(name, program);
+
+	return program;
 }
