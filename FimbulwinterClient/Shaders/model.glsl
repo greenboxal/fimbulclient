@@ -9,7 +9,7 @@
 #endif
 
 // Control
-#define DEBUG_NORMALS
+//#define DEBUG_NORMALS
 
 // WorldViewProjection matrix 
 uniform mat4 WorldViewProjection;

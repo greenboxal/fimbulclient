@@ -114,7 +114,7 @@ void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Su
 	{
 		glm::vec3 Flat;
 		glm::vec3 Smoothed[4];
-	} *normals = new NormalInfo[surfaces.size()];
+	} *normals = new NormalInfo[_GroundWidth * _GroundHeight];
 
 	// Count object count & calculate normals
 	for (int x = 0; x < _GroundWidth; x++)

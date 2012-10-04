@@ -9,7 +9,7 @@
 #endif
 
 // Control
-#define DEBUG_NORMALS
+//#define DEBUG_NORMALS
 
 // ViewProjection matrix as we don't need a world matrix
 uniform mat4 ViewProjection;
@@ -49,7 +49,7 @@ void main()
 	vec3 lightDir = normalize(LightPosition);
 	float NdotL = max(dot(normal, lightDir), 0.0);
 	
-	LightColorFactor = NdotL * DiffuseColor + AmbientColor;
+	LightColorFactor = /*NdotL * */DiffuseColor + AmbientColor;
 #endif
 	
 	gl_Position = ViewProjection * vec4(VertexPosition, 1);
