@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -19,9 +19,11 @@
 #include <string>
 #include <list>
 #include <map>
+
+#include <YA3DE/Logger.h>
 #include <YA3DE/Helpers.h>
-#include <YA3DE/FileSystem/IFileSystem.h>
 #include <YA3DE/FileSystem/IFile.h>
+#include <YA3DE/FileSystem/IFileSystem.h>
 #include <YA3DE/FileSystem/FolderFileSystem.h>
 
 namespace YA3DE
@@ -36,6 +38,7 @@ namespace YA3DE
 				if (_instance != NULL)
 					throw std::exception("YA3DE::FileSystem::FileManager must have only one instance.");
 
+				LOG("Registering default FileSystem factories");
 				RegisterFileSystemFactory("Folder", FileSystemFactoryPtr(new FolderFileSystemFactory()));
 
 				_instance = this;
@@ -66,29 +69,30 @@ namespace YA3DE
 					throw std::exception("There are already a FileSystemFactory with this name.");
 
 				_fileSystemFactories[name] = factory;
+				LOG("FileSystem factory '%s' registered", name.c_str());
 			}
 
 			void LoadFileSystem(const std::string &name, const std::string &path)
 			{
-				std::map<std::string, FileSystemFactoryPtr>::iterator it;
-				for (it = _fileSystemFactories.begin(); it != _fileSystemFactories.end(); it++)
+				std::map<std::string, FileSystemFactoryPtr>::iterator it = _fileSystemFactories.find(name);
+
+				if (it == _fileSystemFactories.end())
 				{
-					if (it->first == name)
-					{
-						FileSystemPtr fs;
-
-						if ((fs = it->second->Create(path)) != NULL)
-							RegisterFileSystem(fs);
-
-						break;
-					}
+					LOG("Error loading filesystem: invalid '%s' fs type", name.c_str());
+					return;
 				}
+
+				FileSystemPtr fs;
+
+				LOG("Opening '%s' filesystem at '%s'", name.c_str(), path.c_str());
+				if ((fs = it->second->Create(path)) != NULL)
+					RegisterFileSystem(fs);
 			}
 
 			static FileManager *Instance()
 			{
 				if (_instance == NULL)
-					_instance = new FileManager();
+					new FileManager();
 
 				return _instance;
 			}

@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,10 +16,9 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include <YA3DE/Helpers.h>
-#include <YA3DE/OpenGL.h>
 #include <YA3DE/Config.h>
-#include <SFML/Graphics.hpp>
+#include <YA3DE/Helpers.h>
+#include <YA3DE/System/RenderWindow.h>
 
 #include <memory>
 
@@ -44,7 +43,7 @@ namespace YA3DE
 
 		DEFPROP_RW(public, bool, Running);
 		DEFPROP_RW_P(public, Config *, Configuration);
-		DEFPROP_RO(public, sf::RenderWindow *, Window);
+		DEFPROP_RO_R(public, YA3DE::System::RenderWindow, Window);
 		DEFPROP_RO(public, double, FrameRate);
 		DEFPROP_RO(public, bool, IsActive);
 
@@ -55,7 +54,7 @@ namespace YA3DE
 		virtual void OnRender(double elapsedTime) = 0;
 		virtual void OnUnload() = 0;
 
-		virtual void OnEvent(sf::Event &ev, double elapsedTime) { }
+		virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime) { }
 
 	private:
 		void ReadConfig();

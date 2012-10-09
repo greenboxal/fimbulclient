@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -17,10 +17,13 @@
 #define _TESTMODE_H_
 
 #include "../GameMode.h"
-#include "../Camera.h"
+
+#include <YA3DE/Scene/FpsCamera.h>
 
 namespace WorldMode
 {
+	using namespace YA3DE::Scene;
+
 	class TestMode : public SubGameMode
 	{
 	public:
@@ -33,9 +36,8 @@ namespace WorldMode
 		virtual void OnEvent(sf::Event &ev, double elapsedTime);
 		virtual void OnUnload();
 
-		DEFPROP_RO_R(public, Camera, FPSCamera);
-
 	private:
+		FpsCamera *_Camera;
 		sf::Vector2i tempMousePosition;
 		bool prevRightButton;
 	};

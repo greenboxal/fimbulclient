@@ -10,7 +10,6 @@
 
 // Control
 //#define DEBUG_NORMALS
-#define ENABLE_LIGHTS
 
 // ViewProjection matrix as we don't need a world matrix
 uniform mat4 ViewProjection;
@@ -27,7 +26,8 @@ uniform vec3 DiffuseColor;
 // Vertex -> Fragment parameters
 param vec2 TexCoord0;
 param vec2 TexCoord1;
-param vec3 LightColorFactor;
+param vec3 DiffuseVertexColor;
+param vec3 SurfaceVertexColor;
 
 #if defined(VERTEX_SHADER)
 
@@ -36,21 +36,20 @@ layout(location = 0) in vec3 VertexPosition;
 layout(location = 1) in vec3 VertexNormal;
 layout(location = 2) in vec2 VertexTexCoord;
 layout(location = 3) in vec2 VertexLightmap;
-layout(location = 4) in vec4 VertexColor;
+layout(location = 4) in vec3 VertexColor;
 
 void main()
 {
 #ifdef DEBUG_NORMALS
-	LightColorFactor = VertexNormal;
+	SurfaceVertexColor = VertexNormal;
 #else
 	TexCoord0 = VertexTexCoord;
 	TexCoord1 = VertexLightmap;
-	
-#ifdef ENABLE_LIGHTS
-	LightColorFactor = VertexColor.rgb;
-#else
-	LightColorFactor = vec3(1.0);
-#endif
+
+	vec3 diffuseReflection = DiffuseColor * max(0.0, dot(normalize(VertexNormal), normalize(LightPosition)));
+
+	DiffuseVertexColor = AmbientColor + diffuseReflection;
+	SurfaceVertexColor = VertexColor;
 #endif
 	
 	gl_Position = ViewProjection * vec4(VertexPosition, 1);
@@ -64,14 +63,15 @@ out vec4 OutFragColor;
 void main()
 {
 #ifdef DEBUG_NORMALS
-	OutFragColor = vec4(LightColorFactor, 1);
+	OutFragColor = vec4(SurfaceVertexColor, 1);
 #else
 	vec4 color = texture(InTexture, TexCoord0);
 	vec4 lmap = texture(InLightmap, TexCoord1);
-	
-	color.rgb *= LightColorFactor;
-	color.rgb *= lmap.a;
+
+	color.rgb *= SurfaceVertexColor;
+	color.rgb *= DiffuseVertexColor;
 	color.rgb += lmap.rgb;
+	color.rgb *= lmap.a;
 	
 	OutFragColor = color;
 #endif

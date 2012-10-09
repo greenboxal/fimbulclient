@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -17,6 +17,7 @@
 #define _IFILE_H_
 
 #include <memory>
+
 #include <YA3DE/Helpers.h>
 
 namespace YA3DE
@@ -30,7 +31,7 @@ namespace YA3DE
 
 			virtual bool Open() = 0;
 			virtual void Seek(int origin, int offset) = 0;
-			virtual void Read(void *data, int size) = 0;
+			virtual void Read(const void *data, int size) = 0;
 			virtual char ReadByte() = 0;
 			virtual size_t GetSize() = 0;
 			virtual void Close() = 0;

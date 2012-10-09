@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,76 +16,79 @@
 #ifndef _CONTENTMANAGER_H_
 #define _CONTENTMANAGER_H_
 
-#include <memory>
-#include <string>
-#include <list>
+#include <mutex>
 #include <unordered_map>
-#include <stdarg.h>
 
+#include <YA3DE/Content/Resource.h>
+#include <YA3DE/Content/Dispatcher.h>
 #include <YA3DE/Content/ContentName.h>
-#include <YA3DE/FileSystem/IFileSystem.h>
-#include <YA3DE/FileSystem/IFile.h>
-#include <YA3DE/FileSystem/FolderFileSystem.h>
 
 namespace YA3DE
 {
 	namespace Content
 	{
-		class Resource : std::enable_shared_from_this<Resource>
-		{
-		public:
-			virtual ~Resource() { }
-		};
-
 		class ContentManager
 		{
 		public:
 			ContentManager()
 			{
-				if (_instance != NULL)
-					throw std::exception("YA3DE::FileSystem::FileManager must have only one instance.");
+				if (_Instance != NULL)
+					throw std::exception("YA3DE::Content::ContentManager must have only one instance.");
 
-				_instance = this;
+				_Instance = this;
 			}
 
 			template<class T>
-			std::shared_ptr<T> Load(const std::string &name)
+			std::shared_ptr<T> Load(const std::string &name, bool async = false)
 			{
-				CacheMap::iterator it = _cache.find(name);
+				_Guard.lock();
+				CacheMap::iterator it = _Cache.find(name);
+				_Guard.unlock();
 
-				if (it != _cache.end())
+				if (it != _Cache.end())
 				{
 					if (!it->second.expired())
+					{
 						return std::static_pointer_cast<T, Resource>(it->second.lock());
+					}
 					else
-						_cache.erase(it);
+					{
+						_Guard.lock();
+						_Cache.erase(it);
+						_Guard.unlock();
+					}
 				}
 
-				return LoadNew<T>(name);
+				return LoadNew<T>(name, async);
 			}
 			
 			template<class T>
 			void CacheObject(const std::string &name, const std::shared_ptr<T> &ptr)
 			{
-				_cache[name] = std::weak_ptr<Resource>(ptr);
+				_Guard.lock();
+				_Cache[name] = std::weak_ptr<Resource>(ptr);
+				_Guard.unlock();
 			}
 
 			template<class T>
-			std::shared_ptr<T> LoadNew(const std::string &name);
+			std::shared_ptr<T> LoadNew(const std::string &name, bool async);
 
 			static ContentManager *Instance()
 			{
-				if (_instance == NULL)
-					_instance = new ContentManager();
+				if (_Instance == NULL)
+					new ContentManager();
 
-				return _instance;
+				return _Instance;
 			}
 
-		private:
-			typedef ContentNameTraits<std::weak_ptr<Resource> >::HashTable CacheMap;
+			DEFPROP_RO_R(public, FunctionDispatcher, Dispatcher);
 
-			CacheMap _cache;
-			static ContentManager *_instance;
+		private:
+			static ContentManager *_Instance;
+			typedef ContentHashTable<std::weak_ptr<Resource> > CacheMap;
+
+			CacheMap _Cache;
+			std::recursive_mutex _Guard;
 		};
 	}
 }

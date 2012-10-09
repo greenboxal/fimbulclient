@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -14,67 +14,99 @@
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <YA3DE/Logger.h>
+
 #include <exception>
 #include <iostream>
+
 #include <stdarg.h>
+#include <time.h>
 
 using namespace YA3DE;
 
-Logger *Logger::_instance = NULL;
+Logger *Logger::_Instance = NULL;
 
 Logger::Logger()
 {
-	if (_instance != NULL)
+	if (_Instance != NULL)
 		throw std::exception("YA3DE::Logger must have only one instance.");
 
-	_filename = "ya3de.log";
+	_Filename = "ya3de.log";
 	
 #ifdef _DEBUG
-	_useStdout = true;
+	_UseStdout = true;
 #else
-	_useStdout = false;
+	_UseStdout = false;
 #endif
 
-	_instance = this;
+	_Instance = this;
 }
 
 Logger::~Logger()
 {
-	if (_file.is_open())
-		_file.close();
+	if (_File.is_open())
+		_File.close();
 }
 
 void Logger::Open()
 {
-	_file.open(_filename, std::fstream::out | std::fstream::trunc);
+	_File.open(_Filename, std::fstream::out | std::fstream::trunc);
 }
 
 void Logger::Log(char *format, ...)
 {
-	static char buffer[2048];
+	static char buffer[50 * 1024];
 	va_list va;
 	int size;
+	
+	time_t rawtime;
+	struct tm *timeinfo;
+	char timestr[80];
 
-	if (!_file.is_open())
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	int timestrsize = strftime(timestr, sizeof(timestr), "%X: ", timeinfo);
+
+	if (!_File.is_open())
 		Open();
 
 	va_start(va, format);
-	size = vsprintf(buffer, format, va);
+	size = vsnprintf(buffer, sizeof(buffer), format, va);
 	va_end(va);
 
-	if (_useStdout)
-		printf("%s", buffer);
+	_Mutex.lock();
+	if (_UseStdout)
+	{
+		printf("%s", timestr);
+		printf("%s\n", buffer);
+	}
 
-	_file.write(buffer, size);
+	_File.write(timestr, timestrsize);
+	_File.write(buffer, strlen(buffer));
+	_File.write("\n", 1);
+	_Mutex.unlock();
 }
 
 void Logger::Log(std::string s)
 {
-	if (!_file.is_open())
+	time_t rawtime;
+	struct tm *timeinfo;
+	char timestr[80];
+
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	strftime(timestr, sizeof(timestr), "%X: ", timeinfo);
+
+	if (!_File.is_open())
 		Open();
-
-	if (_useStdout)
+	
+	_Mutex.lock();
+	if (_UseStdout)
 		std::cout << s;
-
-	_file << s;
+	
+	_File << timestr;
+	_File << s;
+	_File << "\n";
+	_Mutex.unlock();
 }

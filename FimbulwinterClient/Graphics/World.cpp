@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -18,12 +18,14 @@
 */
 
 #include "World.h"
+#include "WorldModel.h"
 #include "VertexDeclarations.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #include <YA3DE/Math.h>
+#include <YA3DE/Logger.h>
 #include <YA3DE/Content/StringResource.h>
 
 using namespace ROGraphics;
@@ -42,7 +44,7 @@ typedef struct SmoothNode
 
 bool World::_StaticInit = false;
 ShaderProgramPtr World::_GroundShader = NULL;
-CommonShaderProgramPtr World::_CommonShader = NULL;
+ShaderProgramPtr World::_CommonShader = NULL;
 
 World::World()
 {
@@ -57,11 +59,13 @@ bool World::LoadFromRsw(FilePtr rswFile)
 		if (!_GroundShader)
 			return false;
 		
-		_CommonShader = std::make_shared<CommonShaderProgram>();
+		_CommonShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/model.glsl");
+		if (!_CommonShader)
+			return false;
 		
 		_StaticInit = true;
 	}
-	
+
 	if (!LoadWorld(rswFile))
 		return false;
 
@@ -302,30 +306,36 @@ void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Su
 
 		glm::vec3 colors[4];
 
+		if (type == 0)
+		{
 #define FIND_COLOR(stor, x1, y1) \
-		{ \
-			int xx = x1; \
-			int yy = y1; \
-			if (xx >= 0 && xx < _GroundWidth && yy >= 0 && yy < _GroundHeight) \
 			{ \
-				int idx = yy * _GroundWidth + xx; \
-				if (cells[idx].TopSurfaceID != -1) \
+				int xx = x1; \
+				int yy = y1; \
+				if (xx >= 0 && xx < _GroundWidth && yy >= 0 && yy < _GroundHeight) \
 				{ \
-					Surface &s = surfaces[cells[idx].TopSurfaceID]; \
-					colors[stor] = glm::vec3(s.Color.R / 255.f, s.Color.G / 255.f, s.Color.B / 255.f); \
+					int idx = yy * _GroundWidth + xx; \
+					if (cells[idx].TopSurfaceID != -1) \
+					{ \
+						Surface &s = surfaces[cells[idx].TopSurfaceID]; \
+						colors[stor] = glm::vec3(s.Color.R / 255.f, s.Color.G / 255.f, s.Color.B / 255.f); \
+					} \
 				} \
-			} \
-		}
+			}
 		
-		colors[3] = glm::vec3(1);
-		colors[2] = glm::vec3(1);
-		colors[1] = glm::vec3(1);
-		colors[0] = glm::vec3(1);
-
-		FIND_COLOR(2, x, y + 1);
-		FIND_COLOR(3, x + 1, y + 1);
-		FIND_COLOR(1, x + 1, y);
-		FIND_COLOR(0, x, y);
+			FIND_COLOR(0, x, y);
+			FIND_COLOR(1, x + 1, y);
+			FIND_COLOR(2, x, y + 1);
+			FIND_COLOR(3, x + 1, y + 1);
+#undef FIND_COLOR
+		}
+		else
+		{
+			colors[0] = glm::vec3(1.f);
+			colors[1] = glm::vec3(1.f);
+			colors[2] = glm::vec3(1.f);
+			colors[3] = glm::vec3(1.f);
+		}
 
 		vertices[idx + 0] = VertexPositionTextureColorNormalLightmap(position[0], normal[0], glm::vec2(surface.U[0], surface.V[0]), glm::vec2(lightmapU[0], lightmapV[0]), colors[0]);
 		vertices[idx + 1] = VertexPositionTextureColorNormalLightmap(position[1], normal[1], glm::vec2(surface.U[1], surface.V[1]), glm::vec2(lightmapU[1], lightmapV[0]), colors[1]);
@@ -379,7 +389,7 @@ void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Su
 	_GroundVBuffer->SetData(vertices, objectCount * 4, GL_STATIC_DRAW);
 
 	_GroundIBuffers.resize(_GroundTextures.size());
-	for (int i = 0; i < _GroundTextures.size(); i++)
+	for (unsigned int i = 0; i < _GroundTextures.size(); i++)
 	{
 		_GroundIBuffers[i] = std::make_shared<IndexBuffer>(GL_UNSIGNED_INT);
 		_GroundIBuffers[i]->SetData(&indices[i][0], indices[i].size(), GL_STATIC_DRAW);
@@ -417,7 +427,7 @@ bool World::LoadGround(FilePtr stream)
 	for (int i = 0; i < header.TextureCount; i++)
 	{
 		stream->Read(name, header.TextureSize);
-		_GroundTextures[i] = cm->Load<Texture2D>(std::string("data/texture/") + name);
+		_GroundTextures[i] = cm->Load<Texture2D>(std::string("data/texture/") + name, true);
 		_GroundTextures[i]->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		_GroundTextures[i]->SetSTWrap(GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT);
 	}
@@ -477,6 +487,70 @@ bool World::LoadAltitude(YA3DE::FileSystem::FilePtr stream)
 
 	_AltitudeCells.resize(header.Width * header.Height);
 	stream->Read(&_AltitudeCells[0], sizeof(AltitudeCell) * _AltitudeCells.size());
+
+	return true;
+}
+
+bool World::SetupWaterVertices()
+{
+	ContentManager *cm = ContentManager::Instance();
+	VertexPositionTextureNormal vertexdata[4];
+    short indexdata[4];
+
+    glm::vec3 position[4];
+    glm::vec2 tex[4];
+
+    float x0 = 0;
+    float x1 = _GroundWidth * _GroundZoom;
+
+    float z0 = 0;
+    float z1 = _GroundHeight * _GroundZoom;
+            
+    position[0] = glm::vec3(x0, -_Water.Level, z0);
+    position[1] = glm::vec3(x1, -_Water.Level, z0);
+    position[2] = glm::vec3(x0, -_Water.Level, z1);
+    position[3] = glm::vec3(x1, -_Water.Level, z1);
+
+    tex[0] = glm::vec2(0, 0);
+    tex[1] = glm::vec2(_GroundWidth / 8, 0);
+    tex[2] = glm::vec2(0, _GroundHeight / 8);
+    tex[3] = glm::vec2(_GroundWidth / 8, _GroundHeight / 8);
+
+    vertexdata[0] = VertexPositionTextureNormal(position[0], glm::vec3(1.0F), tex[0]);
+    vertexdata[1] = VertexPositionTextureNormal(position[1], glm::vec3(1.0F), tex[1]);
+    vertexdata[2] = VertexPositionTextureNormal(position[2], glm::vec3(1.0F), tex[2]);
+    vertexdata[3] = VertexPositionTextureNormal(position[3], glm::vec3(1.0F), tex[3]);
+
+    indexdata[0] = 0;
+    indexdata[1] = 1;
+    indexdata[2] = 2;
+    indexdata[3] = 3;
+
+	_WaterVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureNormal::Declaration);
+	_WaterVBuffer->SetData(vertexdata, 4, GL_STATIC_DRAW);
+
+	_WaterIBuffer = std::make_shared<IndexBuffer>(GL_UNSIGNED_SHORT);
+	_WaterIBuffer->SetData(indexdata, 4, GL_STATIC_DRAW);
+
+	for (int i = 0; i < 32; i++)
+	{
+		char name[8];
+
+		sprintf(name, "%d%02d", _Water.Type, i);
+
+		Texture2DPtr tex = cm->Load<Texture2D>(std::string("data/texture/워터/water") + name + ".jpg", true);
+
+		if (tex == NULL)
+			return false;
+
+		tex->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		tex->SetSTWrap(GL_REPEAT, GL_REPEAT);
+
+		_WaterTextures.push_back(tex);
+	}
+
+	_WaterTextureIndex = 0;
+	_WaterElapsed = 0;
 
 	return true;
 }
@@ -558,66 +632,6 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 	{
 		_Water.AnimSpeed = 3;
 	}
-
-	{
-		VertexPositionTextureNormal vertexdata[4];
-        short indexdata[4];
-
-        glm::vec3 position[4];
-        glm::vec2 tex[4];
-
-        float x0 = 0;
-        float x1 = _GroundWidth * _GroundZoom;
-
-        float z0 = 0;
-        float z1 = _GroundHeight * _GroundZoom;
-            
-        position[0] = glm::vec3(x0, -_Water.Level, z0);
-        position[1] = glm::vec3(x1, -_Water.Level, z0);
-        position[2] = glm::vec3(x0, -_Water.Level, z1);
-        position[3] = glm::vec3(x1, -_Water.Level, z1);
-
-        tex[0] = glm::vec2(0, 0);
-        tex[1] = glm::vec2(_GroundWidth / 8, 0);
-        tex[2] = glm::vec2(0, _GroundHeight / 8);
-        tex[3] = glm::vec2(_GroundWidth / 8, _GroundHeight / 8);
-
-        vertexdata[0] = VertexPositionTextureNormal(position[0], glm::vec3(1.0F), tex[0]);
-        vertexdata[1] = VertexPositionTextureNormal(position[1], glm::vec3(1.0F), tex[1]);
-        vertexdata[2] = VertexPositionTextureNormal(position[2], glm::vec3(1.0F), tex[2]);
-        vertexdata[3] = VertexPositionTextureNormal(position[3], glm::vec3(1.0F), tex[3]);
-
-        indexdata[0] = 0;
-        indexdata[1] = 1;
-        indexdata[2] = 2;
-        indexdata[3] = 3;
-
-		_WaterVBuffer = std::make_shared<VertexBuffer>(VertexPositionTextureNormal::Declaration);
-		_WaterVBuffer->SetData(vertexdata, 4, GL_STATIC_DRAW);
-
-		_WaterIBuffer = std::make_shared<IndexBuffer>(GL_UNSIGNED_SHORT);
-		_WaterIBuffer->SetData(indexdata, 4, GL_STATIC_DRAW);
-
-		for (int i = 0; i < 32; i++)
-		{
-			char name[8];
-
-			sprintf(name, "%d%02d", _Water.Type, i);
-
-			Texture2DPtr tex = cm->Load<Texture2D>(std::string("data/texture/워터/water") + name + ".jpg");
-
-			if (tex == NULL)
-				return false;
-
-			tex->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-			tex->SetSTWrap(GL_REPEAT, GL_REPEAT);
-
-			_WaterTextures.push_back(tex);
-		}
-
-		_WaterTextureIndex = 0;
-		_WaterElapsed = 0;
-	}
 	
 	if (IsCompatibleWith(1, 5))
 	{
@@ -643,13 +657,11 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 		Light.Intensity = 1.f;
 	}
 
-	{
-		float x = glm::cos(glm::radians((float)Light.Longitude + 90.f)) * glm::cos(glm::radians(90.f - (float)Light.Latitude));
-		float y = glm::sin(glm::radians((float)Light.Longitude + 90.f)) * glm::sin(glm::radians(90.f - (float)Light.Latitude));
-		float z = glm::cos(glm::radians(90.f - (float)Light.Latitude));
+	float x = std::cos(glm::radians((float)Light.Longitude)) * std::cos(glm::radians((float)Light.Latitude));
+	float y = std::cos(glm::radians((float)Light.Longitude)) * std::sin(glm::radians((float)Light.Latitude));
+	float z = std::sin(glm::radians((float)Light.Latitude));
 
-		Light.Position = glm::vec3(x, y, z);
-	}
+	Light.Position = glm::vec3(-x, y, z);
 
 	if (IsCompatibleWith(1, 6))
 	{
@@ -665,7 +677,6 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 
 	int objectCount;
 	stream->Read(&objectCount, sizeof(int));
-
 	for (int i = 0; i < objectCount; i++)
 	{
 		int type, skip = 0;
@@ -677,11 +688,6 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 
 			if (!model->Load(stream, header.Version.Major, header.Version.Minor))
 				return false;
-
-			model->Position.x = (model->Position.x / 5) + _GroundWidth;
-			model->Position.z = (model->Position.z / 5) + _GroundHeight;
-
-			_Objects.push_back(WorldObjectPtr(model));
 		}
 		else if (type == 2)
 		{
@@ -707,12 +713,10 @@ bool World::LoadWorld(YA3DE::FileSystem::FilePtr stream)
 			stream->Seek(1, skip);
 	}
 
-	std::list<WorldObjectPtr>::iterator it;
-	for (it = _Objects.begin(); it != _Objects.end(); it++)
-	{
-		if (!(*it)->DoPostLoad())
-			return false;
-	}
+	LOG("Loaded %d objects", SceneRoot->Children.size());
+	
+	if (!SetupWaterVertices())
+		return false;
 
 	return true;
 #undef IsCompatibleWith
@@ -731,12 +735,10 @@ void World::Update(double elapsed)
         _WaterElapsed -= _Water.AnimSpeed * 10;
     }
 
-	std::list<WorldObjectPtr>::iterator it;
-	for (it = _Objects.begin(); it != _Objects.end(); it++)
-		(*it)->Update(elapsed);
+	SceneManager::Update(elapsed);
 }
 
-void World::Render(Camera &camera, double elapsed)
+void World::RenderStaticGeometry(double elapsed)
 {
 	glEnable(GL_DEPTH_TEST);
 
@@ -745,7 +747,7 @@ void World::Render(Camera &camera, double elapsed)
 		_GroundShader->Begin();
 		_GroundShader->SetUniform("InTexture", 0);
 		_GroundShader->SetUniform("InLightmap", 1);
-		_GroundShader->SetUniform("ViewProjection", camera.ViewProjection);
+		_GroundShader->SetUniform("ViewProjection", SceneCamera->GetProjection() * SceneCamera->GetView());
 		_GroundShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
 		_GroundShader->SetUniform("DiffuseColor", _Light.Diffuse);
 		_GroundShader->SetUniform("LightPosition", _Light.Position);
@@ -765,9 +767,9 @@ void World::Render(Camera &camera, double elapsed)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		_CommonShader->Begin();
-		_CommonShader->SetTexture(0);
-		_CommonShader->SetAlpha(0.5f);
-		_CommonShader->SetMatrix(camera.ViewProjection);
+		_CommonShader->SetUniform("InTexture", 0);
+		_CommonShader->SetUniform("Alpha", 0.5f);
+		_CommonShader->SetUniform("WorldViewProjection", SceneCamera->GetProjection() * SceneCamera->GetView());
 		_CommonShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
 		_CommonShader->SetUniform("DiffuseColor", _Light.Diffuse);
 		_CommonShader->SetUniform("LightPosition", _Light.Position);
@@ -779,37 +781,29 @@ void World::Render(Camera &camera, double elapsed)
 		glDisable(GL_BLEND);
 	}
 
-	/* Objects */
-	{
-		glEnable(GL_BLEND);
-		
-		_CommonShader->Begin();
-		_CommonShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
-		_CommonShader->SetUniform("DiffuseColor", _Light.Diffuse);
-		_CommonShader->SetUniform("LightPosition", _Light.Position);
-		std::list<WorldObjectPtr>::iterator it;
-		for (it = _Objects.begin(); it != _Objects.end(); it++)
-			(*it)->Render(_CommonShader, camera, elapsed);
-		_CommonShader->End();
-
-		glDisable(GL_BLEND);
-	}
-
 	glDisable(GL_DEPTH_TEST);
 }
 
 template<>
-std::shared_ptr<World> ContentManager::LoadNew(const std::string &name)
+std::shared_ptr<World> ContentManager::LoadNew(const std::string &name, bool async)
 {
 	FilePtr rswFile = FileManager::Instance()->OpenFile(name);
-
+	
 	if (!rswFile)
+	{
+		LOG("Failed loading '%s': file not found", name.c_str());
 		return NULL;
+	}
 
 	WorldPtr ptr = std::make_shared<World>();
 
 	if (!ptr->LoadFromRsw(rswFile))
+	{
+		LOG("Error loading '%s'", name.c_str());
 		return NULL;
+	}
+
+	LOG("Loaded '%s'", name.c_str());
 
 	return ptr;
 }

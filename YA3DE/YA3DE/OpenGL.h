@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,21 +16,22 @@
 #ifndef _OPENGL_H_
 #define _OPENGL_H_
 
-#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN	
-#include <Windows.h>
-
-#ifdef max
-#undef max
-#endif
-
-#ifdef min
-#undef min
-#endif
-#endif
+#define GLEW_MX
+#define glewGetContext() (&YA3DE_CurrentGlew)
+#define wglewGetContext() (&YA3DE_CurrentWGlew)
 
 #include <GL/glew.h>
+#ifdef _WIN32
+#include <GL/wglew.h>
+#endif
+
 #include <GL/GL.h>
 #include <GL/GLU.h>
+
+extern __declspec(thread) GLEWContext YA3DE_CurrentGlew;
+
+#ifdef _WIN32
+extern __declspec(thread) WGLEWContext YA3DE_CurrentWGlew;
+#endif
 
 #endif

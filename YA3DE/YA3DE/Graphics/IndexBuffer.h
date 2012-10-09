@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,14 +16,16 @@
 #ifndef _INDEXBUFFER_H_
 #define _INDEXBUFFER_H_
 
-#include <YA3DE/Helpers.h>
 #include <memory>
+
+#include <YA3DE/OpenGL.h>
+#include <YA3DE/Helpers.h>
 
 namespace YA3DE
 {
 	namespace Graphics
 	{
-		class IndexBuffer : public std::enable_shared_from_this<IndexBuffer>
+		class IndexBuffer
 		{
 		public:
 			IndexBuffer(int type)

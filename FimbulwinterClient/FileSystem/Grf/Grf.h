@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -13,9 +13,9 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <unordered_map>
+#include <mutex>
 #include <fstream>
-#include <SFML/System.hpp>
+
 #include <YA3DE/Helpers.h>
 #include <YA3DE/Content/ContentName.h>
 
@@ -46,7 +46,7 @@ namespace ROFileSystem
 		class Grf
 		{
 		public:
-			typedef YA3DE::Content::ContentNameTraits<GrfFile>::HashTable GrfFileMap;
+			typedef YA3DE::Content::ContentHashTable<GrfFile> GrfFileMap;
 
 			bool Open(const std::string &filename);
 			GrfFile *FindFile(const std::string &filename);
@@ -56,8 +56,8 @@ namespace ROFileSystem
 			DEFPROP_RO_R(public, GrfFileMap, Files);
 
 		private:
-			sf::Mutex _mutex;
-			std::ifstream _stream;
+			std::recursive_mutex _Guard;
+			std::ifstream _Stream;
 		};
 	}
 }

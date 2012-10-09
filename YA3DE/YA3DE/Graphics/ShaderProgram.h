@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -22,9 +22,8 @@
 #include <list>
 
 #include <YA3DE/Helpers.h>
-#include <YA3DE/OpenGL.h>
 #include <YA3DE/Graphics/Shader.h>
-#include <YA3DE/Content/ContentManager.h>
+#include <YA3DE/Content/Resource.h>
 
 namespace YA3DE
 {

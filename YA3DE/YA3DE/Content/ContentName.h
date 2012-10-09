@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -18,6 +18,7 @@
 
 #include <string>
 #include <unordered_map>
+
 #include <YA3DE/Helpers.h>
 
 namespace YA3DE
@@ -39,38 +40,16 @@ namespace YA3DE
 				_Hash = MakeHash(name);
 			}
 
-			const std::string &GetName() const
-			{
-				return _Name;
-			}
-
 			bool operator==(const ContentName &other) const
 			{
 				return other._Hash == _Hash;
 			}
 			
 			DEFPROP_RO(public, unsigned int, Hash);
-			DEFPROP_I_RO(public, const std::string &, Name, GetName);
+			DEFPROP_RO_R(public, std::string, Name);
 
 		private:
-			static unsigned int MakeHash(const std::string &s)
-			{
-				unsigned int hash = 0x1505;
-
-				for (int i = s.size() - 1; i > 0; i--)
-				{
-					char c = (char)tolower((int)s[i]);
-
-					if (c == '/')
-						c = '\\';
-
-					hash = hash * 0x21 + c;
-				}
-
-				return hash;
-			}
-
-			std::string _Name;
+			static unsigned int MakeHash(const std::string &s);
 		};
 
 		struct ContenNameHasher
@@ -83,9 +62,9 @@ namespace YA3DE
 		};
 
 		template<typename _Ty>
-		struct ContentNameTraits
+		class ContentHashTable : public std::unordered_map<ContentName, _Ty, ContenNameHasher>
 		{
-			typedef std::unordered_map<ContentName, _Ty, ContenNameHasher> HashTable;
+
 		};
 	}
 }

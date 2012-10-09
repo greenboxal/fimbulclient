@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -39,51 +39,51 @@ bool Grf::Open(const std::string &filename)
 {
 	GrfHeader header;
 
-	if (_stream.is_open())
+	if (_Stream.is_open())
 		return false;
 
-	_stream.open(filename, std::fstream::in | std::fstream::binary);
+	_Stream.open(filename, std::fstream::in | std::fstream::binary);
 
-	if (_stream.fail())
+	if (_Stream.fail())
 		return false;
 
-	_stream.read((char *)&header, sizeof(GrfHeader));
+	_Stream.read((char *)&header, sizeof(GrfHeader));
 
-	if (_stream.fail())
+	if (_Stream.fail())
 	{
-		_stream.close();
+		_Stream.close();
 		return false;
 	}
 
 	if (memcmp(header.Magic, GRF_MAGIC, sizeof(header.Magic)) != 0)
 	{
-		_stream.close();
+		_Stream.close();
 		return false;
 	}
 
-	_stream.seekg(header.FileTableOffset, std::fstream::cur);
+	_Stream.seekg(header.FileTableOffset, std::fstream::cur);
 
 	if (header.Version >= 0x200)
 	{
 		unsigned int fileTableLen = 0, fileTableULen = 0;
 
-		_stream.read((char *)&fileTableLen, sizeof(unsigned int));
-		_stream.read((char *)&fileTableULen, sizeof(unsigned int));
+		_Stream.read((char *)&fileTableLen, sizeof(unsigned int));
+		_Stream.read((char *)&fileTableULen, sizeof(unsigned int));
 
-		if (_stream.fail())
+		if (_Stream.fail())
 		{
-			_stream.close();
+			_Stream.close();
 			return false;
 		}
 
 		char *compressed = new char[fileTableLen];
 		char *uncompressed = new char[fileTableULen];
 
-		_stream.read(compressed, fileTableLen);
+		_Stream.read(compressed, fileTableLen);
 
-		if (_stream.fail())
+		if (_Stream.fail())
 		{
-			_stream.close();
+			_Stream.close();
 			delete[] compressed;
 			delete[] uncompressed;
 			return false;
@@ -91,7 +91,7 @@ bool Grf::Open(const std::string &filename)
 
 		if (uncompress((Bytef *)uncompressed, (uLongf *)&fileTableULen, (Bytef *)compressed, fileTableLen) != Z_OK)
 		{
-			_stream.close();
+			_Stream.close();
 			delete[] compressed;
 			delete[] uncompressed;
 			return false;
@@ -149,25 +149,25 @@ void *Grf::GetFileData(GrfFile *file, size_t &size)
 {
 	char *compressed = new char[file->CompressedLengthAligned];
 
-	_mutex.lock();
+	_Guard.lock();
 	{
-		_stream.seekg(sizeof(GrfHeader) + file->Offset, std::fstream::beg);
+		_Stream.seekg(sizeof(GrfHeader) + file->Offset, std::fstream::beg);
 
-		if (_stream.fail())
+		if (_Stream.fail())
 		{
 			delete[] compressed;
 			return NULL;
 		}
 
-		_stream.read(compressed, file->CompressedLengthAligned);
+		_Stream.read(compressed, file->CompressedLengthAligned);
 		
-		if (_stream.fail())
+		if (_Stream.fail())
 		{
 			delete[] compressed;
 			return NULL;
 		}
 	}
-	_mutex.unlock();
+	_Guard.unlock();
 
 	GRF_Decode((unsigned char *)compressed, file->CompressedLengthAligned, file->Flags, file->CompressedLength);
 
@@ -188,6 +188,6 @@ void *Grf::GetFileData(GrfFile *file, size_t &size)
 
 void Grf::Close()
 {
-	if (_stream.is_open())
-		_stream.close();
+	if (_Stream.is_open())
+		_Stream.close();
 }

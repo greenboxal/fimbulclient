@@ -55,7 +55,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)YA3DE\;$(SolutionDir)FimbulwinterClient\CEGUI;</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -95,7 +95,7 @@ exit 0</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)YA3DE\;$(SolutionDir)FimbulwinterClient\CEGUI;</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -135,7 +135,7 @@ exit 0</Command>
     <ClCompile Include="Graphics\RsmModel.cpp" />
     <ClCompile Include="Graphics\VertexDeclarations.cpp" />
     <ClCompile Include="Graphics\World.cpp" />
-    <ClCompile Include="Graphics\WorldObjects.cpp" />
+    <ClCompile Include="Graphics\WorldModel.cpp" />
     <ClCompile Include="WorldGameMode.cpp" />
     <ClCompile Include="WorldMode\TestMode.cpp" />
   </ItemGroup>
@@ -145,7 +145,6 @@ exit 0</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="FileSystem\GrfFileSystem.h" />
     <ClInclude Include="FileSystem\Grf\Grf.h" />
     <ClInclude Include="FileSystem\Grf\zlib\crc32.h" />
@@ -161,11 +160,10 @@ exit 0</Command>
     <ClInclude Include="FileSystem\Grf\zlib\zutil.h" />
     <ClInclude Include="FimbulwinterClient.h" />
     <ClInclude Include="GameMode.h" />
-    <ClInclude Include="Graphics\CommonShaderProgram.h" />
     <ClInclude Include="Graphics\RsmModel.h" />
     <ClInclude Include="Graphics\VertexDeclarations.h" />
     <ClInclude Include="Graphics\World.h" />
-    <ClInclude Include="Graphics\WorldObjects.h" />
+    <ClInclude Include="Graphics\WorldModel.h" />
     <ClInclude Include="GUI\Renderers\ControlRenderer.h" />
     <ClInclude Include="GUI\Renderers\LabelRenderer.h" />
     <ClInclude Include="LoginGameMode.h" />

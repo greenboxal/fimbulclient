@@ -122,7 +122,7 @@ namespace rapidxml
 }
 
 template<>
-std::shared_ptr<rapidxml::xml_document<>> YA3DE::Content::ContentManager::LoadNew(const std::string &filename)
+std::shared_ptr<rapidxml::xml_document<>> YA3DE::Content::ContentManager::LoadNew(const std::string &filename, bool async)
 {
 	YA3DE::FileSystem::FilePtr file = YA3DE::FileSystem::FileManager::Instance()->OpenFile(filename);
 	if (file == NULL)

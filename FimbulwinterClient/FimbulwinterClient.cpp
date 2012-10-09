@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,11 +16,12 @@
 #include "FimbulwinterClient.h"
 #include "FileSystem/GrfFileSystem.h"
 
+#include <YA3DE/OpenGL.h>
+#include <YA3DE/GUI/GUIManager.h>
 #include <YA3DE/Graphics/Font.h>
 #include <YA3DE/Graphics/Graphics2D.h>
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
-#include <YA3DE/GUI/GUIManager.h>
 
 #include "GUI/Renderers/ControlRenderer.h"
 #include "GUI/Renderers/LabelRenderer.h"
@@ -45,6 +46,7 @@ void ClientGame::OnInitialize()
 
 void ClientGame::OnLoad()
 {
+	Window.SetMouseCursor(true);
 	ChangeGameMode(new WorldGameMode());
 }
 
@@ -81,9 +83,7 @@ void ClientGame::OnEvent(sf::Event &ev, double elapsedTime)
 
 int main(int argc, char **argv)
 {
-	std::shared_ptr<ClientGame> game(new ClientGame());
-
-	game->Run();
+	std::make_shared<ClientGame>()->Run();
 	
 	return 0;
 }

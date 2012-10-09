@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,16 +16,18 @@
 #ifndef _VERTEXBUFFER_H_
 #define _VERTEXBUFFER_H_
 
+#include <memory>
+
+#include <YA3DE/OpenGL.h>
 #include <YA3DE/Helpers.h>
 #include <YA3DE/Graphics/IndexBuffer.h>
 #include <YA3DE/Graphics/VertexDeclaration.h>
-#include <memory>
 
 namespace YA3DE
 {
 	namespace Graphics
 	{
-		class VertexBuffer : public std::enable_shared_from_this<VertexBuffer>
+		class VertexBuffer
 		{
 		public:
 			VertexBuffer(VertexDeclaration &declaration)

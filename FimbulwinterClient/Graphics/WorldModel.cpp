@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -13,13 +13,14 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "WorldObjects.h"
-#include "World.h"
+#include "WorldModel.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace ROGraphics;
 
 WorldModel::WorldModel(World *owner)
-	: _Owner(owner)
+	: SceneNode(owner->SceneRoot), _Owner(owner)
 {
 
 }
@@ -55,25 +56,16 @@ bool WorldModel::Load(YA3DE::FileSystem::FilePtr stream, int majorVersion, int m
 
 	_ModelName = modelName;
 	_MeshName = meshName;
-
-	return true;
-#undef IsCompatibleWith
-}
-
-bool WorldModel::DoPostLoad()
-{
-	_Model = ContentManager::Instance()->Load<RsmModel>(std::string("data/model/" + _ModelName));
+	
+	_Shader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/model.glsl");
+	_Model = ContentManager::Instance()->Load<RsmModel>(std::string("data/model/" + _ModelName), true);
 	
 	if (_Model == NULL)
 		return false;
-	
-	RsmModel::MeshList::iterator it = _Model->Meshes.find(_MeshName);
 
-	if (it == _Model->Meshes.end())
-		_Mesh = _Model->MainMesh;
-	else
-		_Mesh = it->second;
-	
+	_Position.x = (_Position.x / 5) + _Owner->GroundWidth;
+	_Position.z = (_Position.z / 5) + _Owner->GroundHeight;
+
 	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(0, 0, _Owner->GroundHeight * _Owner->GroundZoom));
 	_WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(1, 1, -1));
 	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(_Position.x * 5, -_Position.y, _Position.z * 5));
@@ -84,18 +76,38 @@ bool WorldModel::DoPostLoad()
 	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(-_Model->BoundingBox.Range.x, _Model->BoundingBox.Min.y, -_Model->BoundingBox.Range.z));
 
 	return true;
+#undef IsCompatibleWith
 }
-		
-void WorldModel::Update(double elapsed)
+
+void WorldModel::Update(Camera *camera, double elapsed)
 {
+	if (_Model == NULL)
+		return;
+
+	if (_Mesh == NULL)
+	{
+		RsmModel::MeshList::iterator it = _Model->Meshes.find(_MeshName);
+
+		if (it == _Model->Meshes.end())
+			_Mesh = _Model->MainMesh;
+		else
+			_Mesh = it->second;
+
+		if (_Mesh == NULL)
+			return;
+	}
+
 	_Mesh->Update(elapsed);
 }
 
-void WorldModel::Render(CommonShaderProgramPtr &shader, Camera &camera, double elapsed)
+void WorldModel::Render(Camera *camera, double elapsed)
 {
-	//if (camera.Frustum.IsBoxInside(_Model->BoundingBox, _WorldMatrix))
-	{
-		shader->SetAlpha(_Model->Alpha / 255.f);
-		_Mesh->Render(shader, camera, _WorldMatrix, elapsed);
-	}
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	_Shader->Begin();
+	_Shader->SetUniform("Alpha", _Model->Alpha / 255.f);
+	_Mesh->Render(_Shader, *camera, _WorldMatrix, elapsed);
+	_Shader->End();
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }

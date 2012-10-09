@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -19,29 +19,29 @@
 #include <list>
 #include <vector>
 
-#include "../Camera.h"
-#include "WorldObjects.h"
-#include "CommonShaderProgram.h"
-
 #include <YA3DE/Helpers.h>
+#include <YA3DE/Scene/FpsCamera.h>
+#include <YA3DE/Scene/SceneManager.h>
+
 #include <YA3DE/FileSystem/FileManager.h>
 #include <YA3DE/Content/ContentManager.h>
 
 #include <YA3DE/Graphics/ShaderProgram.h>
-
 #include <YA3DE/Graphics/VertexDeclaration.h>
 #include <YA3DE/Graphics/VertexBuffer.h>
 #include <YA3DE/Graphics/IndexBuffer.h>
 #include <YA3DE/Graphics/Texture2D.h>
 
-using namespace YA3DE::Content;
-using namespace YA3DE::Graphics;
-
 namespace ROGraphics
 {
-	class World : public Resource
+	using namespace YA3DE::Scene;
+	using namespace YA3DE::Content;
+	using namespace YA3DE::Graphics;
+
+	class World : public Resource, public SceneManager
 	{
 	public:
+#pragma region Internal Data Structs
 		#include <YA3DE/Pack1.h>
 		struct GndHeader
 		{
@@ -160,14 +160,15 @@ namespace ROGraphics
 			int Right;
 		} STRUCT_PACKED;
 		#include <YA3DE/PackEnd.h>
+#pragma endregion
 
 		World();
 
 		bool LoadFromRsw(YA3DE::FileSystem::FilePtr rswFile);
 
-		void Update(double elapsed);
-		void Render(Camera &camera, double elapsed);
-
+		virtual void Update(double elapsed);
+		virtual void RenderStaticGeometry(double elapsed);
+		
 		/* Ground */
 		DEFPROP_RO(public, int, GroundWidth);
 		DEFPROP_RO(public, int, GroundHeight);
@@ -193,15 +194,15 @@ namespace ROGraphics
 		/* World */
 		DEFPROP_RO_R(public, LightInfo, Light);
 		DEFPROP_RO_R(public, GroundInfo, Ground);
-		DEFPROP_RO_R(public, std::list<WorldObjectPtr>, Objects);
-
+		
 	private:
 		static bool _StaticInit;
 		static ShaderProgramPtr _GroundShader;
-		static CommonShaderProgramPtr _CommonShader;
+		static ShaderProgramPtr _CommonShader;
 		
 		void SetupGroundLightmap(std::vector<LightmapCell> &lmaps);
 		void SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Surface> &surfaces, std::vector<GroundCell> &cells);
+		bool SetupWaterVertices();
 
 		bool LoadGround(YA3DE::FileSystem::FilePtr stream);
 		bool LoadAltitude(YA3DE::FileSystem::FilePtr stream);

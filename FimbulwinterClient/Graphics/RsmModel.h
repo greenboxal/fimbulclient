@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -20,17 +20,15 @@
 #include <vector>
 #include <string>
 
-#include "../Camera.h"
-#include "CommonShaderProgram.h"
-
 #include <YA3DE/Helpers.h>
 #include <YA3DE/FileSystem/FileManager.h>
 #include <YA3DE/Content/ContentManager.h>
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Math/AABBox.h>
-#include <YA3DE/Graphics/ShaderProgram.h>
+#include <YA3DE/Scene/Camera.h>
 
+#include <YA3DE/Graphics/ShaderProgram.h>
 #include <YA3DE/Graphics/VertexDeclaration.h>
 #include <YA3DE/Graphics/VertexBuffer.h>
 #include <YA3DE/Graphics/IndexBuffer.h>
@@ -38,12 +36,13 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-using namespace YA3DE::Content;
-using namespace YA3DE::Graphics;
-using namespace YA3DE::Math;
-
 namespace ROGraphics
 {
+	using namespace YA3DE::Math;
+	using namespace YA3DE::Scene;
+	using namespace YA3DE::Content;
+	using namespace YA3DE::Graphics;
+
 #include <YA3DE/Pack1.h>
 	struct RsmHeader
 	{
@@ -82,7 +81,7 @@ namespace ROGraphics
 		void UpdateRealBoundingBox(AABBox &aabb, const glm::mat4 &ptm);
 
 		void Update(double elapsed);
-		void Render(CommonShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
+		void Render(ShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
 
 		DEFPROP_RO_R(public, std::string, Name);
 		DEFPROP_RO_R(public, std::string, ParentName);
@@ -133,6 +132,8 @@ namespace ROGraphics
 		DEFPROP_RO(public, RsmMeshPtr, MainMesh);
 		DEFPROP_RO_R(public, MeshList, Meshes);
 		DEFPROP_RO_R(public, AABBox, BoundingBox);
+
+		DEFPROP_RO(public, bool, Loaded);
 	};
 	typedef std::shared_ptr<RsmModel> RsmModelPtr;
 }

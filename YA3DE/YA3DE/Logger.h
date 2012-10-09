@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -13,15 +13,14 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef _LOGGER_H_
+#define _LOGGER_H_
 
+#include <mutex>
 #include <string>
 #include <fstream>
 
-#define LogError(format, ...) Logger::Instance()->Log("[Error]: "); Logger::Instance()->Log(format, __VA_ARGS__)
-#define LogWarning(format, ...) Logger::Instance()->Log("[Warning]: "); Logger::Instance()->Log(format, __VA_ARGS__)
-#define LogInfo(format, ...) Logger::Instance()->Log("[Info]: "); Logger::Instance()->Log(format, __VA_ARGS__)
+#define LOG(format, ...) YA3DE::Logger::Instance()->Log(format, __VA_ARGS__);
 
 namespace YA3DE
 {
@@ -36,19 +35,20 @@ namespace YA3DE
 
 		static Logger *Instance()
 		{
-			if (_instance == NULL)
-				_instance = new Logger();
+			if (_Instance == NULL)
+				new Logger();
 
-			return _instance;
+			return _Instance;
 		}
 	private:
-		static Logger *_instance;
+		static Logger *_Instance;
 
 		void Open();
 
-		bool _useStdout;
-		std::string _filename;
-		std::fstream _file;
+		bool _UseStdout;
+		std::string _Filename;
+		std::fstream _File;
+		std::mutex _Mutex;
 	};
 }
 

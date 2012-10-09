@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -18,8 +18,9 @@
 
 #include <exception>
 #include <fstream>
-#include <YA3DE/FileSystem/IFileSystem.h>
+
 #include <YA3DE/FileSystem/IFile.h>
+#include <YA3DE/FileSystem/IFileSystem.h>
 
 namespace YA3DE
 {
@@ -68,7 +69,7 @@ namespace YA3DE
 				_stream.seekg(dir, offset);
 			}
 
-			virtual void Read(void *data, int size)
+			virtual void Read(const void *data, int size)
 			{
 				_stream.read((char *)data, size);
 			}

@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,37 +16,25 @@
 #ifndef _WORLDOBJECTS_H_
 #define _WORLDOBJECTS_H_
 
-#include "../Camera.h"
 #include "RsmModel.h"
-#include "CommonShaderProgram.h"
+#include "World.h"
 
-#include <YA3DE/FileSystem/IFile.h>
 #include <YA3DE/Math.h>
 #include <YA3DE/Helpers.h>
+#include <YA3DE/FileSystem/IFile.h>
+#include <YA3DE/Graphics/ShaderProgram.h>
 
 namespace ROGraphics
 {
-	class World;
-
-	class WorldObject : public std::enable_shared_from_this<WorldObject>
-	{
-	public:
-		virtual void Update(double elapsed) = 0;
-		virtual void Render(CommonShaderProgramPtr &shader, Camera &camera, double elapsed) = 0;
-		virtual bool DoPostLoad() = 0;
-	};
-	typedef std::shared_ptr<WorldObject> WorldObjectPtr;
-
-	class WorldModel : public WorldObject
+	class WorldModel : public SceneNode
 	{
 	public:
 		WorldModel(World *owner);
 
 		bool Load(YA3DE::FileSystem::FilePtr stream, int majorVersion, int minorVersion);
-		virtual bool DoPostLoad();
 		
-		virtual void Update(double elapsed);
-		virtual void Render(CommonShaderProgramPtr &shader, Camera &camera, double elapsed);
+		virtual void Update(Camera *camera, double elapsed);
+		virtual void Render(Camera *camera, double elapsed);
 
 		DEFPROP_RO_R(public, std::string, Name);
 		DEFPROP_RO(public, int, AnimationType);
@@ -62,6 +50,7 @@ namespace ROGraphics
 		DEFPROP_RO_R(public, glm::mat4, WorldMatrix);
 
 	private:
+		ShaderProgramPtr _Shader;
 		World *_Owner;
 	};
 }

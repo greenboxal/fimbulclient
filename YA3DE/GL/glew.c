@@ -29,6 +29,7 @@
 ** THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define GLEW_MX
 #include <GL/glew.h>
 
 #if defined(_WIN32)

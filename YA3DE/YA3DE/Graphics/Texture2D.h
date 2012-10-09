@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -17,7 +17,7 @@
 #define _TEXTURE2D_H_
 
 #include <YA3DE/Helpers.h>
-#include <YA3DE/Content/ContentManager.h>
+#include <YA3DE/Content/Resource.h>
 
 namespace YA3DE
 {
@@ -26,9 +26,11 @@ namespace YA3DE
 		class Texture2D : public YA3DE::Content::Resource
 		{
 		public:
-			Texture2D(int textureID);
+			Texture2D();
 			Texture2D(int width, int height, int pixelformat, int internalpixelformat, int type);
 			~Texture2D();
+
+			void Assign(unsigned int textureID);
 			
 			void SetMinMagFilter(int min, int mag);
 			void SetSTWrap(int s, int t);
@@ -53,6 +55,11 @@ namespace YA3DE
 		private:
 			static int _LastUsedTextureUnit;
 			static int _LastUsedTexture;
+			
+			int _PAMinFilter;
+			int _PAMagFilter;
+			int _PASWrap;
+			int _PATWrap;
 		};
 		typedef std::shared_ptr<Texture2D> Texture2DPtr;
 	}

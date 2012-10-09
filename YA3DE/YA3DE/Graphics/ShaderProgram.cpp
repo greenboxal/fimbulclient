@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -13,8 +13,10 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <YA3DE/OpenGL.h>
 #include <YA3DE/Math.h>
+#include <YA3DE/Logger.h>
+#include <YA3DE/OpenGL.h>
+#include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 #include <YA3DE/Graphics/ShaderProgram.h>
 
@@ -167,12 +169,15 @@ void ShaderProgram::SetUniform(int id, const glm::uvec4 &value)
 }
 
 template<>
-std::shared_ptr<ShaderProgram> ContentManager::LoadNew(const std::string &name)
+std::shared_ptr<ShaderProgram> ContentManager::LoadNew(const std::string &name, bool async)
 {
 	FilePtr fp = FileManager::Instance()->OpenFile(name);
 
 	if (!fp)
+	{
+		LOG("Failed loading '%s': file not found", name.c_str());
 		return NULL;
+	}
 
 	int size = fp->GetSize();
 	char *data = new char[size + 1];
@@ -185,18 +190,29 @@ std::shared_ptr<ShaderProgram> ContentManager::LoadNew(const std::string &name)
 
 	ShaderPtr vs = std::make_shared<Shader>(GL_VERTEX_SHADER);
 	if (!vs->Load(data))
+	{
+		LOG("Error loading '%s' vertex shader: %s", name.c_str(), vs->ErrorMessage.c_str());
 		return NULL;
+	}
 	program->AddShader(vs);
 	
 	ShaderPtr ps = std::make_shared<Shader>(GL_FRAGMENT_SHADER);
 	if (!ps->Load(data))
+	{
+		LOG("Error loading '%s' fragment shader: %s", name.c_str(), vs->ErrorMessage.c_str());
 		return NULL;
+	}
 	program->AddShader(ps);
 
 	if (!program->Link())
+	{
+		LOG("Error loading '%s': link failed", name.c_str());
 		return NULL;
+	}
 
 	ContentManager::Instance()->CacheObject(name, program);
+	
+	LOG("Loaded shader '%s'", name.c_str());
 
 	return program;
 }

@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	FimbulwinterClient is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -15,9 +15,13 @@
 
 #include "RsmModel.h"
 #include "VertexDeclarations.h"
-#include <YA3DE/Content/StringResource.h>
+
+#include <YA3DE/Logger.h>
+
+#include <future>
 
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace ROGraphics;
 using namespace YA3DE::FileSystem;
@@ -239,7 +243,7 @@ void RsmMesh::UpdateGlobalMatrix(double elapsed)
 	}
 	else
 	{
-		if (elapsed > 0)
+		if (elapsed< 0)
 		{
 			int current = 0;
 
@@ -288,13 +292,10 @@ void RsmMesh::UpdateLocalMatrix()
 	_LocalMatrix = glm::mat4();
 
 	if (_Parent == NULL && _Children.size() == 0)
-	{
 		_LocalMatrix = glm::translate(_LocalMatrix, -_Owner->MainMesh->_BoundingBox.Range);
-	}
-	else if (_Parent != NULL || _Children.size() > 0)
-	{
+
+	if (_Parent != NULL || _Children.size() > 0)
 		_LocalMatrix = glm::translate(_LocalMatrix, _ParentPosition);
-	}
 
 	_LocalMatrix *= _ParentTransformation;
 	_HasLocalMatrix = true;
@@ -302,6 +303,9 @@ void RsmMesh::UpdateLocalMatrix()
 
 void RsmMesh::Update(double elapsed)
 {
+	if (!_Owner->Loaded)
+		return;
+
 	UpdateGlobalMatrix(elapsed);
 	UpdateLocalMatrix();
 
@@ -309,12 +313,15 @@ void RsmMesh::Update(double elapsed)
 		_Children[i]->Update(elapsed);
 }
 
-void RsmMesh::Render(CommonShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed)
+void RsmMesh::Render(ShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed)
 {
+	if (!_Owner->Loaded)
+		return;
+
 	glm::mat4 world = model * _GlobalMatrix;
 
-	shader->SetTexture(0);
-	shader->SetMatrix(camera.ViewProjection * world * _LocalMatrix);
+	shader->SetUniform("InTexture", 0);
+	shader->SetUniform("WorldViewProjection", camera.GetProjection() * camera.GetView() * world * _LocalMatrix);
 	_Vertices->Bind();
 	for (unsigned int i = 0; i < _Indices.size(); i++)
 	{
@@ -327,7 +334,7 @@ void RsmMesh::Render(CommonShaderProgramPtr &shader, Camera &camera, const glm::
 }
 
 RsmModel::RsmModel()
-	: _BoundingBox(glm::vec3(999999), glm::vec3(-999999))
+	: _BoundingBox(glm::vec3(999999), glm::vec3(-999999)), _Loaded(false)
 {
 
 }
@@ -360,13 +367,10 @@ bool RsmModel::Load(YA3DE::FileSystem::FilePtr stream)
 	for (int i = 0; i < textureCount; i++)
 	{
 		char name[40];
-
 		stream->Read(name, sizeof(name));
+		std::string namecopy = name;
 
-		Texture2DPtr tex = cm->Load<Texture2D>(std::string("data/texture/") + name);
-
-		if (tex == NULL)
-			return false;
+		Texture2DPtr tex = cm->Load<Texture2D>(std::string("data/texture/") + name, true);
 
 		tex->SetMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		tex->SetSTWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
@@ -412,6 +416,8 @@ bool RsmModel::Load(YA3DE::FileSystem::FilePtr stream)
 	}
 
 	UpdateBoundingBox();
+	
+	_Loaded = true;
 
 	return true;
 #undef IsCompatibleWith
@@ -427,17 +433,34 @@ void RsmModel::UpdateBoundingBox()
 }
 
 template<>
-std::shared_ptr<RsmModel> ContentManager::LoadNew(const std::string &name)
+std::shared_ptr<RsmModel> ContentManager::LoadNew(const std::string &name, bool async)
 {
-	FilePtr stream = FileManager::Instance()->OpenFile(name);
-
-	if (!stream)
-		return NULL;
-
+	auto namecopy = name;
 	RsmModelPtr ptr = std::make_shared<RsmModel>();
 
-	if (!ptr->Load(stream))
-		return NULL;
+	auto main = [=]()
+	{
+		FilePtr stream = FileManager::Instance()->OpenFile(namecopy);
+
+		if (!stream)
+		{
+			LOG("Failed loading '%s': file not found", namecopy.c_str());
+			return;
+		}
+
+		if (!ptr->Load(stream))
+		{
+			LOG("Failed loading '%s'", namecopy.c_str());
+			return;
+		}
+
+		LOG("Loaded '%s'", namecopy.c_str());
+	};
+
+	if (async)
+		ContentManager::Instance()->Dispatcher.EnqueueAsync(main);
+	else
+		main();
 
 	ContentManager::CacheObject(name, ptr);
 

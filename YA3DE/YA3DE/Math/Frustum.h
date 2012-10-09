@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -16,11 +16,11 @@
 #ifndef _FRUSTUM_H_
 #define _FURSTUM_H_
 
-#include <YA3DE/Helpers.h>
-#include <YA3DE/Math.h>
-#include <YA3DE/Math/AABBox.h>
-
 #include <glm/gtc/matrix_access.hpp>
+
+#include <YA3DE/Math.h>
+#include <YA3DE/Helpers.h>
+#include <YA3DE/Math/AABBox.h>
 
 namespace YA3DE
 {
@@ -82,9 +82,7 @@ namespace YA3DE
 		private:
 			glm::vec4 normalizePlane(const glm::vec4 &in)
 			{
-				float t = std::sqrt(in.x * in.x + in.y * in.y + in.z * in.z);
-
-				return glm::vec4(in.x / t, in.y / t, in.z / t, in.w / t);
+				return in / std::sqrt(in.x * in.x + in.y * in.y + in.z * in.z);
 			}
 
 			glm::vec4 _Frustum[6];

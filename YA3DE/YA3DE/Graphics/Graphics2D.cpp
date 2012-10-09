@@ -5,7 +5,7 @@
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Foobar is distributed in the hope that it will be useful,
+	YA3DE is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -103,7 +103,7 @@ public:
 
 		success = _shader->Link();
 
-		_2dproj = glm::ortho<float>(0, (const float)game->GetWindow()->getSize().x, (const float)game->GetWindow()->getSize().y, 0, 1, -1);
+		_2dproj = glm::ortho<float>(0, (const float)game->Window.Size.x, (const float)game->Window.Size.y, 0, 1, -1);
 
 		_isShaderInit = true;
 	}

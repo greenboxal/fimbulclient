@@ -75,7 +75,7 @@
     <ClCompile Include="Graphics\VertexDeclarations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\WorldObjects.cpp">
+    <ClCompile Include="Graphics\WorldModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Renderers\LabelRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameMode.h">
@@ -152,10 +149,7 @@
     <ClInclude Include="Graphics\VertexDeclarations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\WorldObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\CommonShaderProgram.h">
+    <ClInclude Include="Graphics\WorldModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
