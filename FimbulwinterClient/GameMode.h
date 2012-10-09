@@ -17,8 +17,9 @@
 #define _GAMEMODE_H_
 
 #include <vector>
-#include <SFML/Graphics.hpp>
+
 #include <YA3DE/Helpers.h>
+#include <YA3DE/System/Event.h>
 
 class SubGameMode
 {
@@ -31,7 +32,7 @@ public:
 	virtual void OnLoad() = 0;
 	virtual void Update(double elapsed) = 0;
 	virtual void Render(double elapsed) = 0;
-	virtual void OnEvent(sf::Event &ev, double elapsedTime) = 0;
+	virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime) = 0;
 	virtual void OnUnload() = 0;
 };
 
@@ -68,7 +69,7 @@ public:
 			_subGameModes[_SubMode]->Render(elapsed);
 	}
 
-	void DispatchEvent(sf::Event &ev, double elapsedTime)
+	void DispatchEvent(YA3DE::System::Event &ev, double elapsedTime)
 	{
 		if (_SubMode != -1)
 			_subGameModes[_SubMode]->OnEvent(ev, elapsedTime);

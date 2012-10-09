@@ -23,8 +23,6 @@
 #include <YA3DE/Math.h>
 #include <YA3DE/Helpers.h>
 
-#include <SFML/Graphics.hpp>
-
 namespace YA3DE
 {
 	namespace Graphics

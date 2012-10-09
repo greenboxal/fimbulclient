@@ -24,6 +24,7 @@
 namespace WorldMode
 {
 	using namespace YA3DE::Scene;
+	using namespace YA3DE::System;
 
 	class TestMode : public SubGameMode
 	{
@@ -34,14 +35,14 @@ namespace WorldMode
 		virtual void OnLoad();
 		virtual void Update(double elapsed);
 		virtual void Render(double elapsed);
-		virtual void OnEvent(sf::Event &ev, double elapsedTime);
+		virtual void OnEvent(Event &ev, double elapsedTime);
 		virtual void OnUnload();
 
 	private:
 		FpsCamera *_Camera;
 		ROGraphics::WorldPtr _World;
-		sf::Vector2i tempMousePosition;
-		bool prevRightButton;
+		MouseState _PrevMouseState;
+		glm::uvec2 _PrevMousePos;
 	};
 }
 

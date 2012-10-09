@@ -202,87 +202,6 @@
     <ClInclude Include="SDL\SDL_types.h" />
     <ClInclude Include="SDL\SDL_version.h" />
     <ClInclude Include="SDL\SDL_video.h" />
-    <ClInclude Include="SFML\Audio.hpp" />
-    <ClInclude Include="SFML\Audio\Export.hpp" />
-    <ClInclude Include="SFML\Audio\Listener.hpp" />
-    <ClInclude Include="SFML\Audio\Music.hpp" />
-    <ClInclude Include="SFML\Audio\Sound.hpp" />
-    <ClInclude Include="SFML\Audio\SoundBuffer.hpp" />
-    <ClInclude Include="SFML\Audio\SoundBufferRecorder.hpp" />
-    <ClInclude Include="SFML\Audio\SoundRecorder.hpp" />
-    <ClInclude Include="SFML\Audio\SoundSource.hpp" />
-    <ClInclude Include="SFML\Audio\SoundStream.hpp" />
-    <ClInclude Include="SFML\Config.hpp" />
-    <ClInclude Include="SFML\Graphics.hpp" />
-    <ClInclude Include="SFML\Graphics\BlendMode.hpp" />
-    <ClInclude Include="SFML\Graphics\CircleShape.hpp" />
-    <ClInclude Include="SFML\Graphics\Color.hpp" />
-    <ClInclude Include="SFML\Graphics\ConvexShape.hpp" />
-    <ClInclude Include="SFML\Graphics\Drawable.hpp" />
-    <ClInclude Include="SFML\Graphics\Export.hpp" />
-    <ClInclude Include="SFML\Graphics\Font.hpp" />
-    <ClInclude Include="SFML\Graphics\Glyph.hpp" />
-    <ClInclude Include="SFML\Graphics\Image.hpp" />
-    <ClInclude Include="SFML\Graphics\PrimitiveType.hpp" />
-    <ClInclude Include="SFML\Graphics\Rect.hpp" />
-    <ClInclude Include="SFML\Graphics\RectangleShape.hpp" />
-    <ClInclude Include="SFML\Graphics\RenderStates.hpp" />
-    <ClInclude Include="SFML\Graphics\RenderTarget.hpp" />
-    <ClInclude Include="SFML\Graphics\RenderTexture.hpp" />
-    <ClInclude Include="SFML\Graphics\RenderWindow.hpp" />
-    <ClInclude Include="SFML\Graphics\Shader.hpp" />
-    <ClInclude Include="SFML\Graphics\Shape.hpp" />
-    <ClInclude Include="SFML\Graphics\Sprite.hpp" />
-    <ClInclude Include="SFML\Graphics\Text.hpp" />
-    <ClInclude Include="SFML\Graphics\Texture.hpp" />
-    <ClInclude Include="SFML\Graphics\Transform.hpp" />
-    <ClInclude Include="SFML\Graphics\Transformable.hpp" />
-    <ClInclude Include="SFML\Graphics\Vertex.hpp" />
-    <ClInclude Include="SFML\Graphics\VertexArray.hpp" />
-    <ClInclude Include="SFML\Graphics\View.hpp" />
-    <ClInclude Include="SFML\Network.hpp" />
-    <ClInclude Include="SFML\Network\Export.hpp" />
-    <ClInclude Include="SFML\Network\Ftp.hpp" />
-    <ClInclude Include="SFML\Network\Http.hpp" />
-    <ClInclude Include="SFML\Network\IpAddress.hpp" />
-    <ClInclude Include="SFML\Network\Packet.hpp" />
-    <ClInclude Include="SFML\Network\Socket.hpp" />
-    <ClInclude Include="SFML\Network\SocketHandle.hpp" />
-    <ClInclude Include="SFML\Network\SocketSelector.hpp" />
-    <ClInclude Include="SFML\Network\TcpListener.hpp" />
-    <ClInclude Include="SFML\Network\TcpSocket.hpp" />
-    <ClInclude Include="SFML\Network\UdpSocket.hpp" />
-    <ClInclude Include="SFML\OpenGL.hpp" />
-    <ClInclude Include="SFML\System.hpp" />
-    <ClInclude Include="SFML\System\Clock.hpp" />
-    <ClInclude Include="SFML\System\Err.hpp" />
-    <ClInclude Include="SFML\System\Export.hpp" />
-    <ClInclude Include="SFML\System\InputStream.hpp" />
-    <ClInclude Include="SFML\System\Lock.hpp" />
-    <ClInclude Include="SFML\System\Mutex.hpp" />
-    <ClInclude Include="SFML\System\NonCopyable.hpp" />
-    <ClInclude Include="SFML\System\Sleep.hpp" />
-    <ClInclude Include="SFML\System\String.hpp" />
-    <ClInclude Include="SFML\System\Thread.hpp" />
-    <ClInclude Include="SFML\System\ThreadLocal.hpp" />
-    <ClInclude Include="SFML\System\ThreadLocalPtr.hpp" />
-    <ClInclude Include="SFML\System\Time.hpp" />
-    <ClInclude Include="SFML\System\Utf.hpp" />
-    <ClInclude Include="SFML\System\Vector2.hpp" />
-    <ClInclude Include="SFML\System\Vector3.hpp" />
-    <ClInclude Include="SFML\Window.hpp" />
-    <ClInclude Include="SFML\Window\Context.hpp" />
-    <ClInclude Include="SFML\Window\ContextSettings.hpp" />
-    <ClInclude Include="SFML\Window\Event.hpp" />
-    <ClInclude Include="SFML\Window\Export.hpp" />
-    <ClInclude Include="SFML\Window\GlResource.hpp" />
-    <ClInclude Include="SFML\Window\Joystick.hpp" />
-    <ClInclude Include="SFML\Window\Keyboard.hpp" />
-    <ClInclude Include="SFML\Window\Mouse.hpp" />
-    <ClInclude Include="SFML\Window\VideoMode.hpp" />
-    <ClInclude Include="SFML\Window\Window.hpp" />
-    <ClInclude Include="SFML\Window\WindowHandle.hpp" />
-    <ClInclude Include="SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="SOIL\image_DXT.h" />
     <ClInclude Include="SOIL\image_helper.h" />
     <ClInclude Include="SOIL\SOIL.h" />
@@ -445,12 +364,6 @@
     <None Include="glm\gtx\vector_query.inl" />
     <None Include="glm\gtx\verbose_operator.inl" />
     <None Include="glm\gtx\wrap.inl" />
-    <None Include="SFML\Graphics\Rect.inl" />
-    <None Include="SFML\System\Thread.inl" />
-    <None Include="SFML\System\ThreadLocalPtr.inl" />
-    <None Include="SFML\System\Utf.inl" />
-    <None Include="SFML\System\Vector2.inl" />
-    <None Include="SFML\System\Vector3.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DE8C7342-7F57-4257-BA2C-662AFAB5F532}</ProjectGuid>
@@ -529,7 +442,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)YA3DE\;</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
     </ClCompile>

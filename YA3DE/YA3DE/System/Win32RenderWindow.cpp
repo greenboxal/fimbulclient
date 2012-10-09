@@ -253,7 +253,9 @@ void RenderWindow::_WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CLOSE:
 		{
-			// PUSHEVENT
+			Event e;
+			e.Type = EventType::Close;
+			_EventQueue.push(e);
 		}
 		break;
 	case WM_SETFOCUS:

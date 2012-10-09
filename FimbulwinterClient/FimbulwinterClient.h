@@ -17,6 +17,7 @@
 #define _FIMBULWINTERCLIENT_H_
 
 #include <YA3DE/Game.h>
+#include <YA3DE/System/Event.h>
 
 #include "GameMode.h"
 
@@ -64,7 +65,7 @@ protected:
 	virtual void OnRender(double elapsedTime);
 	virtual void OnUnload();
 	
-	virtual void OnEvent(sf::Event &ev, double elapsedTime);
+	virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime);
 };
 
 #endif

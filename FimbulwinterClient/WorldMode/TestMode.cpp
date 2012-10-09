@@ -16,17 +16,19 @@
 #include "TestMode.h"
 #include "../FimbulwinterClient.h"
 
+#include <YA3DE/System/Mouse.h>
+#include <YA3DE/System/Keyboard.h>
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/Content/StringResource.h>
 
 using namespace WorldMode;
 using namespace ROGraphics;
+
 using namespace YA3DE::Content;
 
 TestMode::TestMode()
 {
 	_Camera = new FpsCamera(glm::vec3(800.f, 1350.f, 2600.f), glm::vec3(820.f, -1000.f, 120.f), 1.f, 5000.f);
-	prevRightButton = false;
 }
 
 TestMode::~TestMode()
@@ -50,56 +52,57 @@ void TestMode::Update(double elapsed)
 
 	if (Ragnarok->Window.IsActive)
 	{
-		sf::Vector2i mousePos = sf::Mouse::getPosition();
+		MouseState state;
+		Mouse::GetState(state);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		if (Keyboard::GetKeyState(Key::W) == KeyState::Pressed)
             _Camera->MoveForward(1.0f * timeDifference);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		else if (Keyboard::GetKeyState(Key::S) == KeyState::Pressed)
             _Camera->MoveForward(-1.0f * timeDifference);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (Keyboard::GetKeyState(Key::A) == KeyState::Pressed)
             _Camera->Strafe(-1.0f * timeDifference);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        else if (Keyboard::GetKeyState(Key::D) == KeyState::Pressed)
             _Camera->Strafe(1.0f * timeDifference);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		if (Keyboard::GetKeyState(Key::LShift) == KeyState::Pressed)
             _Camera->Levitate(1.0f * timeDifference);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+		else if (Keyboard::GetKeyState(Key::LControl) == KeyState::Pressed)
             _Camera->Levitate(-1.0f * timeDifference);
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		if (Keyboard::GetKeyState(Key::Left) == KeyState::Pressed)
             _Camera->AddYaw(1.0f * timeDifference / 10.f);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		else if (Keyboard::GetKeyState(Key::Right) == KeyState::Pressed)
             _Camera->AddYaw(-1.0f * timeDifference / 10.f);
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		if (Keyboard::GetKeyState(Key::Up) == KeyState::Pressed)
             _Camera->AddPitch(1.0f * timeDifference / 10.f);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		else if (Keyboard::GetKeyState(Key::Down) == KeyState::Pressed)
             _Camera->AddPitch(-1.0f * timeDifference / 10.f);
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && prevRightButton)
+		if (state.RightButton == ButtonState::Pressed && _PrevMouseState.RightButton == ButtonState::Pressed)
         {
 			glm::uvec2 center = Ragnarok->Window.Position + glm::uvec2(Ragnarok->Window.Size.x / 2, Ragnarok->Window.Size.y / 2);
 			
-            _Camera->AddYaw((center.x - mousePos.x) / 100.f * timeDifference);
-            _Camera->AddPitch((center.y - mousePos.y) / 100.f * timeDifference);
+            _Camera->AddYaw((center.x - state.X) / 100.f * timeDifference);
+            _Camera->AddPitch((center.y - state.Y) / 100.f * timeDifference);
 			
-            sf::Mouse::setPosition(sf::Vector2i(center.x, center.y));
+            Mouse::SetPosition(center);
         }
-        else if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !prevRightButton)
+		else if (state.RightButton == ButtonState::Pressed && _PrevMouseState.RightButton == ButtonState::Released)
         {
 			glm::uvec2 center = Ragnarok->Window.Position + glm::uvec2(Ragnarok->Window.Size.x / 2, Ragnarok->Window.Size.y / 2);
 
-            tempMousePosition = mousePos;
+            _PrevMousePos = glm::uvec2(state.X, state.Y);
 			
-            sf::Mouse::setPosition(sf::Vector2i(center.x, center.y));
+            Mouse::SetPosition(center);
         }
-        else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right) && prevRightButton)
+		else if (state.RightButton == ButtonState::Released && _PrevMouseState.RightButton == ButtonState::Pressed)
         {
-            sf::Mouse::setPosition(tempMousePosition);
+			Mouse::SetPosition(_PrevMousePos);
         }
 
-		prevRightButton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+		_PrevMouseState = state;
 
 		char buffer[1024];
 		sprintf(buffer, "X=%f, Y=%f, Z=%f -> X=%f, Y=%f, Z=%f", _Camera->Position.x, _Camera->Position.y, _Camera->Position.z, _Camera->Target.x, _Camera->Target.y, _Camera->Target.z);
@@ -114,7 +117,7 @@ void TestMode::Render(double elapsed)
 	_World->Render(elapsed);
 }
 
-void TestMode::OnEvent(sf::Event &ev, double elapsedTime)
+void TestMode::OnEvent(Event &ev, double elapsedTime)
 {
 
 }

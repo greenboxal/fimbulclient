@@ -18,8 +18,7 @@
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
-#include <SFML/System.hpp>
-
+#include <chrono>
 #include <exception>
 
 using namespace YA3DE;
@@ -59,7 +58,7 @@ void Game::ReadConfig()
 		
 		LOG("Creating RenderWindow");
 		_Window.Create(VideoMode(atoi(window->first_attribute("Width")->value()), atoi(window->first_attribute("Height")->value()), atoi(window->first_attribute("BitsPerPixel")->value())), style);
-		_Window.SetVSync(true);
+		_Window.SetVSync(stricmp(window->first_attribute("VSync")->value(), "true") == 0);
 
 		LOG("Video mode: %dx%d, %dbpp [%s]", _Window.Mode.Width, _Window.Mode.Height, _Window.Mode.BitsPerPixel, _Window.Mode.FullScreen ? "Fullscreen" : "Windowed");
 		LOG("OpenGL version %d.%d", _Window.Mode.GLMajor, _Window.Mode.GLMinor);
@@ -86,8 +85,7 @@ void Game::ReadConfig()
 
 void Game::Run()
 {
-	double total = 0, frames = 0;
-	sf::Clock clock;
+	double total = 0, frames = 0, elapsed = 0;
 
 	LOG("YA3DE Alpha");
 
@@ -108,9 +106,8 @@ void Game::Run()
 	LOG("Entering main loop");
 	while (_Running)
 	{
-		::Event ev;
-		double elapsed = clock.getElapsedTime().asMilliseconds();
-		clock.restart();
+		Event ev;
+		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 		while(_Window.PollEvent(ev) && _Running)
 			OnEvent(ev, elapsed);
@@ -132,6 +129,8 @@ void Game::Run()
 		}
 
 		_Window.EndScene();
+
+		elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count();
 	}
 	
 	LOG("Unloading");

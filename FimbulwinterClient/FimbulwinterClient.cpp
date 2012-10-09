@@ -30,8 +30,8 @@
 
 using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;
-using namespace YA3DE::GUI;
 using namespace YA3DE::FileSystem;
+using namespace YA3DE::System;
 
 using namespace ROFileSystem;
 using namespace ROGUI::Renderers;
@@ -69,9 +69,9 @@ void ClientGame::OnUnload()
 	ChangeGameMode(NULL);
 }
 
-void ClientGame::OnEvent(sf::Event &ev, double elapsedTime)
+void ClientGame::OnEvent(Event &ev, double elapsedTime)
 {
-	if (ev.type == sf::Event::Closed)
+	if (ev.Type == EventType::Close)
 	{
 		Running = false;
 		return;
