@@ -903,6 +903,18 @@
     <ClInclude Include="YA3DE\Scene\FpsCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="YA3DE\System\Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="YA3DE\System\Keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="YA3DE\System\Win32Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="YA3DE\System\Win32Keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="YA3DE\Game.cpp">
@@ -978,6 +990,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="YA3DE\Scene\FpsCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="YA3DE\System\Win32Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="YA3DE\System\Win32Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

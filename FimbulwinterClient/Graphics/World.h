@@ -196,9 +196,8 @@ namespace ROGraphics
 		DEFPROP_RO_R(public, GroundInfo, Ground);
 		
 	private:
-		static bool _StaticInit;
-		static ShaderProgramPtr _GroundShader;
-		static ShaderProgramPtr _CommonShader;
+		ShaderProgramPtr _GroundShader;
+		ShaderProgramPtr _CommonShader;
 		
 		void SetupGroundLightmap(std::vector<LightmapCell> &lmaps);
 		void SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Surface> &surfaces, std::vector<GroundCell> &cells);

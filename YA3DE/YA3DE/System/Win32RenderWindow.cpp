@@ -16,8 +16,9 @@
 
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/Logger.h>
-#include <YA3DE/System/RenderWindow.h>
+#include <YA3DE/System/Mouse.h>
 #include <YA3DE/System/GLContext.h>
+#include <YA3DE/System/RenderWindow.h>
 
 using namespace YA3DE::System;
 
@@ -299,6 +300,8 @@ void RenderWindow::_WndProc(UINT message, WPARAM wParam, LPARAM lParam)
             position.x = static_cast<short>(LOWORD(lParam));
             position.y = static_cast<short>(HIWORD(lParam));
 			ScreenToClient(_NativeHandle, &position);
+
+			Mouse::UpdateMouseWheel(HIWORD(wParam) / 120);
 
 			// PUSHEVENT
 		}

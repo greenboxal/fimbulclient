@@ -15,7 +15,6 @@
 
 #include "TestMode.h"
 #include "../FimbulwinterClient.h"
-#include "../Graphics/World.h"
 
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/Content/StringResource.h>
@@ -24,7 +23,6 @@ using namespace WorldMode;
 using namespace ROGraphics;
 using namespace YA3DE::Content;
 
-WorldPtr world;
 TestMode::TestMode()
 {
 	_Camera = new FpsCamera(glm::vec3(800.f, 1350.f, 2600.f), glm::vec3(820.f, -1000.f, 120.f), 1.f, 5000.f);
@@ -40,8 +38,10 @@ void TestMode::OnLoad()
 {
 	LOG("TestMode::OnLoad");
 
-	world = ContentManager::Instance()->Load<World>("data/prontera.rsw");
-	world->SceneCamera = _Camera;
+	std::string mapName = Ragnarok->Configuration->GetRoot().first_node("Config")->first_node("Ragnarok")->first_attribute("World")->value();
+
+	_World = ContentManager::Instance()->Load<World>("data/" + mapName + ".rsw");
+	_World->SceneCamera = _Camera;
 }
 
 void TestMode::Update(double elapsed)
@@ -106,12 +106,12 @@ void TestMode::Update(double elapsed)
 		Ragnarok->Window.SetTitle(buffer);
 	}
 
-	world->Update(elapsed);
+	_World->Update(elapsed);
 }
 
 void TestMode::Render(double elapsed)
 {
-	world->Render(elapsed);
+	_World->Render(elapsed);
 }
 
 void TestMode::OnEvent(sf::Event &ev, double elapsedTime)

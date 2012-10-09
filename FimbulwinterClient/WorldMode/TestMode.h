@@ -17,6 +17,7 @@
 #define _TESTMODE_H_
 
 #include "../GameMode.h"
+#include "../Graphics/World.h"
 
 #include <YA3DE/Scene/FpsCamera.h>
 
@@ -38,6 +39,7 @@ namespace WorldMode
 
 	private:
 		FpsCamera *_Camera;
+		ROGraphics::WorldPtr _World;
 		sf::Vector2i tempMousePosition;
 		bool prevRightButton;
 	};

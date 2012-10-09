@@ -58,7 +58,7 @@ void Game::ReadConfig()
 			style |= WindowStyle::FullScreen;
 		
 		LOG("Creating RenderWindow");
-		_Window.Create(VideoMode(1280, 720, 32), style);
+		_Window.Create(VideoMode(atoi(window->first_attribute("Width")->value()), atoi(window->first_attribute("Height")->value()), atoi(window->first_attribute("BitsPerPixel")->value())), style);
 		_Window.SetVSync(true);
 
 		LOG("Video mode: %dx%d, %dbpp [%s]", _Window.Mode.Width, _Window.Mode.Height, _Window.Mode.BitsPerPixel, _Window.Mode.FullScreen ? "Fullscreen" : "Windowed");

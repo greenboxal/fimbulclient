@@ -12,38 +12,14 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _EVENT_H_
-#define _EVENT_H_
+#ifndef _MOUSE_H_
+#define _MOUSE_H_
 
-#include <YA3DE/System/Mouse.h>
-//#include <YA3DE/System/Keyboard.h>
+#ifdef _WIN32
+#include <YA3DE/System/Win32Mouse.h>
+#else
+#error "This platform is not supported yet."
+#endif
 
-namespace YA3DE
-{
-	namespace System
-	{
-		enum class EventType
-		{
-			None,
-			Close,
-			GainedFocus,
-			LostFocus,
-			TextEntered,
-			KeyPressed,
-			KeyReleased,
-			MouseWheelMoved,
-			MouseButtonPressed,
-			MouseButtonReleased,
-			MouseMoved,
-			MouseEntered,
-			MouseLeft
-		};
-
-		struct Event
-		{
-			EventType Type;
-		};
-	}
-}
 
 #endif

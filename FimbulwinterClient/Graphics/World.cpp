@@ -42,9 +42,6 @@ typedef struct SmoothNode
     struct SmoothNode *Next;
 } SmoothNode;
 
-bool World::_StaticInit = false;
-ShaderProgramPtr World::_GroundShader = NULL;
-ShaderProgramPtr World::_CommonShader = NULL;
 
 World::World()
 {
@@ -53,18 +50,13 @@ World::World()
 
 bool World::LoadFromRsw(FilePtr rswFile)
 {
-	if (!_StaticInit)
-	{
-		_GroundShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/ground.glsl");
-		if (!_GroundShader)
-			return false;
+	_GroundShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/ground.glsl");
+	if (!_GroundShader)
+		return false;
 		
-		_CommonShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/model.glsl");
-		if (!_CommonShader)
-			return false;
-		
-		_StaticInit = true;
-	}
+	_CommonShader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/model.glsl");
+	if (!_CommonShader)
+		return false;
 
 	if (!LoadWorld(rswFile))
 		return false;
