@@ -20,36 +20,70 @@
 #include <list>
 #include <vector>
 #include <memory>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_SIZES_H
+
 #include <YA3DE/Math.h>
 #include <YA3DE/Helpers.h>
+#include <YA3DE/Graphics/ShaderProgram.h>
+#include <YA3DE/Graphics/VertexPositionTexture.h>
 
 namespace YA3DE
 {
 	namespace Graphics
 	{
-		enum FontStyle
+		namespace FontStyle
 		{
-			None = 0x0,
-			Bold = 0x1,
-			Italic = 0x2,
-			Underline = 0x4,
-			Strikeout = 0x8,
+			enum
+			{
+				None = 0x0,
+				Bold = 0x1,
+				Italic = 0x2,
+				Underline = 0x4,
+				Strikeout = 0x8,
+			};
+		}
+
+		enum class FontLoadPolicy
+		{
+			Direct,
+			Lazy
+		};
+
+		struct FontGlyph
+		{
+			FontGlyph()
+			{
+				Cached = false;
+			}
+
+			VertexPositionTexture Vertices[4];
+			FT_Glyph_Metrics Metrics;
+			FT_Vector Advance;
+			glm::uvec2 AtlasPosition;
+			bool Cached;
+			int GlyphID;
 		};
 
 		class Font : public std::shared_ptr<Font>
 		{
 		public:
-			Font(std::string name, int size, FontStyle style);
+			Font(void *memory, unsigned int mem_size, int size, int style, FontLoadPolicy policy);
 			~Font();
 
-			void Render(std::string text, glm::uvec2 pos, glm::vec4 color);
-			int Measure(std::string text);
+			void Render(const std::string &text, const glm::uvec2 &pos, const glm::vec4 &color);
+			int Measure(const std::string &text);
 			
+			const FontGlyph *GetGlyph(char c);
+			int GetAdvance(char c, char n);
+
 			DEFPROP_RO(public, std::string, Name);
-			DEFPROP_RW(public, int, Size);
 			DEFPROP_RO(public, int, Height);
-			DEFPROP_RO(public, FontStyle, Style);
-			
+			DEFPROP_RO(public, int, Size);
+			DEFPROP_RO(public, int, Style);
+
 			DEFPROP_SELF_RO(public, bool, Bold)
 			{
 				return (_Style & FontStyle::Bold) != 0;
@@ -68,7 +102,19 @@ namespace YA3DE
 			DEFPROP_SELF_RO(public, bool, Strikeout)
 			{
 				return (_Style & FontStyle::Strikeout) != 0;
-			} 
+			}
+
+		private:
+			FT_Face _Face;
+			ShaderProgramPtr _Shader;
+			std::vector<FontGlyph> _Glyphs;
+			void *_Memory;
+
+			unsigned int _Texture;
+			unsigned char *_Atlas;
+			int _AtlasWidth, _AtlasHeight;
+
+			void SetAtlasRegion(int x, int y, int w, int h, unsigned char *data, int pitch);
 		};
 		typedef std::shared_ptr<Font> FontPtr;
 	}

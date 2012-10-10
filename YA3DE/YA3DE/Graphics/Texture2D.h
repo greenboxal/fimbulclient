@@ -38,6 +38,12 @@ namespace YA3DE
 			void SetData(void *data);
 
 			void Bind(int index = -1);
+			
+			static void InvalidateLastUsedCache()
+			{
+				_LastUsedTextureUnit = -1;
+				_LastUsedTexture = -1;
+			}
 
 			DEFPROP_RO(public, unsigned int, TextureID);
 			DEFPROP_RO(public, int, Width);
@@ -45,12 +51,6 @@ namespace YA3DE
 			DEFPROP_RO(public, int, PixelFormat);
 			DEFPROP_RO(public, int, InternalPixelFormat);
 			DEFPROP_RO(public, int, Type);
-
-			static void InvalidateLastUsedCache()
-			{
-				_LastUsedTextureUnit = -1;
-				_LastUsedTexture = -1;
-			}
 
 		private:
 			static int _LastUsedTextureUnit;

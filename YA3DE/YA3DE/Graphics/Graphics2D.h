@@ -48,21 +48,21 @@ namespace YA3DE
 			}
 
 			void Begin();
-			void Draw(Texture2DPtr texture, glm::uvec4 &rect, glm::uvec4 &srect, glm::vec4 &color, float rotation, float depth);
-			void Draw(FontPtr font, int height, std::string str, glm::uvec2 &pos, glm::vec4 &color = glm::vec4(1.0f), FontStyle style = FontStyle::None);
+			void Draw(Texture2DPtr texture, const glm::uvec4 &rect, const glm::uvec4 &srect, const glm::vec4 &color, const float rotation, const float depth);
+			void Draw(FontPtr font, const std::string &str, const glm::uvec2 &pos, const glm::vec4 &color = glm::vec4(1.0f));
 			void End();
 
-			void Draw(Texture2DPtr texture, glm::uvec4 &rect, glm::vec4 &color)
+			void Draw(Texture2DPtr texture, const glm::uvec4 &rect, const glm::vec4 &color)
 			{
 				Draw(texture, rect, glm::uvec4(0, 0, texture->Width, texture->Height), color, 0, 0);
 			}
 
-			void Draw(Texture2DPtr texture, glm::uvec4 &rect, glm::uvec4 &srect, glm::vec4 &color)
+			void Draw(Texture2DPtr texture, const glm::uvec4 &rect, const glm::uvec4 &srect, const glm::vec4 &color)
 			{
 				Draw(texture, rect, srect, color, 0, 0);
 			}
 
-			void Draw(Texture2DPtr texture, glm::uvec4 &rect, glm::uvec4 &srect, glm::vec4 &color, float rotation)
+			void Draw(Texture2DPtr texture, const glm::uvec4 &rect, const glm::uvec4 &srect, const glm::vec4 &color, const float rotation)
 			{
 				Draw(texture, rect, srect, color, rotation, 0);
 			}

@@ -35,6 +35,10 @@ int Texture2D::_LastUsedTexture = -1;
 Texture2D::Texture2D()
 {
 	_TextureID = -1;
+	_PAMinFilter = -1;
+	_PAMagFilter = -1;
+	_PASWrap = -1;
+	_PATWrap = -1;
 }
 
 Texture2D::Texture2D(int width, int height, int pixelformat, int internalpixelformat, int type)
@@ -64,8 +68,12 @@ void Texture2D::Assign(unsigned int textureID)
 		Bind();
 		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &_Width);
 		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &_Height);
-		SetMinMagFilter(_PAMinFilter, _PAMagFilter);
-		SetSTWrap(_PASWrap, _PATWrap);
+
+		if (_PAMinFilter != -1 && _PAMagFilter != -1)
+			SetMinMagFilter(_PAMinFilter, _PAMagFilter);
+
+		if (_PASWrap != -1 && _PATWrap != -1)
+			SetSTWrap(_PASWrap, _PATWrap);
 	}
 }
 

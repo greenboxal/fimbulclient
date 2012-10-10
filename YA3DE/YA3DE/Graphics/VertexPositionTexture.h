@@ -13,38 +13,33 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _FONTMANAGER_H_
-#define _FONTMANAGER_H_
+#ifndef _VERTEXPOSITIONTEXTURE_H_
+#define _VERTEXPOSITIONTEXTURE_H_
 
-#include <map>
-#include <list>
-#include <YA3DE/Helpers.h>
-#include <YA3DE/Graphics/Font.h>
+#include <YA3DE/Math.h>
+#include <YA3DE/Graphics/VertexDeclaration.h>
 
 namespace YA3DE
 {
 	namespace Graphics
 	{
-		class FontManager
+		struct VertexPositionTexture
 		{
-		public:
-			FontManager()
+			glm::vec3 Position;
+			glm::vec2 TexCoord;
+
+			VertexPositionTexture()
 			{
-				_Instance = this;
+
 			}
 
-			FontPtr LoadFont(const std::string &name, int size, int style = FontStyle::None, FontLoadPolicy policy = FontLoadPolicy::Direct);
-
-			static FontManager *Instance()
+			VertexPositionTexture(const glm::vec3 &position, const glm::vec2 &texcoord)
 			{
-				if (_Instance == NULL)
-					new FontManager();
-
-				return _Instance;
+				Position = position;
+				TexCoord = texcoord;
 			}
-		public:
-			std::map<std::string, std::list<std::weak_ptr<Font> > > _Instances;
-			static FontManager *_Instance;
+
+			static VertexDeclaration VertexDeclaration;
 		};
 	}
 }
