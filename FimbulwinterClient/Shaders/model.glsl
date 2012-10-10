@@ -12,7 +12,7 @@
 //#define DEBUG_NORMALS
 //#define ENABLE_LIGHTS
 
-// WorldViewProjection matrix 
+// WorldViewProjection matrix
 uniform mat4 WorldViewProjection;
 
 // Light information

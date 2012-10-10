@@ -35,7 +35,7 @@ namespace ROGUI
 
 			void Render(Graphics2D &g)
 			{
-				g.Draw(_label->GetFont(), _label->GetFontHeight(), _label->GetText(), glm::uvec2(0), _label->GetForeColor());
+				g.Draw(_label->GetFont(), _label->GetText(), glm::uvec2(0), _label->GetForeColor());
 			}
 
 		private:

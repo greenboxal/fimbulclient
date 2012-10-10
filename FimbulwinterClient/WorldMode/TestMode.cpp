@@ -18,6 +18,8 @@
 
 #include <YA3DE/System/Mouse.h>
 #include <YA3DE/System/Keyboard.h>
+#include <YA3DE/Graphics/Graphics2D.h>
+#include <YA3DE/Graphics/FontManager.h>
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/Content/StringResource.h>
 
@@ -25,6 +27,7 @@ using namespace WorldMode;
 using namespace ROGraphics;
 
 using namespace YA3DE::Content;
+using namespace YA3DE::Graphics;
 
 TestMode::TestMode()
 {
@@ -42,8 +45,8 @@ void TestMode::OnLoad()
 
 	std::string mapName = Ragnarok->Configuration->GetRoot().first_node("Config")->first_node("Ragnarok")->first_attribute("World")->value();
 
-	_World = ContentManager::Instance()->Load<World>("data/" + mapName + ".rsw");
-	_World->SceneCamera = _Camera;
+	//_World = ContentManager::Instance()->Load<World>("data/" + mapName + ".rsw");
+	//_World->SceneCamera = _Camera;
 }
 
 void TestMode::Update(double elapsed)
@@ -103,18 +106,22 @@ void TestMode::Update(double elapsed)
         }
 
 		_PrevMouseState = state;
-
-		char buffer[1024];
-		sprintf(buffer, "X=%f, Y=%f, Z=%f -> X=%f, Y=%f, Z=%f", _Camera->Position.x, _Camera->Position.y, _Camera->Position.z, _Camera->Target.x, _Camera->Target.y, _Camera->Target.z);
-		Ragnarok->Window.SetTitle(buffer);
 	}
 
-	_World->Update(elapsed);
+	//_World->Update(elapsed);
 }
 
 void TestMode::Render(double elapsed)
 {
-	_World->Render(elapsed);
+	char buffer[1024];
+	sprintf(buffer, "ABCabcÁÉÍÂ", _Camera->Position.x, _Camera->Position.y, _Camera->Position.z, _Camera->Target.x, _Camera->Target.y, _Camera->Target.z);
+
+	//_World->Render(elapsed);
+
+	Graphics2D g;
+	g.Begin();
+	g.Draw(FontManager::Instance()->LoadFont("arial", 48, FontStyle::None, FontLoadPolicy::Direct), buffer, glm::uvec2(1, 50), glm::vec4(1.f));
+	g.End();
 }
 
 void TestMode::OnEvent(Event &ev, double elapsedTime)

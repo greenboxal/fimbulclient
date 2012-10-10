@@ -156,5 +156,7 @@
   <ItemGroup>
     <None Include="Shaders\ground.glsl" />
     <None Include="Shaders\model.glsl" />
+    <None Include="Shaders\graphics2d.glsl" />
+    <None Include="Shaders\font.glsl" />
   </ItemGroup>
 </Project>
