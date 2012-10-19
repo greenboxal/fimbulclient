@@ -83,21 +83,21 @@ namespace ROGraphics
 		void Update(double elapsed);
 		void Render(ShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
 
-		DEFPROP_RO_R(public, std::string, Name);
-		DEFPROP_RO_R(public, std::string, ParentName);
-		DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
-		DEFPROP_RO_R(public, glm::mat4, ParentTransformation);
-		DEFPROP_RO_R(public, glm::vec3, ParentPosition);
-		DEFPROP_RO_R(public, glm::vec3, Position);
-		DEFPROP_RO_R(public, VertexBufferPtr, Vertices);
-		DEFPROP_RO_R(public, std::vector<IndexBufferPtr>, Indices);
-		DEFPROP_RO_R(public, RotationList, RotationFrames);
-		DEFPROP_RO_R(public, float, RotationAngle);
-		DEFPROP_RO_R(public, glm::vec3, RotationAxis);
-		DEFPROP_RO_R(public, glm::vec3, Scale);
-		DEFPROP_RO_R(public, AABBox, BoundingBox);
+		DEFPROP_RO(public, std::string, Name);
+		DEFPROP_RO(public, std::string, ParentName);
+		DEFPROP_RO(public, std::vector<Texture2DPtr>, Textures);
+		DEFPROP_RO(public, glm::mat4, ParentTransformation);
+		DEFPROP_RO(public, glm::vec3, ParentPosition);
+		DEFPROP_RO(public, glm::vec3, Position);
+		DEFPROP_RO(public, VertexBufferPtr, Vertices);
+		DEFPROP_RO(public, std::vector<IndexBufferPtr>, Indices);
+		DEFPROP_RO(public, RotationList, RotationFrames);
+		DEFPROP_RO(public, float, RotationAngle);
+		DEFPROP_RO(public, glm::vec3, RotationAxis);
+		DEFPROP_RO(public, glm::vec3, Scale);
+		DEFPROP_RO(public, AABBox, BoundingBox);
 		DEFPROP_RW(public, std::shared_ptr<RsmMesh>, Parent);
-		DEFPROP_RO_R(public, std::vector<std::shared_ptr<RsmMesh>>, Children);
+		DEFPROP_RO(public, std::vector<std::shared_ptr<RsmMesh>>, Children);
 		DEFPROP_RO(public, RsmModel *, Owner);
 	
 	private:
@@ -128,10 +128,10 @@ namespace ROGraphics
 		DEFPROP_RO(public, int, AnimationLength);
 		DEFPROP_RO(public, int, ShadeType);
 		DEFPROP_RO(public, unsigned char, Alpha);
-		DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
+		DEFPROP_RO(public, std::vector<Texture2DPtr>, Textures);
 		DEFPROP_RO(public, RsmMeshPtr, MainMesh);
-		DEFPROP_RO_R(public, MeshList, Meshes);
-		DEFPROP_RO_R(public, AABBox, BoundingBox);
+		DEFPROP_RO(public, MeshList, Meshes);
+		DEFPROP_RO(public, AABBox, BoundingBox);
 
 		DEFPROP_RO(public, bool, Loaded);
 	};

@@ -13,30 +13,38 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _XGLCONTEXT_H_
+#define _XGLCONTEXT_H_
 
-#include <string>
-
-#include <rapidxml/rapidxml.hpp>
-
+#include <YA3DE/OpenGL.h>
 #include <YA3DE/Helpers.h>
+#include <YA3DE/System/RenderWindow.h>
+
+#include <GL/glx.h>
+#include <X11/Xlib.h>
 
 namespace YA3DE
 {
-	class Config
+	namespace System
 	{
-	public:
-		Config(std::string filename)
-			: _Name(filename)
+		class GLContext
 		{
-		}
+		public:
+			GLContext(RenderWindow *owner);
+			~GLContext();
 
-		void Read();
+			bool Create(GLContext *share = NULL);
+			void UnbindCurrent();
+			void MakeCurrent();
+			void Destroy();
 
-		DEFPROP_RO(public, std::string, Name);
-		DEFPROP_RO(public, rapidxml::xml_document<>, Root);
-	};
+			void InitGlew();
+
+			DEFPROP_RO(public, GLXContext, NativeHandle);
+			DEFPROP_RO(public, Display *, DeviceContext)
+			DEFPROP_RO(public, RenderWindow *, Window);
+		};
+	}
 }
 
 #endif

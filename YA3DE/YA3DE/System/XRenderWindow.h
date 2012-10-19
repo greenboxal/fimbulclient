@@ -12,15 +12,15 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _WIN32RENDERWINDOW_H_
-#define _WIN32RENDERWINDOW_H_
-
-#include <Windows.h>
+#ifndef _XRENDERWINDOW_H_
+#define _XRENDERWINDOW_H_
 
 #include <mutex>
 #include <queue>
 #include <vector>
 #include <string>
+
+#include <X11/Xlib.h>
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Helpers.h>
@@ -33,7 +33,7 @@ namespace YA3DE
 	{
 		namespace WindowStyle
 		{
-			enum
+			enum _WindowStyle
 			{
 				None = 0,
 				Borderless = 0x1,
@@ -67,24 +67,18 @@ namespace YA3DE
 			DEFPROP_RO(public, GLContext *, MainContext);
 			DEFPROP_RO(public, std::vector<GLContext *>, ContextList);
 			
-			DEFPROP_RO(public, HWND, NativeHandle);
+			DEFPROP_RO(public, Display *, DeviceContext);
+			DEFPROP_RO(public, Window, NativeHandle);
 			DEFPROP_RO(public, bool, IsActive);
 
-			DEFPROP_SELF_RO(public, glm::uvec2, Position);
-			DEFPROP_SELF_RO(public, glm::uvec2, Size);
+			DEFPROP_RO(public, glm::uvec2, Position);
+			DEFPROP_RO(public, glm::uvec2, Size);
 
 			DEFPROP_RW(public, bool, KeyRepeat);
 
 		private:
-			std::string _ClassName;
-			HCURSOR _Cursor;
-			bool _MouseCursorIn;
-
+			bool _VSync;
 			std::queue<Event> _EventQueue;
-			
-			void _WndProc(UINT message, WPARAM wParam, LPARAM lParam);
-
-			static LRESULT CALLBACK WndProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
 		};
 	}
 }

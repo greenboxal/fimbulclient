@@ -18,6 +18,8 @@
 
 #ifdef _WIN32
 #include <YA3DE/System/Win32RenderWindow.h>
+#elif defined(_LINUX)
+#include <YA3DE/System/XRenderWindow.h>
 #else
 #error "This platform is not supported yet."
 #endif

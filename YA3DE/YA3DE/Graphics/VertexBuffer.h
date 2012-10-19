@@ -61,7 +61,7 @@ namespace YA3DE
 
 			DEFPROP_RO(public, unsigned int, ID);
 			DEFPROP_RO(public, int, Type);
-			DEFPROP_RO_R(public, VertexDeclaration, Declaration);
+			DEFPROP_RO(public, VertexDeclaration, Declaration);
 		};
 		typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
 	}

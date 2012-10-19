@@ -35,8 +35,6 @@ namespace YA3DE
 			virtual char ReadByte() = 0;
 			virtual size_t GetSize() = 0;
 			virtual void Close() = 0;
-
-			DEFPROP_I_RO(public, size_t, Size, GetSize);
 		};
 		typedef std::shared_ptr<IFile> FilePtr;
 	}

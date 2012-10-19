@@ -30,8 +30,8 @@ namespace YA3DE
 		Logger();
 		~Logger();
 
-		void Log(char *format, ...);
-		void Log(std::string s);
+		void Log(const char *format, ...);
+		void Log(const std::string &s);
 
 		static Logger *Instance()
 		{

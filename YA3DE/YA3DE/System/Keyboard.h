@@ -17,6 +17,8 @@
 
 #ifdef _WIN32
 #include <YA3DE/System/Win32Keyboard.h>
+#elif defined(_LINUX)
+#include <YA3DE/System/XKeyboard.h>
 #else
 #error "This platform is not supported yet."
 #endif

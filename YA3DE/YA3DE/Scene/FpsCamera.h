@@ -53,8 +53,8 @@ namespace YA3DE
 				return glm::normalize(glm::cross(Direction, Up));
 			}
 	
-			DEFPROP_RO_R(public, glm::vec3, Position);
-			DEFPROP_RO_R(public, glm::vec3, Target);
+			DEFPROP_RO(public, glm::vec3, Position);
+			DEFPROP_RO(public, glm::vec3, Target);
 			DEFPROP_RO(public, float, NearPlane);
 			DEFPROP_RO(public, float, FarPlane);
 			DEFPROP_RO(public, float, Yaw);

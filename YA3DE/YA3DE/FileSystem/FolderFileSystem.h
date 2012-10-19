@@ -66,7 +66,7 @@ namespace YA3DE
 				else
 					throw std::exception("Invalid seek origin!");
 
-				_stream.seekg(dir, offset);
+				_stream.seekg(offset, dir);
 			}
 
 			virtual void Read(const void *data, int size)

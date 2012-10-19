@@ -37,7 +37,7 @@ namespace YA3DE
 			void Clear();
 
 			DEFPROP_RO(public, SceneNode *, Parent);
-			DEFPROP_RO_R(public, std::list<SceneNode *>, Children);
+			DEFPROP_RO(public, std::list<SceneNode *>, Children);
 		};
 	}
 }

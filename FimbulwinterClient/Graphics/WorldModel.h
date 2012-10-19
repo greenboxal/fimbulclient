@@ -36,18 +36,18 @@ namespace ROGraphics
 		virtual void Update(Camera *camera, double elapsed);
 		virtual void Render(Camera *camera, double elapsed);
 
-		DEFPROP_RO_R(public, std::string, Name);
+		DEFPROP_RO(public, std::string, Name);
 		DEFPROP_RO(public, int, AnimationType);
 		DEFPROP_RO(public, float, AnimationSpeed);
 		DEFPROP_RO(public, int, BlockType);
-		DEFPROP_RO_R(public, std::string, ModelName);
-		DEFPROP_RO_R(public, std::string, MeshName);
+		DEFPROP_RO(public, std::string, ModelName);
+		DEFPROP_RO(public, std::string, MeshName);
 		DEFPROP_RW_R(public, glm::vec3, Position);
 		DEFPROP_RW_R(public, glm::vec3, Rotation);
 		DEFPROP_RW_R(public, glm::vec3, Scale);
 		DEFPROP_RO(public, RsmModelPtr, Model);
 		DEFPROP_RO(public, RsmMeshPtr, Mesh);
-		DEFPROP_RO_R(public, glm::mat4, WorldMatrix);
+		DEFPROP_RO(public, glm::mat4, WorldMatrix);
 
 	private:
 		ShaderProgramPtr _Shader;

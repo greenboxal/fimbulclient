@@ -18,20 +18,29 @@
 
 #define GLEW_MX
 #define glewGetContext() (&YA3DE_CurrentGlew)
-#define wglewGetContext() (&YA3DE_CurrentWGlew)
 
 #include <GL/glew.h>
 #ifdef _WIN32
 #include <GL/wglew.h>
+#define wglewGetContext() (&YA3DE_CurrentWGlew)
+#elif defined(_LINUX)
+#define glxewContextInit() (&YA3DE_CurrentXGlew)
+#include <GL/glxew.h>
 #endif
 
-#include <GL/GL.h>
-#include <GL/GLU.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
+#ifdef _MSC_VER
 extern __declspec(thread) GLEWContext YA3DE_CurrentGlew;
+#elif defined(_LINUX)
+extern __thread GLEWContext YA3DE_CurrentGlew;
+#endif
 
 #ifdef _WIN32
 extern __declspec(thread) WGLEWContext YA3DE_CurrentWGlew;
+#elif defined(_LINUX)
+extern __thread GLXEWContext YA3DE_CurrentXGlew;
 #endif
 
 #endif

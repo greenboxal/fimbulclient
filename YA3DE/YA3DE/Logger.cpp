@@ -49,10 +49,10 @@ Logger::~Logger()
 
 void Logger::Open()
 {
-	_File.open(_Filename, std::fstream::out | std::fstream::trunc);
+	_File.open(_Filename.c_str(), std::fstream::out | std::fstream::trunc);
 }
 
-void Logger::Log(char *format, ...)
+void Logger::Log(const char *format, ...)
 {
 	static char buffer[50 * 1024];
 	va_list va;
@@ -87,7 +87,7 @@ void Logger::Log(char *format, ...)
 	_Mutex.unlock();
 }
 
-void Logger::Log(std::string s)
+void Logger::Log(const std::string &s)
 {
 	time_t rawtime;
 	struct tm *timeinfo;

@@ -17,6 +17,8 @@
 
 #ifdef _WIN32
 #include <YA3DE/System/Win32GLContext.h>
+#elif defined(_LINUX)
+#include <YA3DE/System/XGLContext.h>
 #else
 #error "This platform is not supported yet."
 #endif

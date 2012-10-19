@@ -43,7 +43,7 @@ namespace YA3DE
 
 		DEFPROP_RW(public, bool, Running);
 		DEFPROP_RW_P(public, Config *, Configuration);
-		DEFPROP_RO_R(public, YA3DE::System::RenderWindow, Window);
+		DEFPROP_RO(public, YA3DE::System::RenderWindow, Window);
 		DEFPROP_RO(public, double, FrameRate);
 		DEFPROP_RO(public, bool, IsActive);
 

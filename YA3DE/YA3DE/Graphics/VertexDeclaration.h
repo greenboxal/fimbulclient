@@ -115,7 +115,7 @@ namespace YA3DE
 				}
 			}
 			
-			DEFPROP_RO_R(public, std::vector<VertexElement>, Elements);
+			DEFPROP_RO(public, std::vector<VertexElement>, Elements);
 			DEFPROP_RO(public, int, TotalSize);
 		};
 	}

@@ -46,7 +46,7 @@ namespace YA3DE
 			}
 			
 			DEFPROP_RO(public, unsigned int, Hash);
-			DEFPROP_RO_R(public, std::string, Name);
+			DEFPROP_RO(public, std::string, Name);
 
 		private:
 			static unsigned int MakeHash(const std::string &s);

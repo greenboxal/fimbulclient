@@ -22,82 +22,25 @@
 #define STRUCT_PACKED __attribute__((packed))
 #endif
 
-#if defined(_MSC_VER)
-
-#define DEFPROP_I_RW(access, type, name, getter, setter) \
-access: \
-	__declspec(property(get = getter, put = setter)) type name
-
-#define DEFPROP_I_RW_R(access, type, name, getter, setter) \
-access: \
-	__declspec(property(get = getter, put = setter)) type &name
-
-#define DEFPROP_I_RO(access, type, name, getter) \
-access: \
-	__declspec(property(get = getter)) type name
-
-#define DEFPROP_I_RO_R(access, type, name, getter) \
-access: \
-	__declspec(property(get = getter)) type &name
-
 #define DEFPROP_SELF_RO(access, type, name) \
 access: \
-	DEFPROP_I_RO(access, type, name, Get##name); \
-	type Get##name()
+	const type &name()
 
-#define DEFPROP_SELF_RO_R(access, type, name) \
+#define DEFPROP_SELF_RW(access, type, name) \
 access: \
 	DEFPROP_I_RO_R(access, type, name, Get##name) \
 	type &Get##name()
 
 #define DEFPROP_RW(access, type, name) \
 access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type Get##name() const { return _##name; } \
-	void Set##name(const type &value) { _##name = value; } \
-private: \
-	type _##name
-
-#define DEFPROP_RW_P(access, type, name) \
-access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type Get##name() const { return _##name; } \
-	void Set##name(type value) { _##name = value; } \
-private: \
-	type _##name
-
-#define DEFPROP_RW_R(access, type, name) \
-access: \
-	DEFPROP_I_RW_R(access, type, name, Get##name, Set##name); \
-	type &Get##name() { return _##name; } \
-	void Set##name(const type &value) { _##name = value; } \
-private: \
-	type _##name
-
-#define DEFPROP_RW_PR(access, type, name) \
-access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type &Get##name() { return _##name; } \
-	void Set##name(type value) { _##name = value; } \
+	type &name() { return _##name; } \
 private: \
 	type _##name
 
 #define DEFPROP_RO(access, type, name) \
 access: \
-	DEFPROP_I_RO(access, type, name, Get##name); \
-	type Get##name() const { return _##name; } \
+	const type &name() { return _##name; } \
 private: \
 	type _##name
-
-#define DEFPROP_RO_R(access, type, name) \
-access: \
-	DEFPROP_I_RO_R(access, type, name, Get##name); \
-	type &Get##name() { return _##name; } \
-private: \
-	type _##name
-
-#else
-#error "This compiler doesn't support property creation!"
-#endif
 
 #endif
