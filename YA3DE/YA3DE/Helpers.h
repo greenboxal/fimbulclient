@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _HELPERS_H_
-#define _HELPERS_H_
+#pragma once
 
 #ifdef _MSC_VER
 #define STRUCT_PACKED
@@ -100,4 +99,3 @@ private: \
 #error "This compiler doesn't support property creation!"
 #endif
 
-#endif

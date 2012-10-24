@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _DISPATCHER_H_
-#define _DISPATCHER_H_
+#pragma once
 
 #include <queue>
 #include <mutex>
@@ -48,4 +47,3 @@ namespace YA3DE
 	}
 }
 
-#endif

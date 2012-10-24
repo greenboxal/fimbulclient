@@ -12,8 +12,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _EVENT_H_
-#define _EVENT_H_
+#pragma once
 
 #include <YA3DE/System/Mouse.h>
 //#include <YA3DE/System/Keyboard.h>
@@ -46,4 +45,3 @@ namespace YA3DE
 	}
 }
 
-#endif

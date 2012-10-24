@@ -15,148 +15,154 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FimbulwinterClient.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorldGameMode.cpp">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\adler32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorldMode\TestMode.cpp">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\compress.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\GrfFileSystem.cpp">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\crc32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\adler32.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\deflate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\compress.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\infback.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\crc32.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inffast.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\deflate.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inflate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\inffast.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inftrees.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\inflate.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\trees.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\inftrees.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\uncompr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\trees.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\zutil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\zutil.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\Grf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\infback.c">
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\GrfCrypt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\zlib\uncompr.c">
+    <ClCompile Include="FCRagnarok\FileSystem\GrfFileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\Grf.cpp">
+    <ClCompile Include="FCRagnarok\Graphics\RsmModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\Grf\GrfCrypt.cpp">
+    <ClCompile Include="FCRagnarok\Graphics\VertexDeclarations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\RsmModel.cpp">
+    <ClCompile Include="FCRagnarok\Graphics\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\VertexDeclarations.cpp">
+    <ClCompile Include="FCRagnarok\Graphics\WorldModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\World.cpp">
+    <ClCompile Include="FCRagnarok\WorldMode\TestMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\WorldModel.cpp">
+    <ClCompile Include="FCRagnarok\FimbulwinterClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\WorldGameMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FimbulwinterClient.h">
+    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\Renderers\ControlRenderer.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\crc32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\Renderers\LabelRenderer.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\deflate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameMode.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inffast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LoginGameMode.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inffixed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldGameMode.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inflate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldMode\TestMode.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inftrees.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\GrfFileSystem.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\trees.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\crc32.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zconf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\deflate.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\inffast.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zutil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\inffixed.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\Grf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\inflate.h">
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\GrfCrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\inftrees.h">
+    <ClInclude Include="FCRagnarok\FileSystem\GrfFileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\trees.h">
+    <ClInclude Include="FCRagnarok\Graphics\RsmModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\zconf.h">
+    <ClInclude Include="FCRagnarok\Graphics\VertexDeclarations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\zlib.h">
+    <ClInclude Include="FCRagnarok\Graphics\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\zlib\zutil.h">
+    <ClInclude Include="FCRagnarok\Graphics\WorldModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\Grf.h">
+    <ClInclude Include="FCRagnarok\GUI\Renderers\ControlRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem\Grf\GrfCrypt.h">
+    <ClInclude Include="FCRagnarok\GUI\Renderers\LabelRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\RsmModel.h">
+    <ClInclude Include="FCRagnarok\WorldMode\TestMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\VertexDeclarations.h">
+    <ClInclude Include="FCRagnarok\FimbulwinterClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\World.h">
+    <ClInclude Include="FCRagnarok\GameMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\WorldModel.h">
+    <ClInclude Include="FCRagnarok\LoginGameMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FCRagnarok\WorldGameMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\ground.glsl" />
-    <None Include="Shaders\model.glsl" />
     <None Include="Shaders\graphics2d.glsl" />
     <None Include="Shaders\font.glsl" />
+    <None Include="FCRagnarok\Shaders\ground.glsl" />
+    <None Include="FCRagnarok\Shaders\model.glsl" />
   </ItemGroup>
 </Project>

@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _CONTENTNAME_H_
-#define _CONTENTNAME_H_
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -69,4 +68,3 @@ namespace YA3DE
 	}
 }
 
-#endif

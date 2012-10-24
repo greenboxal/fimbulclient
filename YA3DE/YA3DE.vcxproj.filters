@@ -927,6 +927,9 @@
     <ClInclude Include="YA3DE\Graphics\VertexPositionTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="YA3DE\Game.cpp">
@@ -1011,6 +1014,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="YA3DE\Graphics\FontManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

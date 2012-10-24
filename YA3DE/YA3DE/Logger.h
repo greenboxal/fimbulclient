@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _LOGGER_H_
-#define _LOGGER_H_
+#pragma once
 
 #include <mutex>
 #include <string>
@@ -52,4 +51,3 @@ namespace YA3DE
 	};
 }
 
-#endif

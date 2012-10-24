@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _VERTEXPOSITIONTEXTURE_H_
-#define _VERTEXPOSITIONTEXTURE_H_
+#pragma once
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Graphics/VertexDeclaration.h>
@@ -44,4 +43,3 @@ namespace YA3DE
 	}
 }
 
-#endif

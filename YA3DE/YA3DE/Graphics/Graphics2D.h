@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _GRAPHICS2D_H_
-#define _GRAPHICS2D_H_
+#pragma once
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Graphics/Font.h>
@@ -74,4 +73,3 @@ namespace YA3DE
 	}
 }
 
-#endif

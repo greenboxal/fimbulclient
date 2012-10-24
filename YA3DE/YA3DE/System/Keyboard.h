@@ -12,8 +12,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _KEYBOARD_H_
-#define _KEYBOARD_H_
+#pragma once
 
 #ifdef _WIN32
 #include <YA3DE/System/Win32Keyboard.h>
@@ -21,4 +20,3 @@
 #error "This platform is not supported yet."
 #endif
 
-#endif

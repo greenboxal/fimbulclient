@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _FRUSTUM_H_
-#define _FURSTUM_H_
+#pragma once
 
 #include <glm/gtc/matrix_access.hpp>
 
@@ -90,4 +89,3 @@ namespace YA3DE
 	}
 }
 
-#endif

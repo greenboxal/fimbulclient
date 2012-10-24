@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _SCENEMANAGER_H_
-#define _SCENEMANAGER_H_
+#pragma once
 
 #include <YA3DE/Helpers.h>
 #include <YA3DE/Scene/Camera.h>
@@ -40,4 +39,3 @@ namespace YA3DE
 	}
 }
 
-#endif

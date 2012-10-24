@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _RENDERWINDOW_H_
-#define _RENDERWINDOW_H_
+#pragma once
 
 #ifdef _WIN32
 #include <YA3DE/System/Win32RenderWindow.h>
@@ -22,4 +21,3 @@
 #error "This platform is not supported yet."
 #endif
 
-#endif

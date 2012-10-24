@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _FONTMANAGER_H_
-#define _FONTMANAGER_H_
+#pragma once
 
 #include <map>
 #include <list>
@@ -49,4 +48,3 @@ namespace YA3DE
 	}
 }
 
-#endif

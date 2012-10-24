@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -91,7 +91,7 @@ exit 0</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,27 +117,64 @@ exit 0</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileSystem\GrfFileSystem.cpp" />
-    <ClCompile Include="FileSystem\Grf\Grf.cpp" />
-    <ClCompile Include="FileSystem\Grf\zlib\adler32.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\compress.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\crc32.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\deflate.c" />
-    <ClCompile Include="FileSystem\Grf\GrfCrypt.cpp" />
-    <ClCompile Include="FileSystem\Grf\zlib\infback.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\inffast.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\inflate.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\inftrees.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\trees.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\uncompr.c" />
-    <ClCompile Include="FileSystem\Grf\zlib\zutil.c" />
-    <ClCompile Include="FimbulwinterClient.cpp" />
-    <ClCompile Include="Graphics\RsmModel.cpp" />
-    <ClCompile Include="Graphics\VertexDeclarations.cpp" />
-    <ClCompile Include="Graphics\World.cpp" />
-    <ClCompile Include="Graphics\WorldModel.cpp" />
-    <ClCompile Include="WorldGameMode.cpp" />
-    <ClCompile Include="WorldMode\TestMode.cpp" />
+    <ClCompile Include="FCRagnarok\FileSystem\GrfFileSystem.cpp" />
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\Grf.cpp" />
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\adler32.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\compress.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\crc32.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\deflate.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\GrfCrypt.cpp" />
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\infback.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inffast.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inflate.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\inftrees.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\trees.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\uncompr.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\zutil.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\FimbulwinterClient.cpp" />
+    <ClCompile Include="FCRagnarok\Graphics\RsmModel.cpp" />
+    <ClCompile Include="FCRagnarok\Graphics\VertexDeclarations.cpp" />
+    <ClCompile Include="FCRagnarok\Graphics\World.cpp" />
+    <ClCompile Include="FCRagnarok\Graphics\WorldModel.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FCRagnarok\WorldGameMode.cpp" />
+    <ClCompile Include="FCRagnarok\WorldMode\TestMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YA3DE\YA3DE.vcxproj">
@@ -145,36 +182,37 @@ exit 0</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileSystem\GrfFileSystem.h" />
-    <ClInclude Include="FileSystem\Grf\Grf.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\crc32.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\deflate.h" />
-    <ClInclude Include="FileSystem\Grf\GrfCrypt.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\inffast.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\inffixed.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\inflate.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\inftrees.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\trees.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\zconf.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\zlib.h" />
-    <ClInclude Include="FileSystem\Grf\zlib\zutil.h" />
-    <ClInclude Include="FimbulwinterClient.h" />
-    <ClInclude Include="GameMode.h" />
-    <ClInclude Include="Graphics\RsmModel.h" />
-    <ClInclude Include="Graphics\VertexDeclarations.h" />
-    <ClInclude Include="Graphics\World.h" />
-    <ClInclude Include="Graphics\WorldModel.h" />
-    <ClInclude Include="GUI\Renderers\ControlRenderer.h" />
-    <ClInclude Include="GUI\Renderers\LabelRenderer.h" />
-    <ClInclude Include="LoginGameMode.h" />
-    <ClInclude Include="WorldGameMode.h" />
-    <ClInclude Include="WorldMode\TestMode.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\GrfFileSystem.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\Grf.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\crc32.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\deflate.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\GrfCrypt.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inffast.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inffixed.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inflate.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\inftrees.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\trees.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zconf.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zlib.h" />
+    <ClInclude Include="FCRagnarok\FileSystem\Grf\zlib\zutil.h" />
+    <ClInclude Include="FCRagnarok\FimbulwinterClient.h" />
+    <ClInclude Include="FCRagnarok\GameMode.h" />
+    <ClInclude Include="FCRagnarok\Graphics\RsmModel.h" />
+    <ClInclude Include="FCRagnarok\Graphics\VertexDeclarations.h" />
+    <ClInclude Include="FCRagnarok\Graphics\World.h" />
+    <ClInclude Include="FCRagnarok\Graphics\WorldModel.h" />
+    <ClInclude Include="FCRagnarok\GUI\Renderers\ControlRenderer.h" />
+    <ClInclude Include="FCRagnarok\GUI\Renderers\LabelRenderer.h" />
+    <ClInclude Include="FCRagnarok\LoginGameMode.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="FCRagnarok\WorldGameMode.h" />
+    <ClInclude Include="FCRagnarok\WorldMode\TestMode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\font.glsl" />
     <None Include="Shaders\graphics2d.glsl" />
-    <None Include="Shaders\ground.glsl" />
-    <None Include="Shaders\model.glsl" />
+    <None Include="FCRagnarok\Shaders\ground.glsl" />
+    <None Include="FCRagnarok\Shaders\model.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

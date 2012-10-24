@@ -13,6 +13,8 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include <stdafx.h>
+
 #ifdef _WIN32
 
 #include <YA3DE/Logger.h>

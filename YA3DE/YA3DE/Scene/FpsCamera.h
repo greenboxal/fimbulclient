@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _FPSCAMERA_H_
-#define _FPSCAMERA_H_
+#pragma once
 
 #include <YA3DE/Scene/Camera.h>
 
@@ -70,4 +69,3 @@ namespace YA3DE
 	}
 }
 
-#endif

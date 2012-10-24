@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _FOLDEFILESYSTEM_H_
-#define _FOLDEFILESYSTEM_H_
+#pragma once
 
 #include <exception>
 #include <fstream>
@@ -138,4 +137,3 @@ namespace YA3DE
 	}
 }
 
-#endif

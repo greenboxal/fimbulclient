@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _IGUIRENDERER_H_
-#define _IGUIRENDERER_H_
+#pragma once
 
 #include <string>
 #include <YA3DE/Graphics/Graphics2D.h>
@@ -41,4 +40,3 @@ namespace YA3DE
 	}
 }
 
-#endif

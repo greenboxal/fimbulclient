@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _VERTEXBUFFER_H_
-#define _VERTEXBUFFER_H_
+#pragma once
 
 #include <memory>
 
@@ -67,4 +66,3 @@ namespace YA3DE
 	}
 }
 
-#endif

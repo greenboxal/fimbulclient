@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _OPENGL_H_
-#define _OPENGL_H_
+#pragma once
 
 #define GLEW_MX
 #define glewGetContext() (&YA3DE_CurrentGlew)
@@ -34,4 +33,3 @@ extern __declspec(thread) GLEWContext YA3DE_CurrentGlew;
 extern __declspec(thread) WGLEWContext YA3DE_CurrentWGlew;
 #endif
 
-#endif

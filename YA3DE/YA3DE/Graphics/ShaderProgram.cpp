@@ -13,6 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include <stdafx.h>
 #include <YA3DE/Math.h>
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>

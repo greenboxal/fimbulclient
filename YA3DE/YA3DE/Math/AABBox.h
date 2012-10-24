@@ -13,8 +13,7 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef _AABBOX_H_
-#define _AABBOX_H_
+#pragma once
 
 #include <algorithm>
 
@@ -100,4 +99,3 @@ namespace YA3DE
 	}
 }
 
-#endif
