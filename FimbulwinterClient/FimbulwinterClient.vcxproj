@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)YA3DE\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdparty\V8\Include;$(SolutionDir)\3rdparty\GLM;$(SolutionDir)\3rdparty\FreeType\Include;$(SolutionDir)\3rdparty\XML\Include;$(ProjectDir);$(SolutionDir)YA3DE\</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
@@ -65,8 +65,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\;$(SolutionDir)Lib\$(Configuration)\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype2410.lib;OpenGL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdparty\V8\$(Configuration)\;$(SolutionDir)\3rdparty\FreeType\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>v8_base.lib;freetype2410.lib;OpenGL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -96,7 +96,7 @@ exit 0</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)YA3DE\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdparty\V8\Include;$(SolutionDir)\3rdparty\GLM;$(SolutionDir)\3rdparty\FreeType\Include;$(SolutionDir)\3rdparty\XML\Include;$(ProjectDir);$(SolutionDir)YA3DE\</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
@@ -106,8 +106,8 @@ exit 0</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\;$(SolutionDir)Lib\$(Configuration)\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype2410.lib;OpenGL32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdparty\V8\$(Configuration)\;$(SolutionDir)\3rdparty\FreeType\;$(SolutionDir)Build\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>v8_base.lib;freetype2410.lib;OpenGL32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Build\$(Configuration)\data &gt; nul 2&gt;&amp;1
