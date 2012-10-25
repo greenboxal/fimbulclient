@@ -137,12 +137,6 @@
     <ClInclude Include="FCRagnarok\Graphics\WorldModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FCRagnarok\GUI\Renderers\ControlRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FCRagnarok\GUI\Renderers\LabelRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FCRagnarok\WorldMode\TestMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>

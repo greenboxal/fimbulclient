@@ -35,105 +35,107 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-namespace ROGraphics
+using namespace YA3DE::Math;
+using namespace YA3DE::Scene;
+using namespace YA3DE::Content;
+using namespace YA3DE::Graphics;
+
+namespace FCRagnarok
 {
-	using namespace YA3DE::Math;
-	using namespace YA3DE::Scene;
-	using namespace YA3DE::Content;
-	using namespace YA3DE::Graphics;
-
-#include <YA3DE/Pack1.h>
-	struct RsmHeader
+	namespace Graphics
 	{
-		char Magic[4];
-		union
+		#include <YA3DE/Pack1.h>
+		struct RsmHeader
 		{
-			struct
+			char Magic[4];
+			union
 			{
-				unsigned char Major;
-				unsigned char Minor;
-			};
-			unsigned short Version;
-		} Version;
-	} STRUCT_PACKED;
+				struct
+				{
+					unsigned char Major;
+					unsigned char Minor;
+				};
+				unsigned short Version;
+			} Version;
+		} STRUCT_PACKED;
 
-	struct RsmFace
-	{
-		unsigned short Vertices[3];
-		unsigned short TexCoords[3];
-		unsigned short TextureID;
-		unsigned short Unknown;
-		unsigned int Dummy[2];
-	} STRUCT_PACKED;
-#include <YA3DE/PackEnd.h>
+		struct RsmFace
+		{
+			unsigned short Vertices[3];
+			unsigned short TexCoords[3];
+			unsigned short TextureID;
+			unsigned short Unknown;
+			unsigned int Dummy[2];
+		} STRUCT_PACKED;
+		#include <YA3DE/PackEnd.h>
 
-	class RsmModel;
-	class RsmMesh : public std::enable_shared_from_this<RsmMesh>
-	{
-	public:
-		typedef std::vector<std::pair<int, glm::quat> > RotationList;
+		class RsmModel;
+		class RsmMesh : public std::enable_shared_from_this<RsmMesh>
+		{
+		public:
+			typedef std::vector<std::pair<int, glm::quat> > RotationList;
 
-		RsmMesh(RsmModel *owner);
-		bool Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream);
+			RsmMesh(RsmModel *owner);
+			bool Load(RsmHeader &header, const YA3DE::FileSystem::FilePtr &stream);
 
-		void UpdateBoundingBox();
-		void UpdateRealBoundingBox(AABBox &aabb, const glm::mat4 &ptm);
+			void UpdateBoundingBox();
+			void UpdateRealBoundingBox(AABBox &aabb, const glm::mat4 &ptm);
 
-		void Update(double elapsed);
-		void Render(ShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
+			void Update(double elapsed);
+			void Render(ShaderProgramPtr &shader, Camera &camera, const glm::mat4 &model, double elapsed);
 
-		DEFPROP_RO_R(public, std::string, Name);
-		DEFPROP_RO_R(public, std::string, ParentName);
-		DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
-		DEFPROP_RO_R(public, glm::mat4, ParentTransformation);
-		DEFPROP_RO_R(public, glm::vec3, ParentPosition);
-		DEFPROP_RO_R(public, glm::vec3, Position);
-		DEFPROP_RO_R(public, VertexBufferPtr, Vertices);
-		DEFPROP_RO_R(public, std::vector<IndexBufferPtr>, Indices);
-		DEFPROP_RO_R(public, RotationList, RotationFrames);
-		DEFPROP_RO_R(public, float, RotationAngle);
-		DEFPROP_RO_R(public, glm::vec3, RotationAxis);
-		DEFPROP_RO_R(public, glm::vec3, Scale);
-		DEFPROP_RO_R(public, AABBox, BoundingBox);
-		DEFPROP_RW(public, std::shared_ptr<RsmMesh>, Parent);
-		DEFPROP_RO_R(public, std::vector<std::shared_ptr<RsmMesh>>, Children);
-		DEFPROP_RO(public, RsmModel *, Owner);
+			DEFPROP_RO_R(public, std::string, Name);
+			DEFPROP_RO_R(public, std::string, ParentName);
+			DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
+			DEFPROP_RO_R(public, glm::mat4, ParentTransformation);
+			DEFPROP_RO_R(public, glm::vec3, ParentPosition);
+			DEFPROP_RO_R(public, glm::vec3, Position);
+			DEFPROP_RO_R(public, VertexBufferPtr, Vertices);
+			DEFPROP_RO_R(public, std::vector<IndexBufferPtr>, Indices);
+			DEFPROP_RO_R(public, RotationList, RotationFrames);
+			DEFPROP_RO_R(public, float, RotationAngle);
+			DEFPROP_RO_R(public, glm::vec3, RotationAxis);
+			DEFPROP_RO_R(public, glm::vec3, Scale);
+			DEFPROP_RO_R(public, AABBox, BoundingBox);
+			DEFPROP_RW(public, std::shared_ptr<RsmMesh>, Parent);
+			DEFPROP_RO_R(public, std::vector<std::shared_ptr<RsmMesh>>, Children);
+			DEFPROP_RO(public, RsmModel *, Owner);
 	
-	private:
-		std::vector<glm::vec3> _TmpVertex;
+		private:
+			std::vector<glm::vec3> _TmpVertex;
 
-		double _Elapsed;
+			double _Elapsed;
 
-		void UpdateGlobalMatrix(double elapsed);
-		glm::mat4 _GlobalMatrix;
-		bool _HasGlobalMatrix;
+			void UpdateGlobalMatrix(double elapsed);
+			glm::mat4 _GlobalMatrix;
+			bool _HasGlobalMatrix;
 		
-		void UpdateLocalMatrix();
-		glm::mat4 _LocalMatrix;
-		bool _HasLocalMatrix;
-	};
-	typedef std::shared_ptr<RsmMesh> RsmMeshPtr;
+			void UpdateLocalMatrix();
+			glm::mat4 _LocalMatrix;
+			bool _HasLocalMatrix;
+		};
+		typedef std::shared_ptr<RsmMesh> RsmMeshPtr;
 	
-	class RsmModel : public Resource
-	{
-	public:
-		typedef std::map<std::string, RsmMeshPtr> MeshList;
+		class RsmModel : public Resource
+		{
+		public:
+			typedef std::map<std::string, RsmMeshPtr> MeshList;
 
-		RsmModel();
+			RsmModel();
 
-		bool Load(YA3DE::FileSystem::FilePtr stream);
-		void UpdateBoundingBox();
+			bool Load(YA3DE::FileSystem::FilePtr stream);
+			void UpdateBoundingBox();
 
-		DEFPROP_RO(public, int, AnimationLength);
-		DEFPROP_RO(public, int, ShadeType);
-		DEFPROP_RO(public, unsigned char, Alpha);
-		DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
-		DEFPROP_RO(public, RsmMeshPtr, MainMesh);
-		DEFPROP_RO_R(public, MeshList, Meshes);
-		DEFPROP_RO_R(public, AABBox, BoundingBox);
+			DEFPROP_RO(public, int, AnimationLength);
+			DEFPROP_RO(public, int, ShadeType);
+			DEFPROP_RO(public, unsigned char, Alpha);
+			DEFPROP_RO_R(public, std::vector<Texture2DPtr>, Textures);
+			DEFPROP_RO(public, RsmMeshPtr, MainMesh);
+			DEFPROP_RO_R(public, MeshList, Meshes);
+			DEFPROP_RO_R(public, AABBox, BoundingBox);
 
-		DEFPROP_RO(public, bool, Loaded);
-	};
-	typedef std::shared_ptr<RsmModel> RsmModelPtr;
+			DEFPROP_RO(public, bool, Loaded);
+		};
+		typedef std::shared_ptr<RsmModel> RsmModelPtr;
+	}
 }
-

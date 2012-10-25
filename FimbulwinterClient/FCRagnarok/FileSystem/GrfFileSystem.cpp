@@ -17,7 +17,7 @@
 #include "GrfFileSystem.h"
 #include <malloc.h>
 
-using namespace ROFileSystem;
+using namespace FCRagnarok::FileSystem;
 
 bool GrfFileSystem::Load()
 {

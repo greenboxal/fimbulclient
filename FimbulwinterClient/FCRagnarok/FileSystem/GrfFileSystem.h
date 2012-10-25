@@ -21,39 +21,42 @@
 
 using namespace YA3DE::FileSystem;
 
-namespace ROFileSystem
+namespace FCRagnarok
 {
-	class GrfFileSystem : public IFileSystem
+	namespace FileSystem
 	{
-	public:
-		GrfFileSystem(const std::string &filename)
+		class GrfFileSystem : public IFileSystem
 		{
-			_filename = filename;
-		}
-		
-		bool Load();
-		FilePtr Open(const std::string &filename);
-
-	private:
-		Grf::Grf _grf;
-		std::string _filename;
-	};
-
-	class GrfFileSystemFactory : public IFileSystemFactory
-	{
-	public:
-		virtual FileSystemPtr Create(const std::string &path)
-		{
-			GrfFileSystem *grf = new GrfFileSystem(path);
-
-			if (!grf->Load())
+		public:
+			GrfFileSystem(const std::string &filename)
 			{
-				delete grf;
-				return NULL;
+				_filename = filename;
 			}
+		
+			bool Load();
+			FilePtr Open(const std::string &filename);
 
-			return FileSystemPtr(grf);
-		}
-	};
+		private:
+			Grf::Grf _grf;
+			std::string _filename;
+		};
+
+		class GrfFileSystemFactory : public IFileSystemFactory
+		{
+		public:
+			virtual FileSystemPtr Create(const std::string &path)
+			{
+				GrfFileSystem *grf = new GrfFileSystem(path);
+
+				if (!grf->Load())
+				{
+					delete grf;
+					return NULL;
+				}
+
+				return FileSystemPtr(grf);
+			}
+		};
+	}
 }
 

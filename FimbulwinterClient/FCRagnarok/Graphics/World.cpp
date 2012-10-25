@@ -18,9 +18,9 @@
 */
 
 #include <stdafx.h>
-#include "World.h"
-#include "WorldModel.h"
-#include "VertexDeclarations.h"
+#include <FCRagnarok/Graphics/World.h>
+#include <FCRagnarok/Graphics/WorldModel.h>
+#include <FCRagnarok/Graphics/VertexDeclarations.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -29,7 +29,7 @@
 #include <YA3DE/Logger.h>
 #include <YA3DE/Content/StringResource.h>
 
-using namespace ROGraphics;
+using namespace FCRagnarok::Graphics;
 using namespace YA3DE::FileSystem;
 
 #define GND_MAGIC "GRGN"

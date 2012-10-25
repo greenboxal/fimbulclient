@@ -17,6 +17,8 @@
 #include "WorldGameMode.h"
 #include "WorldMode/TestMode.h"
 
+using namespace FCRagnarok;
+
 void WorldGameMode::OnLoad()
 {
 	_subGameModes.push_back(new WorldMode::TestMode());

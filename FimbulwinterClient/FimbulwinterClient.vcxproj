@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)YA3DE\;$(SolutionDir)FimbulwinterClient\CEGUI;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)YA3DE\;</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
@@ -96,7 +96,7 @@ exit 0</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)YA3DE\;$(SolutionDir)FimbulwinterClient\CEGUI;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)YA3DE\;</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
@@ -201,8 +201,6 @@ exit 0</Command>
     <ClInclude Include="FCRagnarok\Graphics\VertexDeclarations.h" />
     <ClInclude Include="FCRagnarok\Graphics\World.h" />
     <ClInclude Include="FCRagnarok\Graphics\WorldModel.h" />
-    <ClInclude Include="FCRagnarok\GUI\Renderers\ControlRenderer.h" />
-    <ClInclude Include="FCRagnarok\GUI\Renderers\LabelRenderer.h" />
     <ClInclude Include="FCRagnarok\LoginGameMode.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="FCRagnarok\WorldGameMode.h" />

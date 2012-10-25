@@ -14,8 +14,8 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <stdafx.h>
-#include "FimbulwinterClient.h"
-#include "FileSystem/GrfFileSystem.h"
+#include <FCRagnarok/FimbulwinterClient.h>
+#include <FCRagnarok/FileSystem/GrfFileSystem.h>
 
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/GUI/GUIManager.h>
@@ -24,22 +24,19 @@
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
-#include "GUI/Renderers/ControlRenderer.h"
-#include "GUI/Renderers/LabelRenderer.h"
-
-#include "WorldGameMode.h"
+#include <FCRagnarok/WorldGameMode.h>
 
 using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;
 using namespace YA3DE::FileSystem;
 using namespace YA3DE::System;
 
-using namespace ROFileSystem;
-using namespace ROGUI::Renderers;
+using namespace FCRagnarok;
+using namespace FCRagnarok::FileSystem;
 
 void ClientGame::OnInitialize()
 {
-	FileManager::Instance()->RegisterFileSystemFactory("Grf", FileSystemFactoryPtr(new GrfFileSystemFactory()));
+	FileManager::Instance()->RegisterFileSystemFactory("Grf", std::make_shared<GrfFileSystemFactory>());
 
 	Configuration = new Config("ragnarok.xml");
 	Configuration->Read();

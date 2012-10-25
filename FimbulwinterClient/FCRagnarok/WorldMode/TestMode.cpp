@@ -14,8 +14,8 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <stdafx.h>
-#include "TestMode.h"
-#include "../FimbulwinterClient.h"
+#include <FCRagnarok/WorldMode/TestMode.h>
+#include <FCRagnarok/FimbulwinterClient.h>
 
 #include <YA3DE/System/Mouse.h>
 #include <YA3DE/System/Keyboard.h>
@@ -24,8 +24,8 @@
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/Content/StringResource.h>
 
-using namespace WorldMode;
-using namespace ROGraphics;
+using namespace FCRagnarok::WorldMode;
+using namespace FCRagnarok::Graphics;
 
 using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;

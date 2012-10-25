@@ -20,28 +20,31 @@
 
 #include <YA3DE/Scene/FpsCamera.h>
 
-namespace WorldMode
+using namespace YA3DE::Scene;
+using namespace YA3DE::System;
+
+namespace FCRagnarok
 {
-	using namespace YA3DE::Scene;
-	using namespace YA3DE::System;
-
-	class TestMode : public SubGameMode
+	namespace WorldMode
 	{
-	public:
-		TestMode();
-		~TestMode();
+		class TestMode : public SubGameMode
+		{
+		public:
+			TestMode();
+			~TestMode();
 
-		virtual void OnLoad();
-		virtual void Update(double elapsed);
-		virtual void Render(double elapsed);
-		virtual void OnEvent(Event &ev, double elapsedTime);
-		virtual void OnUnload();
+			virtual void OnLoad();
+			virtual void Update(double elapsed);
+			virtual void Render(double elapsed);
+			virtual void OnEvent(Event &ev, double elapsedTime);
+			virtual void OnUnload();
 
-	private:
-		FpsCamera *_Camera;
-		ROGraphics::WorldPtr _World;
-		MouseState _PrevMouseState;
-		glm::uvec2 _PrevMousePos;
-	};
+		private:
+			FpsCamera *_Camera;
+			Graphics::WorldPtr _World;
+			MouseState _PrevMouseState;
+			glm::uvec2 _PrevMousePos;
+		};
+	}
 }
 

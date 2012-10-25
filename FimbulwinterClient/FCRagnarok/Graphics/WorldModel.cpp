@@ -18,7 +18,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace ROGraphics;
+using namespace FCRagnarok::Graphics;
 
 WorldModel::WorldModel(World *owner)
 	: SceneNode(owner->SceneRoot), _Owner(owner)

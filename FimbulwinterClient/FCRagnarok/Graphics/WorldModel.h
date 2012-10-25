@@ -23,34 +23,37 @@
 #include <YA3DE/FileSystem/IFile.h>
 #include <YA3DE/Graphics/ShaderProgram.h>
 
-namespace ROGraphics
+namespace FCRagnarok
 {
-	class WorldModel : public SceneNode
+	namespace Graphics
 	{
-	public:
-		WorldModel(World *owner);
+		class WorldModel : public SceneNode
+		{
+		public:
+			WorldModel(World *owner);
 
-		bool Load(YA3DE::FileSystem::FilePtr stream, int majorVersion, int minorVersion);
+			bool Load(YA3DE::FileSystem::FilePtr stream, int majorVersion, int minorVersion);
 		
-		virtual void Update(Camera *camera, double elapsed);
-		virtual void Render(Camera *camera, double elapsed);
+			virtual void Update(Camera *camera, double elapsed);
+			virtual void Render(Camera *camera, double elapsed);
 
-		DEFPROP_RO_R(public, std::string, Name);
-		DEFPROP_RO(public, int, AnimationType);
-		DEFPROP_RO(public, float, AnimationSpeed);
-		DEFPROP_RO(public, int, BlockType);
-		DEFPROP_RO_R(public, std::string, ModelName);
-		DEFPROP_RO_R(public, std::string, MeshName);
-		DEFPROP_RW_R(public, glm::vec3, Position);
-		DEFPROP_RW_R(public, glm::vec3, Rotation);
-		DEFPROP_RW_R(public, glm::vec3, Scale);
-		DEFPROP_RO(public, RsmModelPtr, Model);
-		DEFPROP_RO(public, RsmMeshPtr, Mesh);
-		DEFPROP_RO_R(public, glm::mat4, WorldMatrix);
+			DEFPROP_RO_R(public, std::string, Name);
+			DEFPROP_RO(public, int, AnimationType);
+			DEFPROP_RO(public, float, AnimationSpeed);
+			DEFPROP_RO(public, int, BlockType);
+			DEFPROP_RO_R(public, std::string, ModelName);
+			DEFPROP_RO_R(public, std::string, MeshName);
+			DEFPROP_RW_R(public, glm::vec3, Position);
+			DEFPROP_RW_R(public, glm::vec3, Rotation);
+			DEFPROP_RW_R(public, glm::vec3, Scale);
+			DEFPROP_RO(public, RsmModelPtr, Model);
+			DEFPROP_RO(public, RsmMeshPtr, Mesh);
+			DEFPROP_RO_R(public, glm::mat4, WorldMatrix);
 
-	private:
-		ShaderProgramPtr _Shader;
-		World *_Owner;
-	};
+		private:
+			ShaderProgramPtr _Shader;
+			World *_Owner;
+		};
+	}
 }
 

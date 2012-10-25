@@ -19,49 +19,55 @@
 #include <YA3DE/Math.h>
 #include <YA3DE/Graphics/VertexDeclaration.h>
 
-#include <YA3DE/Pack1.h>
-struct VertexPositionTextureNormal
+namespace FCRagnarok
 {
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TextureCoord;
-
-	VertexPositionTextureNormal()
-		: Position(0), Normal(0), TextureCoord(0)
+	namespace Graphics
 	{
+		#include <YA3DE/Pack1.h>
+		struct VertexPositionTextureNormal
+		{
+			glm::vec3 Position;
+			glm::vec3 Normal;
+			glm::vec2 TextureCoord;
 
+			VertexPositionTextureNormal()
+				: Position(0), Normal(0), TextureCoord(0)
+			{
+
+			}
+
+			VertexPositionTextureNormal(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord)
+				: Position(position), Normal(normal), TextureCoord(texcoord)
+			{
+
+			}
+
+			static YA3DE::Graphics::VertexDeclaration Declaration;
+		};
+
+		struct VertexPositionTextureColorNormalLightmap
+		{
+			glm::vec3 Position;
+			glm::vec3 Normal;
+			glm::vec2 TextureCoord;
+			glm::vec2 LightmapCoord;
+			glm::vec3 Color;
+
+			VertexPositionTextureColorNormalLightmap()
+				: Position(0), Normal(0), TextureCoord(0), LightmapCoord(0)
+			{
+
+			}
+
+			VertexPositionTextureColorNormalLightmap(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord, const glm::vec2 &lmapcoord, const glm::vec3 &color)
+				: Position(position), Normal(normal), TextureCoord(texcoord), LightmapCoord(lmapcoord), Color(color)
+			{
+
+			}
+
+			static YA3DE::Graphics::VertexDeclaration Declaration;
+		};
+		#include <YA3DE/PackEnd.h>
 	}
-
-	VertexPositionTextureNormal(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord)
-		: Position(position), Normal(normal), TextureCoord(texcoord)
-	{
-
-	}
-
-	static YA3DE::Graphics::VertexDeclaration Declaration;
-};
-
-struct VertexPositionTextureColorNormalLightmap
-{
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TextureCoord;
-	glm::vec2 LightmapCoord;
-	glm::vec3 Color;
-
-	VertexPositionTextureColorNormalLightmap()
-		: Position(0), Normal(0), TextureCoord(0), LightmapCoord(0)
-	{
-
-	}
-
-	VertexPositionTextureColorNormalLightmap(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texcoord, const glm::vec2 &lmapcoord, const glm::vec3 &color)
-		: Position(position), Normal(normal), TextureCoord(texcoord), LightmapCoord(lmapcoord), Color(color)
-	{
-
-	}
-
-	static YA3DE::Graphics::VertexDeclaration Declaration;
-};
-#include <YA3DE/PackEnd.h>
+}
 

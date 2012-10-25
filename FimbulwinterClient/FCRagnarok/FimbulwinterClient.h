@@ -24,46 +24,48 @@ using namespace YA3DE;
 
 #define Ragnarok ((ClientGame *)Game::Instance())
 
-class ClientGame : public Game
+namespace FCRagnarok
 {
-public:
-	ClientGame()
+	class ClientGame : public Game
 	{
-		_Mode = NULL;
-	}
-
-	~ClientGame()
-	{
-		if (_Mode != NULL)
+	public:
+		ClientGame()
 		{
-			_Mode->OnUnload();
-			delete _Mode;
+			_Mode = NULL;
 		}
-	}
 
-	void ChangeGameMode(GameMode *mode)
-	{
-		if (_Mode != NULL)
+		~ClientGame()
 		{
-			_Mode->OnUnload();
-			delete _Mode;
+			if (_Mode != NULL)
+			{
+				_Mode->OnUnload();
+				delete _Mode;
+			}
 		}
+
+		void ChangeGameMode(GameMode *mode)
+		{
+			if (_Mode != NULL)
+			{
+				_Mode->OnUnload();
+				delete _Mode;
+			}
 		
-		_Mode = mode;
+			_Mode = mode;
 
-		if (_Mode != NULL)
-			_Mode->OnLoad();
-	}
+			if (_Mode != NULL)
+				_Mode->OnLoad();
+		}
 
-	DEFPROP_RO(public, GameMode *, Mode);
+		DEFPROP_RO(public, GameMode *, Mode);
 
-protected:
-	virtual void OnInitialize();
-	virtual void OnLoad();
-	virtual void OnUpdate(double elapsedTime);
-	virtual void OnRender(double elapsedTime);
-	virtual void OnUnload();
+	protected:
+		virtual void OnInitialize();
+		virtual void OnLoad();
+		virtual void OnUpdate(double elapsedTime);
+		virtual void OnRender(double elapsedTime);
+		virtual void OnUnload();
 	
-	virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime);
-};
-
+		virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime);
+	};
+}

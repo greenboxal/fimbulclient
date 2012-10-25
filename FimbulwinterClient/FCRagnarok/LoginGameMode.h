@@ -17,12 +17,14 @@
 
 #include "GameMode.h"
 
-class LoginGameMode : public GameMode
+namespace FCRagnarok
 {
-public:
-	virtual void OnLoad();
-	virtual void OnUnload();
+	class LoginGameMode : public GameMode
+	{
+	public:
+		virtual void OnLoad();
+		virtual void OnUnload();
 
-private:
-};
-
+	private:
+	};
+}

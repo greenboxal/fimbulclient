@@ -14,8 +14,8 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <stdafx.h>
-#include "RsmModel.h"
-#include "VertexDeclarations.h"
+#include <FCRagnarok/Graphics/RsmModel.h>
+#include <FCRagnarok/Graphics/VertexDeclarations.h>
 
 #include <YA3DE/Logger.h>
 
@@ -24,7 +24,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace ROGraphics;
+using namespace FCRagnarok::Graphics;
 using namespace YA3DE::FileSystem;
 
 #define RSM_MAGIC "GRSM"

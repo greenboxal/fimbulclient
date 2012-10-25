@@ -21,45 +21,48 @@
 #include <YA3DE/Helpers.h>
 #include <YA3DE/Content/ContentName.h>
 
-namespace ROFileSystem
+namespace FCRagnarok
 {
-	namespace Grf
+	namespace FileSystem
 	{
-		struct GrfFile
+		namespace Grf
 		{
-		public:
-			GrfFile()
+			struct GrfFile
 			{
+			public:
+				GrfFile()
+				{
 
-			}
+				}
 
-			GrfFile(unsigned int len, unsigned int ulen, unsigned int alen, unsigned char flags, unsigned int offset)
-				: _CompressedLength(len), _UncompressedLength(ulen), _CompressedLengthAligned(alen), _Flags(flags), _Offset(offset)
+				GrfFile(unsigned int len, unsigned int ulen, unsigned int alen, unsigned char flags, unsigned int offset)
+					: _CompressedLength(len), _UncompressedLength(ulen), _CompressedLengthAligned(alen), _Flags(flags), _Offset(offset)
+				{
+				}
+
+				DEFPROP_RO(public, unsigned int, CompressedLength);
+				DEFPROP_RO(public, unsigned int, UncompressedLength);
+				DEFPROP_RO(public, unsigned int, CompressedLengthAligned);
+				DEFPROP_RO(public, unsigned char, Flags);
+				DEFPROP_RO(public, unsigned int, Offset);
+			};
+
+			class Grf
 			{
-			}
+			public:
+				typedef YA3DE::Content::ContentHashTable<GrfFile> GrfFileMap;
 
-			DEFPROP_RO(public, unsigned int, CompressedLength);
-			DEFPROP_RO(public, unsigned int, UncompressedLength);
-			DEFPROP_RO(public, unsigned int, CompressedLengthAligned);
-			DEFPROP_RO(public, unsigned char, Flags);
-			DEFPROP_RO(public, unsigned int, Offset);
-		};
+				bool Open(const std::string &filename);
+				GrfFile *FindFile(const std::string &filename);
+				void *GetFileData(GrfFile *file, size_t &size);
+				void Close();
 
-		class Grf
-		{
-		public:
-			typedef YA3DE::Content::ContentHashTable<GrfFile> GrfFileMap;
+				DEFPROP_RO_R(public, GrfFileMap, Files);
 
-			bool Open(const std::string &filename);
-			GrfFile *FindFile(const std::string &filename);
-			void *GetFileData(GrfFile *file, size_t &size);
-			void Close();
-
-			DEFPROP_RO_R(public, GrfFileMap, Files);
-
-		private:
-			std::recursive_mutex _Guard;
-			std::ifstream _Stream;
-		};
+			private:
+				std::recursive_mutex _Guard;
+				std::ifstream _Stream;
+			};
+		}
 	}
 }

@@ -20,77 +20,80 @@
 #include <YA3DE/Helpers.h>
 #include <YA3DE/System/Event.h>
 
-class SubGameMode
+namespace FCRagnarok
 {
-public:
-	virtual ~SubGameMode()
+	class SubGameMode
 	{
+	public:
+		virtual ~SubGameMode()
+		{
 
-	}
+		}
 
-	virtual void OnLoad() = 0;
-	virtual void Update(double elapsed) = 0;
-	virtual void Render(double elapsed) = 0;
-	virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime) = 0;
-	virtual void OnUnload() = 0;
-};
+		virtual void OnLoad() = 0;
+		virtual void Update(double elapsed) = 0;
+		virtual void Render(double elapsed) = 0;
+		virtual void OnEvent(YA3DE::System::Event &ev, double elapsedTime) = 0;
+		virtual void OnUnload() = 0;
+	};
 
-class GameMode
-{
-public:
-	GameMode()
+	class GameMode
 	{
-		_SubMode = -1;
-	}
+	public:
+		GameMode()
+		{
+			_SubMode = -1;
+		}
 
-	virtual ~GameMode()
-	{
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->OnUnload();
+		virtual ~GameMode()
+		{
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->OnUnload();
 
-		std::vector<SubGameMode *>::iterator it;
-		for (it = _subGameModes.begin(); it != _subGameModes.end(); it++)
-			delete *it;
-	}
+			std::vector<SubGameMode *>::iterator it;
+			for (it = _subGameModes.begin(); it != _subGameModes.end(); it++)
+				delete *it;
+		}
 
-	virtual void OnLoad() = 0;
-	virtual void OnUnload() = 0;
+		virtual void OnLoad() = 0;
+		virtual void OnUnload() = 0;
 
-	void Update(double elapsed)
-	{
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->Update(elapsed);
-	}
+		void Update(double elapsed)
+		{
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->Update(elapsed);
+		}
 
-	void Render(double elapsed)
-	{
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->Render(elapsed);
-	}
+		void Render(double elapsed)
+		{
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->Render(elapsed);
+		}
 
-	void DispatchEvent(YA3DE::System::Event &ev, double elapsedTime)
-	{
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->OnEvent(ev, elapsedTime);
-	}
+		void DispatchEvent(YA3DE::System::Event &ev, double elapsedTime)
+		{
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->OnEvent(ev, elapsedTime);
+		}
 
-	void ChangeSubMode(int id)
-	{
-		if (id < -1 || (unsigned int)id > _subGameModes.size())
-			return;
+		void ChangeSubMode(int id)
+		{
+			if (id < -1 || (unsigned int)id > _subGameModes.size())
+				return;
 
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->OnUnload();
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->OnUnload();
 
-		_SubMode = id;
+			_SubMode = id;
 		
-		if (_SubMode != -1)
-			_subGameModes[_SubMode]->OnLoad();
-	}
+			if (_SubMode != -1)
+				_subGameModes[_SubMode]->OnLoad();
+		}
 
-	DEFPROP_RO(public, int, SubMode);
+		DEFPROP_RO(public, int, SubMode);
 
-protected:
-	std::vector<SubGameMode *> _subGameModes;
-};
+	protected:
+		std::vector<SubGameMode *> _subGameModes;
+	};
+}
 

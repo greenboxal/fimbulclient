@@ -14,9 +14,10 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <stdafx.h>
-#include "VertexDeclarations.h"
+#include <FCRagnarok/Graphics/VertexDeclarations.h>
 
 using namespace YA3DE::Graphics;
+using namespace FCRagnarok::Graphics;
 
 VertexElement VertexPositionTextureColorNormalLightmapElements[] =
 {

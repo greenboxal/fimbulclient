@@ -34,7 +34,7 @@ struct GrfHeader
 } STRUCT_PACKED;
 #include <YA3DE/PackEnd.h>
 
-using namespace ROFileSystem::Grf;
+using namespace FCRagnarok::FileSystem::Grf;
 
 bool Grf::Open(const std::string &filename)
 {
