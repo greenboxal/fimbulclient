@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include <YA3DE/Config.h>
 #include <YA3DE/Helpers.h>
 #include <YA3DE/System/RenderWindow.h>
 
 #include <memory>
+#include <boost/property_tree/ptree.hpp>
 
 namespace YA3DE
 {
@@ -40,9 +40,9 @@ namespace YA3DE
 			return _instance;
 		}
 
-		DEFPROP_RW(public, bool, Running);
-		DEFPROP_RW_P(public, Config *, Configuration);
-		DEFPROP_RO_R(public, YA3DE::System::RenderWindow, Window);
+		DEFPROP_RO(public, bool, Running);
+		DEFPROP_P_RO(public, boost::property_tree::iptree, Settings);
+		DEFPROP_RO(public, YA3DE::System::RenderWindow, Window);
 		DEFPROP_RO(public, double, FrameRate);
 		DEFPROP_RO(public, bool, IsActive);
 

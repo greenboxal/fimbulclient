@@ -31,7 +31,7 @@ namespace YA3DE
 			virtual const glm::mat4 &GetView() = 0;
 			virtual const glm::mat4 &GetProjection() = 0;
 
-			DEFPROP_RO_R(public, YA3DE::Math::Frustum, Frustum);
+			DEFPROP_RO(public, YA3DE::Math::Frustum, Frustum);
 		};
 	}
 }

@@ -174,27 +174,27 @@ namespace FCRagnarok
 			DEFPROP_RO(public, int, GroundWidth);
 			DEFPROP_RO(public, int, GroundHeight);
 			DEFPROP_RO(public, float, GroundZoom);
-			DEFPROP_RO_R(public, std::vector<Texture2DPtr>, GroundTextures);
+			DEFPROP_RO(public, std::vector<Texture2DPtr>, GroundTextures);
 			DEFPROP_RO(public, Texture2DPtr, Lightmap);
 			DEFPROP_RO(public, VertexBufferPtr, GroundVBuffer);
-			DEFPROP_RO_R(public, std::vector<IndexBufferPtr>, GroundIBuffers);
+			DEFPROP_RO(public, std::vector<IndexBufferPtr>, GroundIBuffers);
 
 			/* Altitude */
 			DEFPROP_RO(public, unsigned int, AltitudeWidth);
 			DEFPROP_RO(public, unsigned int, AltitudeHeight);
-			DEFPROP_RO_R(public, std::vector<AltitudeCell>, AltitudeCells);
+			DEFPROP_RO(public, std::vector<AltitudeCell>, AltitudeCells);
 
 			/* Water */
-			DEFPROP_RO_R(public, WaterInfo, Water);
+			DEFPROP_RO(public, WaterInfo, Water);
 			DEFPROP_RO(public, VertexBufferPtr, WaterVBuffer);
 			DEFPROP_RO(public, IndexBufferPtr, WaterIBuffer);
-			DEFPROP_RO_R(public, std::vector<Texture2DPtr>, WaterTextures);
+			DEFPROP_RO(public, std::vector<Texture2DPtr>, WaterTextures);
 			DEFPROP_RO(public, unsigned int, WaterTextureIndex);
 			DEFPROP_RO(public, double, WaterElapsed);
 		
 			/* World */
-			DEFPROP_RO_R(public, LightInfo, Light);
-			DEFPROP_RO_R(public, GroundInfo, Ground);
+			DEFPROP_RO(public, LightInfo, Light);
+			DEFPROP_RO(public, GroundInfo, Ground);
 		
 		private:
 			ShaderProgramPtr _GroundShader;

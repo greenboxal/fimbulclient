@@ -33,8 +33,8 @@ namespace YA3DE
 			virtual void Render(double elapsed);
 			virtual void RenderStaticGeometry(double elapsed);
 
-			DEFPROP_RO(public, SceneNode *, SceneRoot);
-			DEFPROP_RW_P(public, Camera *, SceneCamera);
+			DEFPROP_RO_P(public, SceneNode, SceneRoot);
+			DEFPROP_RW_P(public, Camera, SceneCamera);
 		};
 	}
 }

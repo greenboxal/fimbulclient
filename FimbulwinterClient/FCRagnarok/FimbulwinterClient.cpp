@@ -26,6 +26,8 @@
 
 #include <FCRagnarok/WorldGameMode.h>
 
+#include <boost/property_tree/xml_parser.hpp>
+
 using namespace YA3DE::Content;
 using namespace YA3DE::Graphics;
 using namespace YA3DE::FileSystem;
@@ -38,8 +40,7 @@ void ClientGame::OnInitialize()
 {
 	FileManager::Instance()->RegisterFileSystemFactory("Grf", std::make_shared<GrfFileSystemFactory>());
 
-	Configuration = new Config("ragnarok.xml");
-	Configuration->Read();
+    boost::property_tree::read_xml("ragnarok.xml", _Settings);
 }
 
 void ClientGame::OnLoad()
@@ -71,7 +72,7 @@ void ClientGame::OnEvent(Event &ev, double elapsedTime)
 {
 	if (ev.Type == EventType::Close)
 	{
-		Running = false;
+		Exit();
 		return;
 	}
 	

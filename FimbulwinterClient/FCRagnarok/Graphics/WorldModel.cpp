@@ -14,7 +14,7 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <stdafx.h>
-#include "WorldModel.h"
+#include <FCRagnarok/Graphics/WorldModel.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 

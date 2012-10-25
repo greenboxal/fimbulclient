@@ -21,9 +21,6 @@
     <ClInclude Include="YA3DE\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="YA3DE\Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="YA3DE\FileSystem\FileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -672,9 +669,6 @@
     <ClInclude Include="YA3DE\System\Win32Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ft2build.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="freetype\config\ftconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -938,9 +932,6 @@
     <ClCompile Include="YA3DE\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="YA3DE\Config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="YA3DE\FileSystem\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1016,7 +1007,7 @@
     <ClCompile Include="YA3DE\Graphics\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="ya3destdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

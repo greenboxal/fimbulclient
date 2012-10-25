@@ -91,10 +91,10 @@ namespace YA3DE
 				_Offset = (_Max - _Min) / 2.0F;
 			}
 
-			DEFPROP_RO_R(public, glm::vec3, Min);
-			DEFPROP_RO_R(public, glm::vec3, Max);
-			DEFPROP_RO_R(public, glm::vec3, Range);
-			DEFPROP_RO_R(public, glm::vec3, Offset);
+			DEFPROP_RO(public, glm::vec3, Min);
+			DEFPROP_RO(public, glm::vec3, Max);
+			DEFPROP_RO(public, glm::vec3, Range);
+			DEFPROP_RO(public, glm::vec3, Offset);
 		};
 	}
 }

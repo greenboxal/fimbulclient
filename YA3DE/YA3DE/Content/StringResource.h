@@ -39,7 +39,7 @@ namespace YA3DE
 				}
 			}
 
-			DEFPROP_RO(public, unsigned char *, Data);
+			DEFPROP_RO_P(public, unsigned char, Data);
 			DEFPROP_RO(public, unsigned int, Size);
 		};
 		typedef std::shared_ptr<StringResource> StringResourcePtr;

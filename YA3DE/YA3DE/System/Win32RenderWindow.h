@@ -62,9 +62,9 @@ namespace YA3DE
 
 			bool PollEvent(Event &e);
 			
-			DEFPROP_RO_R(public, VideoMode, Mode);
-			DEFPROP_RO(public, GLContext *, MainContext);
-			DEFPROP_RO_R(public, std::vector<GLContext *>, ContextList);
+			DEFPROP_RO(public, VideoMode, Mode);
+			DEFPROP_RO_P(public, GLContext, MainContext);
+			DEFPROP_RO(public, std::vector<GLContext *>, ContextList);
 			
 			DEFPROP_RO(public, HWND, NativeHandle);
 			DEFPROP_RO(public, bool, IsActive);

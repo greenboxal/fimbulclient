@@ -61,7 +61,7 @@ namespace YA3DE
 			void SetUniform(int id, const T &value);
 			
 			DEFPROP_RO(public, unsigned int, ID);
-			DEFPROP_RO_R(public, std::list<ShaderPtr>, Shaders);
+			DEFPROP_RO(public, std::list<ShaderPtr>, Shaders);
 		};
 		typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
 	}

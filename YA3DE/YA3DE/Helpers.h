@@ -23,6 +23,7 @@
 
 #if defined(_MSC_VER)
 
+// Internals
 #define DEFPROP_I_RW(access, type, name, getter, setter) \
 access: \
 	__declspec(property(get = getter, put = setter)) type name
@@ -49,23 +50,8 @@ access: \
 	DEFPROP_I_RO_R(access, type, name, Get##name) \
 	type &Get##name()
 
+// Common Properties
 #define DEFPROP_RW(access, type, name) \
-access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type Get##name() const { return _##name; } \
-	void Set##name(const type &value) { _##name = value; } \
-private: \
-	type _##name
-
-#define DEFPROP_RW_P(access, type, name) \
-access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type Get##name() const { return _##name; } \
-	void Set##name(type value) { _##name = value; } \
-private: \
-	type _##name
-
-#define DEFPROP_RW_R(access, type, name) \
 access: \
 	DEFPROP_I_RW_R(access, type, name, Get##name, Set##name); \
 	type &Get##name() { return _##name; } \
@@ -73,27 +59,51 @@ access: \
 private: \
 	type _##name
 
-#define DEFPROP_RW_PR(access, type, name) \
-access: \
-	DEFPROP_I_RW(access, type, name, Get##name, Set##name); \
-	type &Get##name() { return _##name; } \
-	void Set##name(type value) { _##name = value; } \
-private: \
-	type _##name
-
 #define DEFPROP_RO(access, type, name) \
-access: \
-	DEFPROP_I_RO(access, type, name, Get##name); \
-	type Get##name() const { return _##name; } \
-private: \
-	type _##name
-
-#define DEFPROP_RO_R(access, type, name) \
 access: \
 	DEFPROP_I_RO_R(access, type, name, Get##name); \
 	type &Get##name() { return _##name; } \
 private: \
 	type _##name
+
+#define DEFPROP_RO_C(access, type, name) \
+access: \
+	DEFPROP_I_RO_R(access, type, name, Get##name); \
+	const type &Get##name() const { return _##name; } \
+private: \
+	type _##name
+
+// Protected
+#define DEFPROP_P_RW(access, type, name) \
+access: \
+	DEFPROP_I_RW_R(access, type, name, Get##name, Set##name); \
+	type &Get##name() { return _##name; } \
+	void Set##name(const type &value) { _##name = value; } \
+protected: \
+	type _##name
+
+#define DEFPROP_P_RO(access, type, name) \
+access: \
+	DEFPROP_I_RO_R(access, type, name, Get##name); \
+	const type &Get##name() const { return _##name; } \
+protected: \
+	type _##name
+
+// Pointers
+#define DEFPROP_RW_P(access, type, name) \
+access: \
+	DEFPROP_I_RW(access, type *, name, Get##name, Set##name); \
+	type *Get##name() const { return _##name; } \
+	void Set##name(type *value) { _##name = value; } \
+private: \
+	type *_##name
+
+#define DEFPROP_RO_P(access, type, name) \
+access: \
+	DEFPROP_I_RO(access, type *, name, Get##name); \
+	type *Get##name() const { return _##name; } \
+private: \
+	type *_##name
 
 #else
 #error "This compiler doesn't support property creation!"

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FCRagnarok\FileSystem\Grf\zlib\adler32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,6 +76,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FCRagnarok\WorldGameMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fcstdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,5 +158,6 @@
     <None Include="Shaders\font.glsl" />
     <None Include="FCRagnarok\Shaders\ground.glsl" />
     <None Include="FCRagnarok\Shaders\model.glsl" />
+    <None Include="FCRagnarok\Shaders\font.glsl" />
   </ItemGroup>
 </Project>

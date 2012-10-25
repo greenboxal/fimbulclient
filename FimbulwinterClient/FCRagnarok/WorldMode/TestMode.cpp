@@ -44,10 +44,8 @@ void TestMode::OnLoad()
 {
 	LOG("TestMode::OnLoad");
 
-	std::string mapName = Ragnarok->Configuration->GetRoot().first_node("Config")->first_node("Ragnarok")->first_attribute("World")->value();
-
-	//_World = ContentManager::Instance()->Load<World>("data/" + mapName + ".rsw");
-	//_World->SceneCamera = _Camera;
+	_World = ContentManager::Instance()->Load<World>("data/" + Ragnarok->Settings.get<std::string>("config.ragnarok.startmap", "prontera") + ".rsw");
+	_World->SceneCamera = _Camera;
 }
 
 void TestMode::Update(double elapsed)
@@ -109,7 +107,7 @@ void TestMode::Update(double elapsed)
 		_PrevMouseState = state;
 	}
 
-	//_World->Update(elapsed);
+	_World->Update(elapsed);
 }
 
 void TestMode::Render(double elapsed)
@@ -117,7 +115,7 @@ void TestMode::Render(double elapsed)
 	char buffer[1024];
 	sprintf(buffer, "ABCabcÁÉÍÂ", _Camera->Position.x, _Camera->Position.y, _Camera->Position.z, _Camera->Target.x, _Camera->Target.y, _Camera->Target.z);
 
-	//_World->Render(elapsed);
+	_World->Render(elapsed);
 
 	Graphics2D g;
 	g.Begin();

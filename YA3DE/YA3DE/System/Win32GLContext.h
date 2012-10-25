@@ -38,7 +38,7 @@ namespace YA3DE
 
 			DEFPROP_RO(public, HGLRC, NativeHandle);
 			DEFPROP_RO(public, HDC, DeviceContext);
-			DEFPROP_RO(public, RenderWindow *, Window);
+			DEFPROP_RO_P(public, RenderWindow, Window);
 		};
 	}
 }

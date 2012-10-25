@@ -31,11 +31,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="ya3destdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">-Zm150 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">-Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="YA3DE\Config.cpp" />
     <ClCompile Include="YA3DE\Content\ContentManager.cpp" />
     <ClCompile Include="YA3DE\Content\ContentName.cpp" />
     <ClCompile Include="YA3DE\Content\Dispatcher.cpp" />
@@ -143,7 +144,6 @@
     <ClInclude Include="freetype\tttables.h" />
     <ClInclude Include="freetype\tttags.h" />
     <ClInclude Include="freetype\ttunpat.h" />
-    <ClInclude Include="ft2build.h" />
     <ClInclude Include="glm\core\func_common.hpp" />
     <ClInclude Include="glm\core\func_exponential.hpp" />
     <ClInclude Include="glm\core\func_geometric.hpp" />
@@ -313,7 +313,6 @@
     <ClInclude Include="SOIL\stbi_DDS_aug_c.h" />
     <ClInclude Include="SOIL\stb_image_aug.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="YA3DE\Config.h" />
     <ClInclude Include="YA3DE\Content\ContentManager.h" />
     <ClInclude Include="YA3DE\Content\ContentName.h" />
     <ClInclude Include="YA3DE\Content\Dispatcher.h" />
@@ -519,6 +518,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
       <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>-Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -551,6 +551,7 @@
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
+      <AdditionalOptions>-Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

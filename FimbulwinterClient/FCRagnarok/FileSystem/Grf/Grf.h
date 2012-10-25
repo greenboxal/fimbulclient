@@ -57,7 +57,7 @@ namespace FCRagnarok
 				void *GetFileData(GrfFile *file, size_t &size);
 				void Close();
 
-				DEFPROP_RO_R(public, GrfFileMap, Files);
+				DEFPROP_RO(public, GrfFileMap, Files);
 
 			private:
 				std::recursive_mutex _Guard;

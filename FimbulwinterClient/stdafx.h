@@ -28,8 +28,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-// XML
-#include <rapidxml/rapidxml.hpp>
+// Boost
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 // YA3DE immutables
 #include <YA3DE/Math.h>

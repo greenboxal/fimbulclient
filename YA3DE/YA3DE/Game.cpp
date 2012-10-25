@@ -19,9 +19,6 @@
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
-#include <chrono>
-#include <exception>
-
 using namespace YA3DE;
 using namespace YA3DE::Content;
 using namespace YA3DE::FileSystem;
@@ -46,7 +43,30 @@ Game::~Game()
 
 void Game::ReadConfig()
 {
-	rapidxml::xml_node<> *config = _Configuration->GetRoot().first_node("Config");
+	// Create the Window
+	int wsstyle = WindowStyle::CloseButton | WindowStyle::Titlebar;
+
+	if (_Settings.get<bool>("config.window.fullscreen", false))
+		wsstyle |= WindowStyle::FullScreen;
+
+	LOG("Creating RenderWindow");
+	_Window.Create(VideoMode(_Settings.get<int>("config.window.width", 800), _Settings.get<int>("config.window.height", 600), _Settings.get<int>("config.window.bitsperpixel", 32)), wsstyle);
+	_Window.SetVSync(_Settings.get<bool>("config.window.vsync", true));
+	_Window.SetTitle(_Settings.get<std::string>("config.window.title", "YA3DE - Yet Another 3D Engine"));
+
+	LOG("Video mode: %dx%d, %dbpp [%s]", _Window.Mode.Width, _Window.Mode.Height, _Window.Mode.BitsPerPixel, _Window.Mode.FullScreen ? "Fullscreen" : "Windowed");
+	LOG("OpenGL version %d.%d", _Window.Mode.GLMajor, _Window.Mode.GLMinor);
+	LOG("FSAA = %d", _Window.Mode.AASamples);
+	LOG("GL_VERSION = %s", glGetString(GL_VERSION));
+	LOG("GL_VENDOR = %s", glGetString(GL_VENDOR));
+	LOG("GL_RENDERER = %s", glGetString(GL_RENDERER));
+	LOG("GL_EXTENSIONS = %s", glGetString(GL_EXTENSIONS));
+
+	// Initialize FileSystem
+	BOOST_FOREACH(boost::property_tree::iptree::value_type &v, _Settings.get_child("config.FileSystem"))
+		FileManager::Instance()->LoadFileSystem(v.first, v.second.data());
+
+	/*rapidxml::xml_node<> *config = _Configuration->GetRoot().first_node("Config");
 
 	rapidxml::xml_node<> *window = config->first_node("Window");
 	if (window)
@@ -81,7 +101,7 @@ void Game::ReadConfig()
 				FileManager::Instance()->LoadFileSystem(source->first_attribute("Type")->value(), source->first_attribute("Path")->value());
 			}
 		}
-	}
+	}*/
 }
 
 void Game::Run()

@@ -34,7 +34,7 @@ namespace YA3DE
 			
 			DEFPROP_RO(public, unsigned int, ID);
 			DEFPROP_RO(public, int, Type);
-			DEFPROP_RO_R(public, std::string, ErrorMessage);
+			DEFPROP_RO(public, std::string, ErrorMessage);
 		private:
 		};
 		typedef std::shared_ptr<Shader> ShaderPtr;

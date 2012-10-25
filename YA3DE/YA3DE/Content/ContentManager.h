@@ -80,7 +80,7 @@ namespace YA3DE
 				return _Instance;
 			}
 
-			DEFPROP_RO_R(public, FunctionDispatcher, Dispatcher);
+			DEFPROP_RO(public, FunctionDispatcher, Dispatcher);
 
 		private:
 			static ContentManager *_Instance;
