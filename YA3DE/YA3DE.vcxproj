@@ -514,7 +514,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/3rdparty/GLM;$(SolutionDir)/3rdparty/FreeType/Include;$(SolutionDir)/3rdparty/XML/Include;$(ProjectDir);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOSTDIR)\;$(SolutionDir)/3rdparty/GLM;$(SolutionDir)/3rdparty/FreeType/Include;$(SolutionDir)/3rdparty/XML/Include;$(ProjectDir);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>
@@ -547,7 +547,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x501;_WIN32_WINDOWS=0x501;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/3rdparty/GLM;$(SolutionDir)/3rdparty/FreeType/Include;$(SolutionDir)/3rdparty/XML/Include;$(ProjectDir);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOSTDIR)\;$(SolutionDir)/3rdparty/GLM;$(SolutionDir)/3rdparty/FreeType/Include;$(SolutionDir)/3rdparty/XML/Include;$(ProjectDir);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4103</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SDLCheck>false</SDLCheck>

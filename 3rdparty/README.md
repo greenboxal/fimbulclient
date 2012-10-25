@@ -2,7 +2,13 @@ Dependencies
 ============
 
 Current user suplied dependencies:
+* Boost
 * V8 Engine
+
+Boost
+-----
+Boost is a very large library, instead of copying Boost files you need to set the BOOSTDIR environment variable to the root folder containing Boost lib and include directories.
+You can download boost from [BoostPro Computing](http://www.boostpro.com/download/).
 
 V8 Engine
 ---------
