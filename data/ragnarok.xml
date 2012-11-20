@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<Config>
+	<Window>
+		<Title>Ragnarok Online - Fimbulwinter Client</Title>
+		<Width>1280</Width>
+		<Height>720</Height>
+		<BitsPerPixel>32</BitsPerPixel>
+		<FullScreen>False</FullScreen>
+		<VSync>True</VSync>
+	</Window>
+	<FileSystem>
+		<Folder>.</Folder>
+		<Grf>D:\Games\RO\bRO\data.grf</Grf>
+	</FileSystem>
+	<Ragnarok>
+		<StartMap>prontera</StartMap>
+	</Ragnarok>
+</Config>
