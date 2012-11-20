@@ -13,25 +13,25 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <YA3DE/Content/StringResource.h>
-#include <YA3DE/Content/ContentManager.h>
-#include <YA3DE/FileSystem/FileManager.h>
+#ifndef YA3DE_CAMERA_H
+#define YA3DE_CAMERA_H
 
-using namespace YADE;
+#include <YA3DE/Helpers.h>
+#include <YA3DE/Math.h>
+#include <YA3DE/Math/Frustum.h>
 
-CONTENT_LOADER(StringResource)
+namespace YADE
 {
-	FilePtr fp = FileManager::Instance()->OpenFile(name);
+	class Camera
+	{
+	public:
+		virtual void Update(double elapsed) = 0;
 
-	if (!fp)
-		return NULL;
+		virtual const glm::mat4 &GetView() = 0;
+		virtual const glm::mat4 &GetProjection() = 0;
 
-	int size = fp->GetSize();
-	unsigned char *data = new unsigned char[size + 1];
-	fp->Read((char *)data, size);
-	fp->Close();
-
-	data[size] = 0;
-
-	return std::make_shared<StringResource>(data, size + 1);
+		DEFPROP_RO(public, Frustum, ViewFrustum);
+	};
 }
+
+#endif

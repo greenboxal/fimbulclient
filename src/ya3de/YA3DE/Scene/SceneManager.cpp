@@ -13,25 +13,37 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <YA3DE/Content/StringResource.h>
-#include <YA3DE/Content/ContentManager.h>
-#include <YA3DE/FileSystem/FileManager.h>
+#include <YA3DE/Scene/SceneManager.h>
 
 using namespace YADE;
 
-CONTENT_LOADER(StringResource)
+SceneManager::SceneManager()
 {
-	FilePtr fp = FileManager::Instance()->OpenFile(name);
+	_SceneRoot = new SceneNode(NULL);
+	_SceneCamera = NULL;
+}
 
-	if (!fp)
-		return NULL;
+SceneManager::~SceneManager()
+{
+	delete _SceneRoot;
+}
 
-	int size = fp->GetSize();
-	unsigned char *data = new unsigned char[size + 1];
-	fp->Read((char *)data, size);
-	fp->Close();
+void SceneManager::Update(double elapsed)
+{
+	if (_SceneCamera != NULL)
+		_SceneCamera->Update(elapsed);
 
-	data[size] = 0;
+	_SceneRoot->Update(_SceneCamera, elapsed);
+}
 
-	return std::make_shared<StringResource>(data, size + 1);
+void SceneManager::Render(double elapsed)
+{
+	RenderStaticGeometry(elapsed);
+	
+	_SceneRoot->Render(_SceneCamera, elapsed);
+}
+
+void SceneManager::RenderStaticGeometry(double elapsed)
+{
+
 }

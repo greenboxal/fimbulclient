@@ -92,4 +92,8 @@ namespace YADE
 	};
 }
 
+#define CONTENT_LOADER(type) \
+namespace YADE { template<> std::shared_ptr<type> ContentManager::LoadNew(const std::string &name, bool async); } \
+template<> std::shared_ptr<type> YADE::ContentManager::LoadNew(const std::string &name, bool async)
+
 #endif

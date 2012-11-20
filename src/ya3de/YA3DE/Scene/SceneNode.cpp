@@ -13,25 +13,44 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <YA3DE/Content/StringResource.h>
-#include <YA3DE/Content/ContentManager.h>
-#include <YA3DE/FileSystem/FileManager.h>
+#include <YA3DE/Scene/SceneManager.h>
 
 using namespace YADE;
 
-CONTENT_LOADER(StringResource)
+SceneNode::SceneNode(SceneNode *parent)
 {
-	FilePtr fp = FileManager::Instance()->OpenFile(name);
+	_Parent = parent;
+	if (_Parent != NULL)
+		_Parent->_Children.push_back(this);
+}
 
-	if (!fp)
-		return NULL;
+SceneNode::~SceneNode()
+{
+	Clear();
+}
 
-	int size = fp->GetSize();
-	unsigned char *data = new unsigned char[size + 1];
-	fp->Read((char *)data, size);
-	fp->Close();
+bool SceneNode::IsVisible(Camera *camera)
+{
+	return true;
+}
 
-	data[size] = 0;
+void SceneNode::Update(Camera *camera, double elapsed)
+{
+	for (SceneNode *node : _Children)
+		node->Update(camera, elapsed);
+}
 
-	return std::make_shared<StringResource>(data, size + 1);
+void SceneNode::Render(Camera *camera, double elapsed)
+{
+	for (SceneNode *node : _Children)
+		if (node->IsVisible(camera))
+			node->Render(camera, elapsed);
+}
+
+void SceneNode::Clear()
+{
+	for (SceneNode *node : _Children)
+		delete node;
+	
+	_Children.clear();
 }

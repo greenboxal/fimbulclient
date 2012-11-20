@@ -3,6 +3,7 @@ project (FimbulwinterClient)
 
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include (cotire)
+include (fhelpers)
 
 # Set a default build type if none was specified
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -30,6 +31,9 @@ set (SOIL_BUILTIN_BUILD ON)
 set (Boost_USE_MULTITHREADED ON)
 set (Boost_USE_STATIC_LIBS ON CACHE STRING "Use boost as static library")
 set (SFML_STATIC_LIBRARIES TRUE CACHE STRING "Use SFML as a static library")
+
+# Definitions
+add_definitions (-DGLM_SWIZZLE)
 
 # Packages
 find_package (Boost 1.41.0 COMPONENTS system REQUIRED)

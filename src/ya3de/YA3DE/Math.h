@@ -13,7 +13,13 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#pragma once
+#ifndef YA3DE_MATH_H
+#define YA3DE_MATH_H
 
+#ifndef GLM_SWIZZLE
 #define GLM_SWIZZLE
+#endif
+
 #include <glm/glm.hpp>
+
+#endif

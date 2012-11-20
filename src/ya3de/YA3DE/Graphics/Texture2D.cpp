@@ -126,8 +126,7 @@ void Texture2D::Bind(int index)
 	}
 }
 
-template<>
-std::shared_ptr<Texture2D> ContentManager::LoadNew(const std::string &name, bool async)
+CONTENT_LOADER(Texture2D)
 {
 	auto namecopy = name;
 	Texture2DPtr tex = std::make_shared<Texture2D>();
