@@ -13,32 +13,13 @@
 	You should have received a copy of the GNU General Public License
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef YA3DE_VERTEXPOSITIONTEXTURE_H
-#define YA3DE_VERTEXPOSITIONTEXTURE_H
+#include <YA3DE/Graphics/VertexPositionTexture.h>
 
-#include <YA3DE/Math.h>
-#include <YA3DE/Graphics/VertexDeclaration.h>
+using namespace YADE;
 
-namespace YADE
+VertexElement VertexPositionTextureDeclarationElements[] =
 {
-	struct VertexPositionTexture
-	{
-		glm::vec3 Position;
-		glm::vec2 TexCoord;
-
-		VertexPositionTexture()
-		{
-
-		}
-
-		VertexPositionTexture(const glm::vec3 &position, const glm::vec2 &texcoord)
-		{
-			Position = position;
-			TexCoord = texcoord;
-		}
-
-		static VertexDeclaration Declaration;
-	};
-}
-
-#endif
+	VertexElement(VertexElementFormat::Vector3, VertexElementUsage::Position),
+	VertexElement(VertexElementFormat::Vector2, VertexElementUsage::TextureCoordinate, 0),
+};
+VertexDeclaration VertexPositionTexture::Declaration(VertexPositionTextureDeclarationElements, 2);

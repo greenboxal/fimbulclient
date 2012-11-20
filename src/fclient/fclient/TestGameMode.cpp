@@ -78,9 +78,9 @@ void TestSubGameMode::Update(double elapsed)
             _Camera->AddPitch(1.0f * timeDifference / 10.f);
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
             _Camera->AddPitch(-1.0f * timeDifference / 10.f);
-
-		bool rightIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+		
 		sf::Vector2i mousePos = sf::Mouse::getPosition();
+		bool rightIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left) && Ragnarok->Gui()->TestPixel(mousePos.x - Ragnarok->Window().getPosition().x, mousePos.y - Ragnarok->Window().getPosition().y);
 
 		if (rightIsPressed && _RightWasPressed)
         {

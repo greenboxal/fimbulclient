@@ -74,7 +74,7 @@ bool WorldModel::Load(YADE::FilePtr stream, int majorVersion, int minorVersion)
 	_WorldMatrix = glm::rotate(_WorldMatrix, _Rotation.y, glm::vec3(0.f, 1.f, 0.f));
 	_WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Scale.x, -_Scale.y, _Scale.z));
 	_WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(-_Model->BoundingBox().Range().x, _Model->BoundingBox().Min().y, -_Model->BoundingBox().Range().z));
-
+	
 	return true;
 #undef IsCompatibleWith
 }

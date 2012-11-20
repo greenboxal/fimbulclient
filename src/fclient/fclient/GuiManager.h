@@ -38,6 +38,7 @@ namespace fclient
 		void Render();
 		void Unload();
 
+		bool TestPixel(int x, int y);
 		void SetDesktop(const std::string &desktop);
 
 		virtual Awesomium::Surface *CreateSurface(Awesomium::WebView *view, int width, int height);

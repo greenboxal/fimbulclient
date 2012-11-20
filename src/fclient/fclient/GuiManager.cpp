@@ -15,10 +15,16 @@
 
 #include <fclient/GuiManager.h>
 
+#include <YA3DE/Math.h>
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>
+#include <YA3DE/Content/ContentManager.h>
+#include <YA3DE/Graphics/ShaderProgram.h>
+#include <YA3DE/Graphics/VertexBuffer.h>
+#include <YA3DE/Graphics/VertexPositionTexture.h>
 
 #include <Awesomium/STLHelpers.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace fclient;
 using namespace YADE;
@@ -140,8 +146,32 @@ public:
 	OpenGLSurface(GuiManager *owner, int width, int height)
 	{
 		_Owner = owner;
-		_Texture.create(width, height);
 		_Buffer = new unsigned char[width * height * 4];
+		_Texture = std::make_shared<Texture2D>(width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+		_Texture->SetMinMagFilter(GL_NEAREST, GL_NEAREST);
+		_Texture->SetSTWrap(GL_CLAMP, GL_CLAMP);
+		_Shader = ContentManager::Instance()->Load<ShaderProgram>("data/shaders/uitexture.glsl");
+
+		VertexPositionTexture vdata[] =
+		{
+			VertexPositionTexture(glm::vec3(0.f, 0.f, 0.f), glm::vec2(0.f, 0.f)),
+			VertexPositionTexture(glm::vec3(width, 0.f, 0.f), glm::vec2(1.f, 0.f)),
+			VertexPositionTexture(glm::vec3(0.f, height, 0.f), glm::vec2(0.f, 1.f)),
+			VertexPositionTexture(glm::vec3(width, height, 0.f), glm::vec2(1.f, 1.f))
+		};
+
+		unsigned short idata[] =
+		{
+			0, 1, 2, 3
+		};
+
+		_VBO = std::make_shared<VertexBuffer>(VertexPositionTexture::Declaration);
+		_VBO->SetData(vdata, 4, GL_STATIC_DRAW);
+
+		_IBO = std::make_shared<IndexBuffer>(GL_UNSIGNED_SHORT);
+		_IBO->SetData(idata, 4, GL_STATIC_DRAW);
+
+		_Projection = glm::ortho(0.f, (float)width, (float)height, 0.f);
 	}
 
 	virtual ~OpenGLSurface()
@@ -151,16 +181,20 @@ public:
 
 	unsigned char GetPixelAlpha(int x, int y)
 	{
-		return _Buffer[(y * _Texture.getSize().x + x) * 4 + 3];
+		if (x < 0 || y < 0 || x >= _Texture->Width() || y >= _Texture->Height())
+			return 0;
+
+		return _Buffer[(y * _Texture->Width() + x) * 4 + 3];
 	}
 
-	virtual void Paint(unsigned char *src_buffer, int src_row_span, const Awesomium::Rect &src_rect, const Awesomium::Rect &dest_rect)
+	virtual void Paint(unsigned char *src_buffer, int src_row_span, const Rect &src_rect, const Rect &dest_rect)
 	{
-		int w = _Texture.getSize().x;
+		int w = _Texture->Width();
 		int stride = src_row_span / 4;
 
 		for (int y = 0; y < dest_rect.height; y++)
 		{
+			//memmove(&_Buffer[((dest_rect.y + y) * w + dest_rect.x) * 4], &_Buffer[((src_rect.y + y) * stride + src_rect.x) * 4], dest_rect.width * 4);
 			size_t soff = ((src_rect.y + y) * stride + src_rect.x) * 4;
 			size_t doff = ((dest_rect.y + y) * w + dest_rect.x) * 4;
 
@@ -178,7 +212,7 @@ public:
 
 	virtual void Scroll(int dx, int dy, const Awesomium::Rect &clip_rect)
 	{
-		int w = _Texture.getSize().x;
+		int w = _Texture->Width();
 
 		for (int y = 0; y < clip_rect.height; y++)
 			memmove(&_Buffer[((dy + y) * w + dx) * 4], &_Buffer[((clip_rect.y + y) * w + clip_rect.x) * 4], clip_rect.width * 4);
@@ -188,18 +222,31 @@ public:
 
 	void Render()
 	{
-		_Owner->Window().draw(sf::Sprite(_Texture));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		_Shader->Begin();
+		_Shader->SetUniform("InTexture", 0);
+		_Shader->SetUniform("Projection", _Projection);
+		_Texture->Bind(0);
+		_VBO->Bind();
+		_VBO->Render(GL_TRIANGLE_STRIP, _IBO, _IBO->Count());
+		_Shader->End();
+		glDisable(GL_BLEND);
 	}
 
 private:
 	void Invalidate(int x, int y, int w, int h)
 	{
 		// FIXME: Only update the changed area
-		_Texture.update(_Buffer, _Texture.getSize().x, _Texture.getSize().y, 0, 0);
+		_Texture->SetData(_Buffer);
 	}
 
 	GuiManager *_Owner;
-	sf::Texture _Texture;
+	Texture2DPtr _Texture;
+	ShaderProgramPtr _Shader;
+	VertexBufferPtr _VBO;
+	IndexBufferPtr _IBO;
+	glm::mat4 _Projection;
 	unsigned char *_Buffer;
 };
 
@@ -209,6 +256,16 @@ GuiManager::GuiManager(sf::RenderWindow &window)
 	_StartedInGui[0] = false;
 	_StartedInGui[1] = false;
 	_StartedInGui[2] = false;
+}
+
+bool GuiManager::TestPixel(int x, int y)
+{
+	OpenGLSurface *surface = (OpenGLSurface *)_View->surface();
+
+	if (surface == nullptr)
+		return true;
+
+	return surface->GetPixelAlpha(x, y) <= 10;
 }
 
 void GuiManager::SetDesktop(const std::string &desktop)
@@ -316,7 +373,7 @@ bool GuiManager::DispatchEvent(const sf::Event &e)
 			}
 		}
 
-		if (surface->GetPixelAlpha(x, y) < 10)
+		if (surface->GetPixelAlpha(x, y) <= 10)
 		{
 			if (e.type == sf::Event::MouseButtonPressed)
 				_StartedInGui[btn] = false;
