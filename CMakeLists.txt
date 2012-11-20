@@ -26,6 +26,7 @@ if (CMAKE_BUILD_TYPE EQUAL Debug)
 endif ()
 
 # Defines
+set (SOIL_BUILTIN_BUILD ON)
 set (Boost_USE_MULTITHREADED ON)
 set (Boost_USE_STATIC_LIBS ON CACHE STRING "Use boost as static library")
 set (SFML_STATIC_LIBRARIES TRUE CACHE STRING "Use SFML as a static library")
@@ -43,6 +44,8 @@ include_directories (${GLM_INCLUDE_DIR})
 include_directories (${SFML_INCLUDE_DIR})
 include_directories (${GLEW_INCLUDE_PATH})
 include_directories (${AWESOMIUM_INCLUDE_DIR})
+include_directories (3rdparty/SOIL/src)
 include_directories (src/ya3de)
 
+add_subdirectory (3rdparty/SOIL)
 add_subdirectory (src)

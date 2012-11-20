@@ -19,6 +19,8 @@
 #include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
+#include <SOIL.h>
+
 using namespace YADE;
 
 int Texture2D::_LastUsedTextureUnit = -1;
@@ -145,7 +147,8 @@ std::shared_ptr<Texture2D> ContentManager::LoadNew(const std::string &name, bool
 		fp->Read(data, size);
 		fp->Close();
 
-		int texID = SOIL_load_OGL_texture_from_memory((const unsigned char *)data, size, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_FUCSIA_TRANSPARENCY);
+		// TODO: Hack SOIL source to support SOIL_FLAG_FUCSIA_TRANSPARENCY
+		int texID = SOIL_load_OGL_texture_from_memory((const unsigned char *)data, size, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
 		delete[] data;
 
@@ -160,9 +163,10 @@ std::shared_ptr<Texture2D> ContentManager::LoadNew(const std::string &name, bool
 		LOG("Loaded %s %d %x", namecopy.c_str(), texID, std::this_thread::get_id().hash());
 	};
 
-	if (async)
-		ContentManager::Instance()->Dispatcher.EnqueueAsync(main);
-	else
+	// TODO: Reimplement multithreaded loading with shared OpenGL contexts
+	//if (async)
+	//	ContentManager::Instance()->Dispatcher.EnqueueAsync(main);
+	//else
 		main();
 
 	ContentManager::Instance()->CacheObject(name, tex);

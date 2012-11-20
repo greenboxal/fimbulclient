@@ -1,0 +1,3 @@
+[submodule "3rdparty/SOIL"]
+	path = 3rdparty/SOIL
+	url = git://github.com/greenboxal/SOIL.git
