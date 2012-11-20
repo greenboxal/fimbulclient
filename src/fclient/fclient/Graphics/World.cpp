@@ -334,12 +334,12 @@ void World::SetupGroundVertices(std::vector<LightmapCell> &lmaps, std::vector<Su
 		vertices[idx + 2] = VertexPositionTextureColorNormalLightmap(position[2], normal[2], glm::vec2(surface.U[2], surface.V[2]), glm::vec2(lightmapU[0], lightmapV[1]), colors[2]);
 		vertices[idx + 3] = VertexPositionTextureColorNormalLightmap(position[3], normal[3], glm::vec2(surface.U[3], surface.V[3]), glm::vec2(lightmapU[1], lightmapV[1]), colors[3]);
 
+		indices[surface.TextureID].push_back(idx + 2);
 		indices[surface.TextureID].push_back(idx + 0);
 		indices[surface.TextureID].push_back(idx + 1);
-		indices[surface.TextureID].push_back(idx + 2);
-		indices[surface.TextureID].push_back(idx + 2);
 		indices[surface.TextureID].push_back(idx + 1);
 		indices[surface.TextureID].push_back(idx + 3);
+		indices[surface.TextureID].push_back(idx + 2);
 	};
 
 	for (int x = 0; x < _GroundWidth; x++)
@@ -740,9 +740,6 @@ void World::RenderStaticGeometry(double elapsed)
 		_GroundShader->SetUniform("InTexture", 0);
 		_GroundShader->SetUniform("InLightmap", 1);
 		_GroundShader->SetUniform("ViewProjection", SceneCamera()->GetProjection() * SceneCamera()->GetView());
-		_GroundShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
-		_GroundShader->SetUniform("DiffuseColor", _Light.Diffuse);
-		_GroundShader->SetUniform("LightPosition", _Light.Position);
 		_Lightmap->Bind(1);
 		_GroundVBuffer->Bind();
 		for (unsigned int i = 0; i < _GroundTextures.size(); i++)
@@ -757,14 +754,11 @@ void World::RenderStaticGeometry(double elapsed)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+		
 		_CommonShader->Begin();
 		_CommonShader->SetUniform("InTexture", 0);
 		_CommonShader->SetUniform("Alpha", 0.5f);
 		_CommonShader->SetUniform("WorldViewProjection", SceneCamera()->GetProjection() * SceneCamera()->GetView());
-		_CommonShader->SetUniform("AmbientColor", _Light.Ambient * _Light.Intensity);
-		_CommonShader->SetUniform("DiffuseColor", _Light.Diffuse);
-		_CommonShader->SetUniform("LightPosition", _Light.Position);
 		_WaterTextures[_WaterTextureIndex]->Bind(0);
 		_WaterVBuffer->Bind();
 		_WaterVBuffer->Render(GL_TRIANGLE_STRIP, _WaterIBuffer, _WaterIBuffer->Count());

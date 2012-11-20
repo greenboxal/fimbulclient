@@ -10,7 +10,6 @@
 
 // Control
 //#define DEBUG_NORMALS
-//#define ENABLE_LIGHTS
 
 // WorldViewProjection matrix
 uniform mat4 WorldViewProjection;
@@ -26,7 +25,6 @@ uniform float Alpha;
 
 // Vertex -> Fragment parameters
 param vec2 TexCoord0;
-param vec3 LightColorFactor;
 
 #if defined(VERTEX_SHADER)
 
@@ -41,16 +39,6 @@ void main()
 	LightColorFactor = VertexNormal;
 #else
 	TexCoord0 = VertexTexCoord;
-	
-#ifdef ENABLE_LIGHTS
-	vec3 normal = normalize(VertexNormal);
-	vec3 lightDir = normalize(LightPosition);
-	float NdotL = max(dot(normal, lightDir), 0.0);
-	
-	LightColorFactor = NdotL * DiffuseColor + AmbientColor;
-#else
-	LightColorFactor = vec3(1.0);
-#endif
 #endif
 	
 	gl_Position = WorldViewProjection * vec4(VertexPosition, 1);
@@ -68,8 +56,10 @@ void main()
 #else
 	vec4 color = texture(InTexture, TexCoord0);
 
-	color.rgb *= LightColorFactor;
 	color.a *= Alpha;
+	
+	if (color.a == 0)
+		discard;
 	
 	OutFragColor = color;
 #endif

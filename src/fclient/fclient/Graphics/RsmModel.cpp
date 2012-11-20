@@ -180,7 +180,7 @@ void RsmMesh::UpdateBoundingBox()
 		{
 			glm::vec3 v = (_ParentTransformation * glm::vec4(_TmpVertex[i], 1)).xyz;
 
-			if (_Parent != NULL || _Children.size() > 0)
+			if (_Parent != nullptr || _Children.size() > 0)
 				v += _Position + _ParentPosition;
 
 			_BoundingBox += v;
@@ -189,8 +189,8 @@ void RsmMesh::UpdateBoundingBox()
 
 	for (unsigned int i = 0; i < _Children.size(); i++)
 	{
-		//_Children[i]->UpdateBoundingBox();
-		//_BoundingBox += _Children[i]->BoundingBox();
+		_Children[i]->UpdateBoundingBox();
+		_BoundingBox += _Children[i]->BoundingBox();
 	}
 
 	_BoundingBox.CalculateRangeAndOffset();
@@ -293,8 +293,7 @@ void RsmMesh::UpdateLocalMatrix()
 
 	if (_Parent == NULL && _Children.size() == 0)
 		_LocalMatrix = glm::translate(_LocalMatrix, -_Owner->MainMesh()->_BoundingBox.Range());
-
-	if (_Parent != NULL || _Children.size() > 0)
+	else
 		_LocalMatrix = glm::translate(_LocalMatrix, _ParentPosition);
 
 	_LocalMatrix *= _ParentTransformation;
