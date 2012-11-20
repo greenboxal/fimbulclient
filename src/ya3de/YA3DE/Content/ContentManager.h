@@ -75,13 +75,13 @@ namespace YADE
 
 		static ContentManager *Instance()
 		{
-			if (_Instance == NULL)
+			if (_Instance == nullptr)
 				new ContentManager();
 
 			return _Instance;
 		}
 
-		DEFPROP_RO(public, FunctionDispatcher, Dispatcher);
+		DEFPROP_P_RO_NR(public, FunctionDispatcher, Dispatcher);
 
 	private:
 		static ContentManager *_Instance;

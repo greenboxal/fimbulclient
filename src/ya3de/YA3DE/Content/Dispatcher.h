@@ -21,6 +21,7 @@
 #include <thread>
 #include <vector>
 #include <functional>
+#include <SFML/Graphics.hpp>
 
 namespace YADE
 {
@@ -32,6 +33,15 @@ namespace YADE
 		void InitializeAsyncWorkers();
 		void EnqueueAsync(std::function<void()> func);
 		void Shutdown();
+
+	private:
+		FunctionDispatcher(const FunctionDispatcher &other) { }
+		void _AsyncWorker();
+
+		bool _ExitFlag;
+		std::vector<std::thread> _Threads;
+		std::queue<std::function<void()>> _Queue;
+		std::recursive_mutex _Guard;
 	};
 }
 

@@ -7,6 +7,6 @@ add_executable (fclient
 )
 target_link_libraries (fclient ya3de ${AWESOMIUM_LIBRARY})
 set_target_properties (fclient PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-cotire (fclient)
+# cotire (fclient)
 
 source_group ("fclient" FILES ${BASE_FILES})

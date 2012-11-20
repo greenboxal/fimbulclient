@@ -16,6 +16,7 @@
 #include <YA3DE/Application.h>
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>
+#include <YA3DE/Content/ContentManager.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
 #include <boost/foreach.hpp>
@@ -32,7 +33,7 @@ Application::Application()
 
 Application::~Application()
 {
-
+	
 }
 
 void Application::Run()
@@ -44,6 +45,7 @@ void Application::Run()
 
 	Initialize();
 	CreateRenderWindow();
+	ContentManager::Instance()->Dispatcher().InitializeAsyncWorkers();
 
 	BOOST_FOREACH(boost::property_tree::iptree::value_type &v, _Settings.get_child("config.FileSystem"))
 		FileManager::Instance()->LoadFileSystem(v.first, v.second.data());
@@ -72,6 +74,7 @@ void Application::Run()
 
 	Unload();
 
+	ContentManager::Instance()->Dispatcher().Shutdown();
 	_Window.close();
 }
 

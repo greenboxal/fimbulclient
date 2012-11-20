@@ -14,9 +14,10 @@
 	along with YA3DE.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <YA3DE/Logger.h>
+#include <YA3DE/Application.h>
 #include <YA3DE/Content/Dispatcher.h>
 
-#define ASYNC_WORKER_COUNT 0
+#define ASYNC_WORKER_COUNT 1
 
 using namespace YADE;
 
@@ -26,39 +27,58 @@ FunctionDispatcher::FunctionDispatcher()
 
 void FunctionDispatcher::InitializeAsyncWorkers()
 {
+	_ExitFlag = false;
+
+	LOG("Starting %d async workers", ASYNC_WORKER_COUNT);
+	for (int i = 0; i < ASYNC_WORKER_COUNT; i++)
+		_Threads.push_back(std::thread(&FunctionDispatcher::_AsyncWorker, this));
 }
 
 void FunctionDispatcher::EnqueueAsync(std::function<void()> func)
 {
+	if (_Threads.size() == 0)
+	{
+		func();
+	}
+	else
+	{
+		_Guard.lock();
+		_Queue.push(func);
+		_Guard.unlock();
+	}
 }
 
 void FunctionDispatcher::Shutdown()
 {
+	_ExitFlag = true;
+
+	LOG("Waiting worker threads to finish");
+	for (unsigned int i = 0; i < _Threads.size(); i++)
+		_Threads[i].join();
 }
-/*
-void FunctionDispatcher::_AsyncWorker(YA3DE::System::GLContext *context)
+
+void FunctionDispatcher::_AsyncWorker()
 {
-	context->MakeCurrent();
-	context->InitGlew();
+	sf::Context context(Application::Instance()->Window().getSettings(), Application::Instance()->Window().getSize().x, Application::Instance()->Window().getSize().y);
+	context.setActive(true);
 
 	while (_ExitFlag == false)
 	{
-		_AsyncGuard.lock();
+		_Guard.lock();
 
-		if (_AsyncQueue.size() == 0)
+		if (_Queue.size() == 0)
 		{
-			_AsyncGuard.unlock();
+			_Guard.unlock();
 			std::this_thread::yield();
 			continue;
 		}
 
-		std::function<void()> f = _AsyncQueue.front();
-		_AsyncQueue.pop();
-		_AsyncGuard.unlock();
+		std::function<void()> f = _Queue.front();
+		_Queue.pop();
+		_Guard.unlock();
 
 		f();
 	}
 
-	context->UnbindCurrent();
+	context.setActive(false);
 }
-*/

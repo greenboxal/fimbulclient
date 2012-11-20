@@ -16,6 +16,7 @@
 #ifndef FCLIENT_YA3DEDATASOURCE_H
 #define FCLIENT_YA3DEDATASOURCE_H
 
+#include <string>
 #include <Awesomium/DataSource.h>
 
 namespace fclient

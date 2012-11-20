@@ -219,7 +219,12 @@ void GuiManager::SetDesktop(const std::string &desktop)
 void GuiManager::Load()
 {
 	WebConfig config;
+
+#ifdef _DEBUG
 	config.log_level = kLogLevel_Verbose;
+#else
+	config.log_level = kLogLevel_Normal;
+#endif
 
 	LOG("Initializing WebCore");
 	WebCore::Initialize(config);

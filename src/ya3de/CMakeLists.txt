@@ -15,7 +15,7 @@ add_library (ya3de
 )
 target_link_libraries (ya3de SOIL ${Boost_LIBRARIES} ${SFML_LIBRARIES} ${GLEW_LIBRARY})
 set_target_properties (ya3de PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-cotire (ya3de)
+# cotire (ya3de)
 
 source_group ("YA3DE" FILES ${BASE_FILES})
 source_group ("YA3DE\\Graphics" FILES ${GRAPHICS_FILES})
