@@ -343,6 +343,7 @@ bool GuiManager::DispatchEvent(const sf::Event &e)
 	else if (e.type == sf::Event::MouseMoved)
 	{
 		_View->InjectMouseMove(e.mouseMove.x, e.mouseMove.y);
+		return false;
 	}
 
 	return true;

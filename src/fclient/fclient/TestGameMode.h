@@ -13,41 +13,34 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef FCLIENT_RAGNAROKCLIENT_H
-#define FCLIENT_RAGNAROKCLIENT_H
+#ifndef FCLIENT_TESTGAMEMODE_H
+#define FCLIENT_TESTGAMEMODE_H
 
-#include <fclient/GuiManager.h>
 #include <fclient/GameMode.h>
-
-#include <YA3DE/Application.h>
-#include <YA3DE/Graphics/Texture2D.h>
-
-#include <Awesomium/WebCore.h>
 
 namespace fclient
 {
-	using namespace YADE;
-
-	class RagnarokClient : public Application
+	class TestSubGameMode : public SubGameMode
 	{
 	public:
-		RagnarokClient();
-		virtual ~RagnarokClient();
+		TestSubGameMode();
+		virtual ~TestSubGameMode();
 
-		void ChangeGameMode(GameMode *mode);
-
-		DEFPROP_RO_P(public, GuiManager, Gui);
-
-	protected:
-		virtual void Initialize();
 		virtual void Load();
 		virtual void OnEvent(const sf::Event &e, double elapsed);
 		virtual void Update(double elapsed);
 		virtual void Render(double elapsed);
 		virtual void Unload();
+	};
 
-	private:
-		GameMode *_CurrentGameMode;
+	class TestGameMode : public GameMode
+	{
+	public:
+		virtual void Load()
+		{
+			RegisterSubMode(0, new TestSubGameMode());
+			ChangeSubMode(0);
+		}
 	};
 }
 

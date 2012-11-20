@@ -14,6 +14,7 @@
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <fclient/RagnarokClient.h>
+#include <fclient/TestGameMode.h>
 
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>
@@ -29,12 +30,25 @@ using namespace Awesomium;
 
 RagnarokClient::RagnarokClient()
 {
-	
+	_CurrentGameMode = nullptr;
 }
 
 RagnarokClient::~RagnarokClient()
 {
+}
 
+void RagnarokClient::ChangeGameMode(GameMode *mode)
+{
+	if (_CurrentGameMode != nullptr)
+	{
+		_CurrentGameMode->Unload();
+		delete _CurrentGameMode;
+	}
+
+	_CurrentGameMode = mode;
+
+	if (_CurrentGameMode != nullptr)
+		_CurrentGameMode->Load();
 }
 
 void RagnarokClient::Initialize()
@@ -47,28 +61,37 @@ void RagnarokClient::Load()
 {
 	_Gui = new GuiManager(_Window);
 	_Gui->Load();
-	_Gui->SetDesktop("login");
+
+	ChangeGameMode(new TestGameMode());
 }
 
 void RagnarokClient::OnEvent(const sf::Event &e, double elapsed)
 {
-	_Gui->DispatchEvent(e);
+	if (!_Gui->DispatchEvent(e) && _CurrentGameMode != nullptr)
+		_CurrentGameMode->OnEvent(e, elapsed);
 }
 
 void RagnarokClient::Update(double elapsed)
 {
 	_Gui->Update();
+
+	if (_CurrentGameMode != nullptr)
+		_CurrentGameMode->Update(elapsed);
 }
 
 void RagnarokClient::Render(double elapsed)
 {
-	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	if (_CurrentGameMode != nullptr)
+		_CurrentGameMode->Render(elapsed);
 
 	_Gui->Render();
 }
 
 void RagnarokClient::Unload()
 {
+	ChangeGameMode(nullptr);
+
 	_Gui->Unload();
 }
