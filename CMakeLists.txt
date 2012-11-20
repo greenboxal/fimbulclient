@@ -4,9 +4,6 @@ project (FimbulwinterClient)
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include (cotire)
 
-include (CheckCXXSourceCompiles)
-include (CheckCSourceCompiles)
-
 # Set a default build type if none was specified
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message (STATUS "Setting build type to 'Debug' as none was specified.")
@@ -14,20 +11,13 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif ()
 
-# Compile with maximum warnings
 if (MSVC)
-  if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-    string (REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  else ()
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-  endif ()
-
-  # Except M$ only deprecations and warnings
-  add_definitions (/D_SCL_SECURE_NO_WARNINGS)
-  add_definitions (/D_CRT_SECURE_NO_DEPRECATE)
-  add_definitions (/D_CRT_NONSTDC_NO_DEPRECATE)
+  add_definitions (-D_SCL_SECURE_NO_WARNINGS)
+  add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
+  add_definitions (-D_CRT_NONSTDC_NO_DEPRECATE)
+  add_definitions (-DWIN32_LEAN_AND_MEAN)
 elseif (CMAKE_COMPILER_IS_GNUCC)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -Wno-unused-parameter -g -std=c++0x")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++0x")
 endif ()
 
 # Is this a debug build?
@@ -35,25 +25,24 @@ if (CMAKE_BUILD_TYPE EQUAL Debug)
   add_definitions (-D_DEBUG)
 endif ()
 
-# Boost
-set (Boost_USE_STATIC_LIBS ON)
+# Defines
 set (Boost_USE_MULTITHREADED ON)
+set (Boost_USE_STATIC_LIBS ON CACHE STRING "Use boost as static library")
+set (SFML_STATIC_LIBRARIES TRUE CACHE STRING "Use SFML as a static library")
+
+# Packages
 find_package (Boost 1.41.0 COMPONENTS system REQUIRED)
-include_directories (${Boost_INCLUDE_DIRS})
-
-# GLM
-find_package (glm REQUIRED)
-
-# SFML
-set (SFML_STATIC_LIBRARIES TRUE)
+find_package (GLM REQUIRED)
 find_package (SFML 2 COMPONENTS system window graphics REQUIRED)
-include_directories (${SFML_INCLUDE_DIR})
-
-# GLEW
 find_package (GLEW REQUIRED)
-include_directories (${GLEW_INCLUDE_PATH})
+find_package (Awesomium REQUIRED)
 
-# YA3DE
+# Includes
+include_directories (${Boost_INCLUDE_DIRS})
+include_directories (${GLM_INCLUDE_DIR})
+include_directories (${SFML_INCLUDE_DIR})
+include_directories (${GLEW_INCLUDE_PATH})
+include_directories (${AWESOMIUM_INCLUDE_DIR})
 include_directories (src/ya3de)
 
 add_subdirectory (src)

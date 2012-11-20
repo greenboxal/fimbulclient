@@ -203,6 +203,9 @@ if (NOT SFML_FOUND)
     endif()
 endif()
 
+find_package_handle_standard_args (Awesomium DEFAULT_MSG AWESOMIUM_INCLUDE_DIR AWESOMIUM_LIBRARY)
+mark_as_advanced (AWESOMIUM_INCLUDE_DIR AWESOMIUM_LIBRARY)
+
 # handle success
 if(SFML_FOUND)
     message(STATUS "Found SFML: ${SFML_INCLUDE_DIR}")

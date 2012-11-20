@@ -1,12 +1,22 @@
-if(NOT GLM_PACKAGE_DIR)
-	message("ERROR: GLM_PACKAGE_DIR requires to be set")
-endif(NOT GLM_PACKAGE_DIR)
+include (FindPackageHandleStandardArgs)
 
-set(GLM_INCLUDE_DIR ${GLM_PACKAGE_DIR})
-set(GLM_LIBRARY_DIR )
+find_path(GLM_INCLUDE_DIR glm/glm.hpp
+	PATH_SUFFIXES include
+	PATHS
+	${GLM_ROOT}
+	$ENV{GLM_ROOT}
+	~/Library/Frameworks
+	/Library/Frameworks
+	/usr/local/
+	/usr/
+	/sw          # Fink
+	/opt/local/  # DarwinPorts
+	/opt/csw/    # Blastwave
+	/opt/)
+	
+find_package_handle_standard_args (GLM DEFAULT_MSG GLM_INCLUDE_DIR)
+mark_as_advanced (GLM_INCLUDE_DIR)
 
-include_directories(${GLM_INCLUDE_DIR})
-
-if(GLM_PACKAGE_DIR AND GLM_INCLUDE_DIR)
-	set(GLM_FOUND "YES")
-endif(GLM_PACKAGE_DIR AND GLM_INCLUDE_DIR)
+if (GLM_FOUND)
+	message (STATUS "Found GLM: ${GLM_INCLUDE_DIR}")
+endif ()
