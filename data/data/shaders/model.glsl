@@ -35,11 +35,7 @@ layout(location = 2) in vec2 VertexTexCoord;
 
 void main()
 {
-#ifdef DEBUG_NORMALS
-	LightColorFactor = VertexNormal;
-#else
 	TexCoord0 = VertexTexCoord;
-#endif
 	
 	gl_Position = WorldViewProjection * vec4(VertexPosition, 1);
 }
@@ -51,18 +47,13 @@ out vec4 OutFragColor;
 
 void main()
 {
-#ifdef DEBUG_NORMALS
-	OutFragColor = vec4(LightColorFactor, 1);
-#else
 	vec4 color = texture(InTexture, TexCoord0);
-
+		
 	color.a *= Alpha;
-	
 	if (color.a == 0)
 		discard;
 	
 	OutFragColor = color;
-#endif
 }
 
 #endif

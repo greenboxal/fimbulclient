@@ -56,14 +56,14 @@ void main()
 	OutFragColor = vec4(SurfaceVertexColor, 1);
 #else
 	vec4 color = texture(InTexture, TexCoord0);
-	vec4 lmap = texture(InLightmap, TexCoord1);
-
-	color.rgb *= SurfaceVertexColor;
-	color.rgb += lmap.rgb;
-	color.rgb *= lmap.a;
 	
 	if (color.a == 0)
 		discard;
+		
+	vec4 lmap = texture(InLightmap, TexCoord1);
+	color.rgb *= SurfaceVertexColor;
+	color.rgb += lmap.rgb;
+	color.rgb *= lmap.a;
 	
 	OutFragColor = color;
 #endif

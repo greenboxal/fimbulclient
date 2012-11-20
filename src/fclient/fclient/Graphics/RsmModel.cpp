@@ -93,8 +93,11 @@ bool RsmMesh::Load(RsmHeader &header, const YADE::FilePtr &stream)
 	int vertexCount;
 	stream->Read(&vertexCount, sizeof(int));
 
-	_TmpVertex.resize(vertexCount);
-	stream->Read(&_TmpVertex[0], sizeof(glm::vec3) * vertexCount);
+	if (vertexCount > 0)
+	{
+		_TmpVertex.resize(vertexCount);
+		stream->Read(&_TmpVertex[0], sizeof(glm::vec3) * vertexCount);
+	}
 
 	std::vector<glm::vec2> texcoords;
 
