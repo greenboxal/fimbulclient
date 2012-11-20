@@ -102,6 +102,9 @@ void WorldModel::Update(Camera *camera, double elapsed)
 
 void WorldModel::Render(Camera *camera, double elapsed)
 {
+	if (_Mesh == nullptr)
+		return;
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	_Shader->Begin();

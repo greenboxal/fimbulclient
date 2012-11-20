@@ -239,6 +239,11 @@ void GuiManager::Load()
 
 bool GuiManager::DispatchEvent(const sf::Event &e)
 {
+	OpenGLSurface *surface = (OpenGLSurface *)_View->surface();
+
+	if (surface == nullptr)
+		return false;
+
 	if (e.type == sf::Event::KeyPressed || e.type == sf::Event::KeyReleased || e.type == sf::Event::TextEntered)
 	{
 		WebKeyboardEvent wke;
@@ -311,7 +316,7 @@ bool GuiManager::DispatchEvent(const sf::Event &e)
 			}
 		}
 
-		if (((OpenGLSurface *)_View->surface())->GetPixelAlpha(x, y) < 10)
+		if (surface->GetPixelAlpha(x, y) < 10)
 		{
 			if (e.type == sf::Event::MouseButtonPressed)
 				_StartedInGui[btn] = false;

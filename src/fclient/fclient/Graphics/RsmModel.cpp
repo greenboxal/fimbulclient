@@ -189,8 +189,8 @@ void RsmMesh::UpdateBoundingBox()
 
 	for (unsigned int i = 0; i < _Children.size(); i++)
 	{
-		_Children[i]->UpdateBoundingBox();
-		_BoundingBox += _Children[i]->BoundingBox();
+		//_Children[i]->UpdateBoundingBox();
+		//_BoundingBox += _Children[i]->BoundingBox();
 	}
 
 	_BoundingBox.CalculateRangeAndOffset();
@@ -243,7 +243,7 @@ void RsmMesh::UpdateGlobalMatrix(double elapsed)
 	}
 	else
 	{
-		if (elapsed< 0)
+		if (elapsed > 0)
 		{
 			int current = 0;
 

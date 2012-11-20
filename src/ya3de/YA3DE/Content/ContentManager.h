@@ -39,7 +39,7 @@ namespace YADE
 		template<class T>
 		std::shared_ptr<T> Load(const std::string &name, bool async = false)
 		{
-			async = false;
+			//async = false;
 
 			_Guard.lock();
 			CacheMap::iterator it = _Cache.find(name);

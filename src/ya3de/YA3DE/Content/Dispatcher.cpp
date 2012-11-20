@@ -17,7 +17,7 @@
 #include <YA3DE/Application.h>
 #include <YA3DE/Content/Dispatcher.h>
 
-#define ASYNC_WORKER_COUNT 1
+#define ASYNC_WORKER_COUNT 0
 
 using namespace YADE;
 
