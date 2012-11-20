@@ -59,7 +59,14 @@ void Application::Run()
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 		while (_Window.pollEvent(e))
+		{
+			if (e.type == sf::Event::GainedFocus)
+				_Active = true;
+			else if (e.type == sf::Event::LostFocus)
+				_Active = false;
+
 			OnEvent(e, elapsed);
+		}
 
 		if (!_Running)
 			break;

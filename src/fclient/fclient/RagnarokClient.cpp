@@ -15,12 +15,11 @@
 
 #include <fclient/RagnarokClient.h>
 #include <fclient/TestGameMode.h>
+#include <fclient/FileSystem/GrfFileSystem.h>
 
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>
-
-#include <Awesomium/BitmapSurface.h>
-#include <Awesomium/STLHelpers.h>
+#include <YA3DE/FileSystem/FileManager.h>
 
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -55,6 +54,8 @@ void RagnarokClient::Initialize()
 {
 	LOG("Reading configuration file: ragnarok.xml");
 	boost::property_tree::read_xml("ragnarok.xml", _Settings);
+
+	FileManager::Instance()->RegisterFileSystemFactory("Grf", std::make_shared<GrfFileSystemFactory>());
 }
 
 void RagnarokClient::Load()

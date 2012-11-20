@@ -30,6 +30,11 @@ namespace YADE
 
 		void Run();
 
+		bool IsActive()
+		{
+			return _Active;
+		}
+
 		static Application *Instance()
 		{
 			return _Instance;
@@ -48,6 +53,7 @@ namespace YADE
 
 	private:
 		bool _Running;
+		bool _Active;
 
 		void CreateRenderWindow();
 

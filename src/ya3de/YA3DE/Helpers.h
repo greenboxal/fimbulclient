@@ -16,6 +16,12 @@
 #ifndef YA3DE_HELPERS_H
 #define YA3DE_HELPERS_H
 
+#ifdef _MSC_VER
+#define STRUCT_PACKED
+#else
+#define STRUCT_PACKED __attribute__((packed))
+#endif
+
 #define DEFPROP_SELF_RO(access, type, name) \
 access: \
 	type name()

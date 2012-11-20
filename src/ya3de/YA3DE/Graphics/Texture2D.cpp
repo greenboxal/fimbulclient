@@ -162,10 +162,9 @@ CONTENT_LOADER(Texture2D)
 		LOG("Loaded %s %d %x", namecopy.c_str(), texID, std::this_thread::get_id().hash());
 	};
 
-	// TODO: Reimplement multithreaded loading with shared OpenGL contexts
-	//if (async)
-	//	ContentManager::Instance()->Dispatcher.EnqueueAsync(main);
-	//else
+	if (async)
+		ContentManager::Instance()->Dispatcher().EnqueueAsync(main);
+	else
 		main();
 
 	ContentManager::Instance()->CacheObject(name, tex);

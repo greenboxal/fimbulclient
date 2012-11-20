@@ -13,42 +13,47 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef FCLIENT_TESTGAMEMODE_H
-#define FCLIENT_TESTGAMEMODE_H
+#ifndef FCLIENT_GRF_FILESYSTEM_H
+#define FCLIENT_GRF_FILESYSTEM_H
 
-#include <fclient/GameMode.h>
-#include <fclient/Graphics/World.h>
-
-#include <YA3DE/Scene/FpsCamera.h>
+#include <fclient/FileSystem/Grf/Grf.h>
+#include <YA3DE/FileSystem/IFileSystem.h>
+#include <YA3DE/FileSystem/MemoryFile.h>
 
 namespace fclient
 {
-	class TestSubGameMode : public SubGameMode
+	using namespace YADE;
+
+	class GrfFileSystem : public IFileSystem
 	{
 	public:
-		TestSubGameMode();
-		virtual ~TestSubGameMode();
-
-		virtual void Load();
-		virtual void OnEvent(const sf::Event &e, double elapsed);
-		virtual void Update(double elapsed);
-		virtual void Render(double elapsed);
-		virtual void Unload();
+		GrfFileSystem(const std::string &filename)
+		{
+			_filename = filename;
+		}
+		
+		bool Load();
+		FilePtr Open(const std::string &filename);
 
 	private:
-		FpsCamera *_Camera;
-		WorldPtr _World;
-		bool _RightWasPressed;
-		sf::Vector2i _PrevMousePos;
+		Grf::Grf _grf;
+		std::string _filename;
 	};
 
-	class TestGameMode : public GameMode
+	class GrfFileSystemFactory : public IFileSystemFactory
 	{
 	public:
-		virtual void Load()
+		virtual FileSystemPtr Create(const std::string &path)
 		{
-			RegisterSubMode(0, new TestSubGameMode());
-			ChangeSubMode(0);
+			GrfFileSystem *grf = new GrfFileSystem(path);
+
+			if (!grf->Load())
+			{
+				delete grf;
+				return NULL;
+			}
+
+			return FileSystemPtr(grf);
 		}
 	};
 }

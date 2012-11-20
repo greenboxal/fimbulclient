@@ -24,6 +24,8 @@
 
 #include <Awesomium/WebCore.h>
 
+#define Ragnarok ((fclient::RagnarokClient *)YADE::Application::Instance())
+
 namespace fclient
 {
 	using namespace YADE;
