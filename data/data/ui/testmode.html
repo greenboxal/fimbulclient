@@ -1,7 +1,32 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="styles/Metro/jquery-ui.css">
+	<script src="js/modernizr-2.0.6.min.js"></script>
+	<script src="js/jquery-1.8.2.js"></script>
+	<script src="js/jquery-ui-1.9.1.custom.min.js"></script>
+	<style>
+	    * {
+		    -webkit-user-select: none;
+		}
+		
+		html, body {
+			background-color: transparent;
+		}
+		
+		input, textarea {
+		    -webkit-user-select: text;
+		}
+	</style>
+	<script>
+        $(function() {
+		    $("#mapInfoWindow").dialog();
+		});
+	</script>
   </head>
-  <body style="background-color: transparent">
+  <body>
+    <div id="mapInfoWindow" title="Map Information">
+	  <p style="font-size: 72px;">Test</p>
+	</div>
   </body>
 </html>
