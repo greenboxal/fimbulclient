@@ -14,10 +14,11 @@
 // WorldViewProjection matrix
 uniform mat4 WorldViewProjection;
 
-// Light information
+// Lights
+uniform float LightIntensity;
 uniform vec3 LightPosition;
-uniform vec3 AmbientColor;
-uniform vec3 DiffuseColor;
+uniform vec3 AmbientLight;
+uniform vec3 DiffuseLight;
 
 // Texture & Transparency information
 uniform sampler2D InTexture;
@@ -25,6 +26,7 @@ uniform float Alpha;
 
 // Vertex -> Fragment parameters
 param vec2 TexCoord0;
+param vec3 Normal;
 
 #if defined(VERTEX_SHADER)
 
@@ -36,6 +38,7 @@ layout(location = 2) in vec2 VertexTexCoord;
 void main()
 {
 	TexCoord0 = VertexTexCoord;
+	Normal = VertexNormal;
 	
 	gl_Position = WorldViewProjection * vec4(VertexPosition, 1);
 }
@@ -52,6 +55,10 @@ void main()
 	color.a *= Alpha;
 	if (color.a == 0)
 		discard;
+		
+	vec3 diffuse = LightIntensity * DiffuseLight * max(0.0, dot(Normal, LightPosition));
+	vec3 ambient = AmbientLight; 
+	color.rgb *= diffuse + ambient;
 	
 	OutFragColor = color;
 }

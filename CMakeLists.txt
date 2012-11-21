@@ -52,6 +52,7 @@ include_directories (${GLEW_INCLUDE_PATH})
 include_directories (${AWESOMIUM_INCLUDE_DIR})
 include_directories (3rdparty/SOIL/src)
 include_directories (src/ya3de)
+include_directories (src/libragnarok)
 
 add_subdirectory (3rdparty/SOIL)
 add_subdirectory (src)

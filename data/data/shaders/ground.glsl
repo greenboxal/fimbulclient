@@ -18,10 +18,17 @@ uniform mat4 ViewProjection;
 uniform sampler2D InTexture;
 uniform sampler2D InLightmap;
 
+// Lights
+uniform float LightIntensity;
+uniform vec3 LightPosition;
+uniform vec3 AmbientLight;
+uniform vec3 DiffuseLight;
+
 // Vertex -> Fragment parameters
 param vec2 TexCoord0;
 param vec2 TexCoord1;
 param vec3 SurfaceVertexColor;
+param vec3 Normal;
 
 #if defined(VERTEX_SHADER)
 
@@ -40,6 +47,7 @@ void main()
 	TexCoord0 = VertexTexCoord;
 	TexCoord1 = VertexLightmap;
 	SurfaceVertexColor = VertexColor;
+	Normal = normalize(VertexNormal);
 #endif
 	
 	gl_Position = ViewProjection * vec4(VertexPosition, 1);
@@ -59,11 +67,15 @@ void main()
 	
 	if (color.a == 0)
 		discard;
+
+	vec3 diffuse = LightIntensity * DiffuseLight * max(0.0, dot(Normal, LightPosition));
+	vec3 ambient = AmbientLight; 
 		
 	vec4 lmap = texture(InLightmap, TexCoord1);
 	color.rgb *= SurfaceVertexColor;
 	color.rgb += lmap.rgb;
 	color.rgb *= lmap.a;
+	color.rgb *= ambient + diffuse;
 	
 	OutFragColor = color;
 #endif
