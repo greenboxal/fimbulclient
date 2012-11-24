@@ -22,53 +22,17 @@
 
 namespace testclient
 {
-	class SubGameMode : public Awesomium::JSMethodHandler
+	class GameMode
 	{
 	public:
-		virtual ~SubGameMode() { }
+		GameMode() { }
+		virtual ~GameMode() { }
+
 		virtual void Load() = 0;
 		virtual void OnEvent(const sf::Event &e, double elapsed) = 0;
 		virtual void Update(double elapsed) = 0;
 		virtual void Render(double elapsed) = 0;
 		virtual void Unload() = 0;
-
-		virtual void OnMethodCall(Awesomium::WebView* caller,
-						unsigned int remote_object_id, 
-						const Awesomium::WebString& method_name,
-						const Awesomium::JSArray& args)
-		{
-
-		}
-
-		virtual Awesomium::JSValue OnMethodCallWithReturnValue(Awesomium::WebView* caller,
-						unsigned int remote_object_id,
-						const Awesomium::WebString& method_name,
-						const Awesomium::JSArray& args)
-		{
-			return Awesomium::JSValue::Undefined();
-		}
-	};
-
-	class GameMode
-	{
-	public:
-		GameMode();
-		virtual ~GameMode();
-
-		virtual void Load();
-		virtual void OnEvent(const sf::Event &e, double elapsed);
-		virtual void Update(double elapsed);
-		virtual void Render(double elapsed);
-		virtual void Unload();
-
-		void ChangeSubMode(size_t mode);
-
-	protected:
-		void RegisterSubMode(size_t modeId, SubGameMode *mode);
-
-	private:
-		std::map<size_t, SubGameMode *> _SubGameModes;
-		SubGameMode *_ActiveSubMode;
 	};
 }
 

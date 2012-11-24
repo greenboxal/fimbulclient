@@ -16,19 +16,15 @@
 #ifndef FCLIENT_RAGNAROKCLIENT_H
 #define FCLIENT_RAGNAROKCLIENT_H
 
-#include "GuiManager.h"
-#include "GameMode.h"
-
 #include <YA3DE/Application.h>
-#include <YA3DE/Graphics/Texture2D.h>
+#include <Ragnarok/GUI/GuiManager.h>
 
-#include <Awesomium/WebCore.h>
-
-#define RagnarokInstance ((testclient::RagnarokClient *)YADE::Application::Instance())
+#include "GameMode.h"
 
 namespace testclient
 {
 	using namespace YADE;
+	using namespace Ragnarok;
 
 	class RagnarokClient : public Application
 	{
@@ -37,6 +33,11 @@ namespace testclient
 		virtual ~RagnarokClient();
 
 		void ChangeGameMode(GameMode *mode);
+
+		static RagnarokClient *Instance()
+		{
+			return (RagnarokClient *)Application::Instance();
+		}
 
 		DEFPROP_RO_P(public, GuiManager, Gui);
 

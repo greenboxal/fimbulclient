@@ -13,13 +13,13 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "Ya3deDataSource.h"
+#include <Ragnarok/GUI/Ya3deDataSource.h>
 #include <YA3DE/FileSystem/FileManager.h>
 
 #include <Awesomium/STLHelpers.h>
 
-using namespace testclient;
 using namespace YADE;
+using namespace Ragnarok;
 using namespace Awesomium;
 
 YadeDataSource::YadeDataSource()

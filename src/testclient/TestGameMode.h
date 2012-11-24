@@ -16,20 +16,34 @@
 #ifndef FCLIENT_TESTGAMEMODE_H
 #define FCLIENT_TESTGAMEMODE_H
 
-#include "GameMode.h"
+#include <YA3DE/Scene/FpsCamera.h>
+#include <Ragnarok/GUI/RocketMVVM.h>
 #include <Ragnarok/Graphics/World.h>
 
-#include <YA3DE/Scene/FpsCamera.h>
+#include "GameMode.h"
 
 namespace testclient
 {
+	using namespace YADE;
 	using namespace Ragnarok;
 
-	class TestSubGameMode : public SubGameMode
+	class MapInfoViewModel : public RocketMVVM::ViewModel
 	{
 	public:
-		TestSubGameMode();
-		virtual ~TestSubGameMode();
+		MVVM_FIELD_STR(MapName, "mapName")
+		MVVM_FIELD(CameraX, "cameraX", float)
+		MVVM_FIELD(CameraY, "cameraY", float)
+		MVVM_FIELD(CameraZ, "cameraZ", float)
+		MVVM_FIELD(TargetX, "targetX", float)
+		MVVM_FIELD(TargetY, "targetY", float)
+		MVVM_FIELD(TargetZ, "targetZ", float)
+	};
+
+	class TestGameMode : public GameMode
+	{
+	public:
+		TestGameMode();
+		virtual ~TestGameMode();
 
 		virtual void Load();
 		virtual void OnEvent(const sf::Event &e, double elapsed);
@@ -38,20 +52,14 @@ namespace testclient
 		virtual void Unload();
 
 	private:
+		// GUI Interaction
+		Awesomium::JSObject _testModeBridge;
+		MapInfoViewModel _mapInfoViewModel;
+
 		FpsCamera *_Camera;
 		WorldPtr _World;
 		bool _RightWasPressed;
 		sf::Vector2i _PrevMousePos;
-	};
-
-	class TestGameMode : public GameMode
-	{
-	public:
-		virtual void Load()
-		{
-			RegisterSubMode(0, new TestSubGameMode());
-			ChangeSubMode(0);
-		}
 	};
 }
 

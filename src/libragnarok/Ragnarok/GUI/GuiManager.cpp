@@ -13,22 +13,22 @@
 	You should have received a copy of the GNU General Public License
 	along with FimbulwinterClient.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "GuiManager.h"
+#include <Ragnarok/GUI/GuiManager.h>
 
 #include <YA3DE/Math.h>
 #include <YA3DE/Logger.h>
 #include <YA3DE/OpenGL.h>
 #include <YA3DE/Content/ContentManager.h>
+#include <YA3DE/Graphics/Texture2D.h>
 #include <YA3DE/Graphics/ShaderProgram.h>
 #include <YA3DE/Graphics/VertexBuffer.h>
 #include <YA3DE/Graphics/VertexPositionTexture.h>
 
-#include <Awesomium/STLHelpers.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace YADE;
 using namespace Awesomium;
-using namespace testclient;
+using namespace Ragnarok;
 
 int GetWebKeyFromSFMLKey(sf::Keyboard::Key key) 
 {
@@ -256,6 +256,8 @@ GuiManager::GuiManager(sf::RenderWindow &window)
 	_StartedInGui[0] = false;
 	_StartedInGui[1] = false;
 	_StartedInGui[2] = false;
+	_DataSource = nullptr;
+	_Dispatcher = nullptr;
 }
 
 bool GuiManager::TestPixel(int x, int y)
@@ -270,7 +272,9 @@ bool GuiManager::TestPixel(int x, int y)
 
 void GuiManager::SetDesktop(const std::string &desktop)
 {
-	_View->LoadURL(WebURL(ToWebString("asset://Ragnarok/ui/" + desktop + ".html")));
+	_View->LoadURL(WebURL(ToWebString("asset://ragnarok/ui/" + desktop + ".html")));
+	while (_View->IsLoading())
+		WebCore::instance()->Update();
 }
 
 void GuiManager::Load()
@@ -291,7 +295,10 @@ void GuiManager::Load()
 
 	_View = WebCore::instance()->CreateWebView(_Window.getSize().x, _Window.getSize().y);
 	_View->SetTransparent(true);
-	_View->session()->AddDataSource(WSLit("fclient"), _DataSource);
+	_View->session()->AddDataSource(WSLit("ragnarok"), _DataSource);
+	_Dispatcher = new JSDispatcher(_View);
+
+	_ApplicationObject = _View->CreateGlobalJavascriptObject(WSLit("Application")).ToObject();
 }
 
 bool GuiManager::DispatchEvent(const sf::Event &e)

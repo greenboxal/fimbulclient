@@ -19,7 +19,7 @@
 #include <string>
 #include <Awesomium/DataSource.h>
 
-namespace testclient
+namespace Ragnarok
 {
 	class YadeDataSource : public Awesomium::DataSource
 	{

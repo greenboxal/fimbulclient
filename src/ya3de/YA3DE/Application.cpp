@@ -29,6 +29,7 @@ Application *Application::_Instance = nullptr;
 Application::Application()
 {
 	_Instance = this;
+	_Active = false;
 }
 
 Application::~Application()

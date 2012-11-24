@@ -5,6 +5,7 @@
 	<script src="js/modernizr-2.0.6.min.js"></script>
 	<script src="js/jquery-1.8.2.js"></script>
 	<script src="js/jquery-ui-1.9.1.custom.min.js"></script>
+	<script src="js/rocketmvvm.js"></script>
 	<style>
 	    * {
 		    -webkit-user-select: none;
@@ -19,14 +20,42 @@
 		}
 	</style>
 	<script>
-        $(function() {
-		    $("#mapInfoWindow").dialog();
+		var mapInfoViewModel = new mvvm.ViewModel(function() {
+			this.mapName = mvvm.observable('');
+			this.cameraX = mvvm.observable(0);
+			this.cameraY = mvvm.observable(0);
+			this.cameraZ = mvvm.observable(0);
+			this.targetX = mvvm.observable(0);
+			this.targetY = mvvm.observable(0);
+			this.targetZ = mvvm.observable(0);
+			this.bool1 = mvvm.observable(false);
+
+			this.cameraString = mvvm.computed(function() {
+				return "" + this.cameraX() + ", " + this.cameraY() + ", " + this.cameraZ() + " -> " + this.targetX() + ", " + this.targetY() + ", " + this.targetZ();
+			}, this, ['cameraX', 'cameraY', 'cameraZ', 'targetX', 'targetY', 'targetZ']);
+			
+			this.register = function() {
+				alert(this.mapName());
+			}
+		});
+			
+		$(function() {
+		
+			$("#mapInfoWindow").dialog();
+			
+			mapInfoViewModel.applyBindings($("#mapInfoWindow"));
+			
+			Application.TestMode.SetMapInfoProxy(mapInfoViewModel);
 		});
 	</script>
   </head>
   <body>
     <div id="mapInfoWindow" title="Map Information">
-	  <p style="font-size: 72px;">Test</p>
+	    <p>Map: <span data-bind="text: mapName" /></p>
+	    <p>Camera: <span data-bind="text: cameraString" /></p>
+	    <p><input type="text" data-bind="value: mapName" /></p>
+	    <p><input type="checkbox" data-bind="checked: bool1" /></p>
+	    <p><button data-bind="enable: bool1, click: register">Submit</button></p>
 	</div>
   </body>
 </html>

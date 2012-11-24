@@ -16,16 +16,14 @@
 #ifndef FCLIENT_GUIMANAGER_H
 #define FCLIENT_GUIMANAGER_H
 
-#include "Ya3deDataSource.h"
+#include <YA3DE/Helpers.h>
+#include <SFML/Graphics.hpp>
+#include <Ragnarok/GUI/Ya3deDataSource.h>
+#include <Ragnarok/GUI/JSDispatcher.h>
 
-#include <YA3DE/Application.h>
-#include <YA3DE/Graphics/Texture2D.h>
-
-#include <Awesomium/WebCore.h>
-
-namespace testclient
+namespace Ragnarok
 {
-	using namespace YADE;
+	using namespace Awesomium;
 
 	class GuiManager : private Awesomium::SurfaceFactory
 	{
@@ -41,20 +39,22 @@ namespace testclient
 		bool TestPixel(int x, int y);
 		void SetDesktop(const std::string &desktop);
 
-		virtual Awesomium::Surface *CreateSurface(Awesomium::WebView *view, int width, int height);
-		virtual void DestroySurface(Awesomium::Surface *surface);
+		virtual Surface *CreateSurface(WebView *view, int width, int height);
+		virtual void DestroySurface(Surface *surface);
 
 		sf::RenderWindow &Window()
 		{
 			return _Window;
 		}
 
-		DEFPROP_RO_P(public, Awesomium::WebView, View);
+		DEFPROP_RO_P(public, JSDispatcher, Dispatcher);
+		DEFPROP_RO_P(public, WebView, View);
 
 	private:
 		bool _StartedInGui[3];
 		sf::RenderWindow &_Window;
 		YadeDataSource *_DataSource;
+		JSObject _ApplicationObject;
 	};
 }
 
